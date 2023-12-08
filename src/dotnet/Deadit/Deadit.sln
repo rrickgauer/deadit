@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Deadit.WebGui", "Deadit.WebGui\Deadit.WebGui.csproj", "{ABB43B59-C345-411B-9ABD-F6A3ED2FC423}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Deadit.Lib", "Deadit.Lib\Deadit.Lib.csproj", "{A6C33CA7-1321-45B4-ADBD-BF414CEDDAF3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABB43B59-C345-411B-9ABD-F6A3ED2FC423}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABB43B59-C345-411B-9ABD-F6A3ED2FC423}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABB43B59-C345-411B-9ABD-F6A3ED2FC423}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABB43B59-C345-411B-9ABD-F6A3ED2FC423}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6C33CA7-1321-45B4-ADBD-BF414CEDDAF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6C33CA7-1321-45B4-ADBD-BF414CEDDAF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6C33CA7-1321-45B4-ADBD-BF414CEDDAF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6C33CA7-1321-45B4-ADBD-BF414CEDDAF3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D5DAECFD-6DA4-43B4-95AE-217BD924D551}
+	EndGlobalSection
+EndGlobal
