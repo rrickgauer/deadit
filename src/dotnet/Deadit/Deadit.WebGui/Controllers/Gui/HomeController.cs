@@ -10,7 +10,7 @@ public class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> HomePageAsync()
     {
-        return View("Index");
+        return View("HomePage");
     }
 
 }
