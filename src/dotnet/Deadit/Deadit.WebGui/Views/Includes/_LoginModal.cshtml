@@ -20,7 +20,36 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
 
-                    <div class="tab-pane active" id="login-tab-section-login" role="tabpanel" tabindex="0">log in</div>
+                    @* Log in *@
+                    <div class="tab-pane active" id="login-tab-section-login" role="tabpanel" tabindex="0">
+                        <div class="login-form-login-container">
+                            <form class="login-form-login">
+
+                                @* Username *@
+                                <div class="login-form-input-section username">
+                                    <label for="login-form-login-input-username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="login-form-login-input-username">
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+
+                                @* Password *@
+                                <div class="login-form-input-section password">
+                                    <label for="login-form-login-input-password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="login-form-login-input-password">
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+
+                                @* Action buttons *@
+                                <div class="login-form-input-section d-flex">
+                                    <button type="button" class="btn btn-success">Log in</button>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
 
                     @* Sign up *@
                     <div class="tab-pane" id="login-tab-section-signup" role="tabpanel" tabindex="0">
