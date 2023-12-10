@@ -2,49 +2,71 @@
 <div class="modal" id="login-container" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+         
             <div class="modal-body">
+                <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button>
 
-                <div class="login-form-signup-container">
+                <!-- Nav tabs -->
+                <ul class="nav nav-underline mb-3" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login-tab-section-login" type="button" role="tab">Log in</button>
+                    </li>
 
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#login-tab-section-signup" type="button" role="tab">Sign up</button>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="login-tab-section-login" role="tabpanel" tabindex="0">log in</div>
 
                     @* Sign up *@
-                    <form class="login-form-signup">
+                    <div class="tab-pane" id="login-tab-section-signup" role="tabpanel" tabindex="0">
+                        <div class="login-form-signup-container">
+                            <form class="login-form-signup">
+                                
+                                @* Email *@
+                                <div class="login-form-input-section email">
+                                    <label for="login-form-signup-input-email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="login-form-signup-input-email">
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                </div>
 
-                        <div class="login-form-input-section">
-                            <label for="login-form-signup-input-email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="login-form-signup-input-email">
+                                @* Username *@
+                                <div class="login-form-input-section username">
+                                    <label for="login-form-signup-input-username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="login-form-signup-input-username">
+                                    <p class="form-text">Choose wisely—because once you get a name, you can’t change it</p>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+
+                                @* Password *@
+                                <div class="login-form-input-section password">
+                                    <label for="login-form-signup-input-password" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="login-form-signup-input-password">
+                                    <p class="form-text">Create a strong password by using at least 8 characters, including a mix of uppercase and lowercase letters, numbers, and special characters</p>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+
+                                @* Action buttons *@
+                                <div class="login-form-input-section d-flex">
+                                    <button type="button" class="btn btn-success">Sign up</button>
+                                </div>
+                            </form>
                         </div>
 
-                        <div class="login-form-input-section">
-                            <label for="login-form-signup-input-username" class="form-label">Username</label>
-                            <input type="email" class="form-control" id="login-form-signup-input-username">
-                        </div>
 
-                        <div class="login-form-input-section">
-                            <label for="login-form-signup-input-password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="login-form-signup-input-password">
-                        </div>
-
-                        <button type="button" class="btn btn-success">Success</button>
-
-                    </form>
-
+                    </div>
 
                 </div>
 
-
-
-
-
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+      
         </div>
     </div>
 </div>
