@@ -1,7 +1,51 @@
+using Deadit.Lib.Auth;
+using Deadit.Lib.Domain.Configurations;
+using Deadit.Lib.Filters;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+bool isProduction = true;
+
+#if DEBUG
+isProduction = false;
+#endif
+
+
+if (isProduction)
+{
+    builder.Services.AddSingleton<IConfigs, ConfigurationProduction>();
+}
+else
+{
+    builder.Services.AddSingleton<IConfigs, ConfigurationDev>();
+}
+
+
+builder.Services.AddScoped<InternalApiAuthFilter>();
+
+
+
+
+
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<HttpResponseExceptionFilter>();
+});
+
+builder.Services.AddDistributedMemoryCache();
+
+
+
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".Deadit.Session";
+    //options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.IsEssential = true;
+});
+
+
 
 var app = builder.Build();
 
@@ -21,5 +65,7 @@ app.UseRouting();
 app.UseAuthorization();
 app.UseAuthentication();
 app.MapControllers();
+
+app.UseSession();
 
 app.Run();
