@@ -37,6 +37,17 @@ Community_Membership [BASE TABLE]
 +------------------+--------------+--------------+-------------------+-------------+-------------------+
 
 
+Error_Message [BASE TABLE]
+
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| 1                | id          | int unsigned | None              | NO          | auto_increment    |
+| 2                | message     | char(200)    | None              | NO          |                   |
+| 3                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+
+
 Post [BASE TABLE]
 
 +------------------+--------------+-------------------+-------------------+-------------+-------------------+
@@ -87,6 +98,19 @@ User [BASE TABLE]
 | ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
 +------------------+-------------+--------------+-------------------+-------------+-------------------+
 | 1                | id          | int unsigned | None              | NO          | auto_increment    |
+| 2                | email       | char(200)    | None              | NO          |                   |
+| 3                | username    | char(30)     | None              | NO          |                   |
+| 4                | password    | char(250)    | None              | NO          |                   |
+| 5                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+
+
+View_User [VIEW]
+
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| 1                | id          | int unsigned | 0                 | NO          |                   |
 | 2                | email       | char(200)    | None              | NO          |                   |
 | 3                | username    | char(30)     | None              | NO          |                   |
 | 4                | password    | char(250)    | None              | NO          |                   |

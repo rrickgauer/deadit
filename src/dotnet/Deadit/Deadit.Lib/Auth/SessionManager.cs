@@ -1,10 +1,6 @@
 ﻿using Deadit.Lib.Domain.Constants;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Deadit.Lib.Auth;
 
@@ -12,9 +8,19 @@ public class SessionManager
 {
     private ISession Session { get; }
 
-    public string? ClientId
+    public int? ClientId
     {
-        get => Session.GetString(SessionKeys.AuthUserId);
+        get
+        {
+            var data = Session.GetString(SessionKeys.AuthUserId);
+
+            if (int.TryParse(data, out var userId))
+            {
+                return userId;
+            }
+
+            return null;
+        }
 
         set
         {
@@ -24,7 +30,7 @@ public class SessionManager
             }
             else
             {
-                Session.SetString(SessionKeys.AuthUserId, value);
+                Session.SetString(SessionKeys.AuthUserId, $"{value}");
             }
         }
     }
@@ -36,12 +42,7 @@ public class SessionManager
 
     public bool IsClientAuthorized()
     {
-        if (string.IsNullOrEmpty(ClientId))
-        {
-            return false;
-        }
-
-        return true;
+        return ClientId.HasValue;
     }
 
 }

@@ -7,6 +7,10 @@ namespace Deadit.WebGui.Controllers.Gui;
 public class HomeController : Controller
 {
 
+    /// <summary>
+    /// deadit.com
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> HomePageAsync()
     {

@@ -1,6 +1,11 @@
 using Deadit.Lib.Auth;
 using Deadit.Lib.Domain.Configurations;
 using Deadit.Lib.Filters;
+using Deadit.Lib.Repository.Contracts;
+using Deadit.Lib.Repository.Implementations;
+using Deadit.Lib.Repository.Other;
+using Deadit.Lib.Service.Contracts;
+using Deadit.Lib.Service.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +25,17 @@ else
     builder.Services.AddSingleton<IConfigs, ConfigurationDev>();
 }
 
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddTransient<DatabaseConnection>();
+
+builder.Services.AddSingleton<ITableMapperService, TableMapperService>();
 
 builder.Services.AddScoped<InternalApiAuthFilter>();
+
 
 
 
