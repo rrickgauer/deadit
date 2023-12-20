@@ -268,3 +268,5 @@ __pycache__/
 # tools/
 
 ConfigurationProduction.cs
+
+**/js/dist/
