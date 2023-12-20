@@ -36,7 +36,7 @@ builder.Services.AddSingleton<ITableMapperService, TableMapperService>();
 
 builder.Services.AddScoped<InternalApiAuthFilter>();
 
-
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
 

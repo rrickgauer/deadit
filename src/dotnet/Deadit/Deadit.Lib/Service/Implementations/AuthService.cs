@@ -9,14 +9,29 @@ namespace Deadit.Lib.Service.Implementations;
 public class AuthService : IAuthService
 {
     private readonly IUserService _userService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private ISession? Session => _httpContextAccessor?.HttpContext?.Session;
+
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="userService"></param>
-    public AuthService(IUserService userService)
+    public AuthService(IUserService userService, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public bool IsClientLoggedIn()
+    {
+        if (Session != null)
+        {
+            SessionManager mgr = new(Session);
+            return mgr.IsClientAuthorized();
+        }
+
+        return false;
     }
 
     /// <summary>
