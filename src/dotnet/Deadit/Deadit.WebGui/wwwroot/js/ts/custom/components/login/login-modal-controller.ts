@@ -5,14 +5,9 @@ import { AuthService } from "../../services/auth-service";
 
 export class LoginModalController
 {
-    /** @type {HTMLDivElement} */
-    #modal = document.querySelector('.login-form-login');
-
-    /** @type {HTMLInputElement} */
-    #loginUsernameInput = document.querySelector('#login-form-login-input-username');
-
-    /** @type {HTMLInputElement} */
-    #loginPasswordInput = document.querySelector('#login-form-login-input-password');
+    #modal: HTMLDivElement = document.querySelector('.login-form-login');
+    #loginUsernameInput: HTMLInputElement = document.querySelector('#login-form-login-input-username');
+    #loginPasswordInput: HTMLInputElement = document.querySelector('#login-form-login-input-password');
 
     #authService = new AuthService();
 

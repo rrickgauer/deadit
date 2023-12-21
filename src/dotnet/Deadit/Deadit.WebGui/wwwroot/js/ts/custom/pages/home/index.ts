@@ -6,6 +6,7 @@ import { PageUtilities } from "../../utilities/page-utilities";
 PageUtilities.pageReady(() => {
     const loginModal = LoginModalController.setupPage();
 
+    alert('fuck you');
 });
 
 
