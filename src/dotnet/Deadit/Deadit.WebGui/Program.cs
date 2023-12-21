@@ -27,19 +27,17 @@ else
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<ITableMapperService, TableMapperService>();
+builder.Services.AddSingleton<IErrorMessageService, ErrorMessageService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IErrorMessageRepository, ErrorMessageRepository>();
 
 builder.Services.AddTransient<DatabaseConnection>();
-
-builder.Services.AddSingleton<ITableMapperService, TableMapperService>();
 
 builder.Services.AddScoped<InternalApiAuthFilter>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-
-
 
 builder.Services.AddControllersWithViews();
 

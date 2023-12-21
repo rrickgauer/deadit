@@ -3,7 +3,7 @@
       "outDir": "./ts/out",
       "allowJs": true,
       "target": "ES6",
-      "moduleResolution": "bundler",
+      "moduleResolution": "Bundler",
     },
     "include": ["./ts/custom/**/*"]
   }

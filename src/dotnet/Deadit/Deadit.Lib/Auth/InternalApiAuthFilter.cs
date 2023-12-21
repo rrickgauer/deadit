@@ -1,6 +1,5 @@
 ﻿using Deadit.Lib.Auth;
-using Deadit.Lib.Domain.HttpResponses;
-using Microsoft.AspNetCore.Http;
+using Deadit.Lib.Domain.Errors;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 

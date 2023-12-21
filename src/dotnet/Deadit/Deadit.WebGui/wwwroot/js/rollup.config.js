@@ -2,7 +2,17 @@
 
 This is the Rollup.JS configuration file.
 
+To get the typescript plugin going:
+
+    cd into the wwwroot/js directory where this file is:
+
+    npm install tslib --save-dev
+    npm install typescript --save-dev
+    npm install @rollup/plugin-typescript --save-dev
+
 ***************************************************************************/
+
+import typescript from '@rollup/plugin-typescript';
 
 class RollupConfig
 {
@@ -10,25 +20,20 @@ class RollupConfig
         this.input = input;
 
         this.output = {
-            format: 'iife',
+            format: 'es',
             compact: true,
             sourcemap: true,
             file: output,
         }
+
+        this.plugins = [typescript()];
     }
 }
 
 
 
-
-
-const configs = [
-    new RollupConfig('ts/out/pages/home/index.js', 'dist/home.bundle.js'),
-    // new RollupConfig('custom/pages/home/index.js', 'dist/home.bundle.js'),
-    // new RollupConfig('custom/pages/account/index.js', 'dist/account.bundle.js'),
-    // new RollupConfig('custom/pages/labels/index.js', 'dist/labels.bundle.js'),
-    // new RollupConfig('custom/pages/checklists/index.js', 'dist/checklists.bundle.js'),
-    // new RollupConfig('custom/pages/checklist-settings/general/index.js', 'dist/checklist-settings.general.bundle.js'),
+const configs = [    
+    new RollupConfig('ts/custom/pages/home/index.ts', 'dist/home.bundle.js'),
 ];
 
 

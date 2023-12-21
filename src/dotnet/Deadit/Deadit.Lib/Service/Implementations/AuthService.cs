@@ -1,15 +1,19 @@
 ﻿using Deadit.Lib.Auth;
 using Deadit.Lib.Domain.Forms;
-using Deadit.Lib.Domain.HttpResponses;
+using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Microsoft.AspNetCore.Http;
 using System.Net;
+using Deadit.Lib.Domain.Enum;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Deadit.Lib.Service.Implementations;
 
 public class AuthService : IAuthService
 {
+    private const int MinPasswordLength = 8;
+
     private readonly IUserService _userService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private ISession? Session => _httpContextAccessor?.HttpContext?.Session;
@@ -83,32 +87,64 @@ public class AuthService : IAuthService
         };
     }
 
-    public async Task<ViewUser?> SignupUserAsync(SignupRequestForm signupForm)
+    public async Task<ServiceDataResponse<ViewUser>> SignupUserAsync(SignupRequestForm signupForm)
     {
+        ServiceDataResponse<ViewUser> response = await ValidateNewUserAccountAsync(signupForm);
+
+        if (!response.Successful)
+        {
+            return response;
+        }
+
+        var newUserId = await _userService.CreateUserAsync(signupForm);
+        response.Data = await _userService.GetUserAsync(newUserId.Value);
+
+        if (response.Data != null)
+        {
+            SetClientSessionId(Session, newUserId.Value);
+        }
+
+        return response;
+    }
+
+    private async Task<ServiceDataResponse<ViewUser>> ValidateNewUserAccountAsync(SignupRequestForm signupForm)
+    {
+        ServiceDataResponse<ViewUser> response = new();
+
+        if (signupForm.Password.Length < MinPasswordLength)
+        {
+            response.Add(ErrorCode.SignupInvalidPassword);
+        }
 
         var existingUsers = await _userService.GetMatchingUsersAsync(signupForm.Email, signupForm.Username);
 
         if (existingUsers.Any())
         {
-            throw new HttpResponseException(HttpStatusCode.BadRequest, "The email or username is already taken");
+            var errors = GetSignupErrors(existingUsers, signupForm);
+            response.Add(errors);
         }
 
-
-        var newUserId = await _userService.CreateUserAsync(signupForm);
-        
-        if (!newUserId.HasValue)
-        {
-            return null;
-        }
-
-
-        var newUser = await _userService.GetUserAsync(newUserId.Value);
-
-        if (newUser != null)
-        {
-            SetClientSessionId(Session, newUserId.Value);
-        }
-
-        return newUser;
+        return response;
     }
+
+    private List<ErrorCode> GetSignupErrors(IEnumerable<ViewUser> existingUsers, SignupRequestForm signupForm)
+    {
+        List<ErrorCode> errors = new();        
+
+        foreach(var user in existingUsers)
+        {
+            if (user.Email == signupForm.Email)
+            {
+                errors.Add(ErrorCode.SignUpEmailTaken);
+            }
+            
+            if (user.Username == signupForm.Username)
+            {
+                errors.Add(ErrorCode.SignupUsernameTaken);
+            }
+        }
+
+        return errors;
+    }
+
 }
