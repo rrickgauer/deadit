@@ -4,15 +4,10 @@ import { ApiEndpoints, HttpMethods } from "../domain/constants/api-constants"
 
 export class ApiLogin
 {
-    #url = ApiEndpoints.LOGIN;
+    private readonly _url: string  = ApiEndpoints.LOGIN;
 
-    /**
-     * POST: /auth/login
-     * @param {FormData} credentials 
-     * @returns result
-     */
-    post = async (credentials) => {
-        const url = this.#url;
+    post = async (credentials: FormData) => {
+        const url = this._url;
 
         return await fetch(url, {
             method: HttpMethods.POST,

@@ -103,24 +103,42 @@ public class DatabaseConnection
 
 
 
+    public async Task<int?> ModifyWithRowIdAsync(MySqlCommand command)
+    {
+        var numRecords = await ModifyAsync(command);
+
+        if (numRecords < 1)
+        {
+            return null;
+        }
+
+        
+        if (!int.TryParse(command.LastInsertedId.ToString(), out var rowId))
+        {
+            return null;
+        }
+
+        return rowId;
+    }
+
 
     /// <summary>
     /// Exeucte the specified sql command that modifies (insert, update, delete) data.
     /// </summary>
     /// <param name="command"></param>
-    /// <returns></returns>
+    /// <returns>Number of affected rows</returns>
     public async Task<int> ModifyAsync(MySqlCommand command)
     {
         // setup a new database connection object
-        using MySqlConnection conn = GetNewConnection();
-        await conn.OpenAsync();
-        command.Connection = conn;
+        using MySqlConnection connection = GetNewConnection();
+        await connection.OpenAsync();
+        command.Connection = connection;
 
         // execute the non query command
         int numRowsAffected = await command.ExecuteNonQueryAsync();
 
         // close the connection
-        await CloseConnectionAsync(conn);
+        await CloseConnectionAsync(connection);
 
         return numRowsAffected;
     }

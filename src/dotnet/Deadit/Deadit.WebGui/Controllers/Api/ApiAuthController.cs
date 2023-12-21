@@ -18,9 +18,16 @@ public class ApiAuthController : ControllerBase
     }
 
     [HttpPost("signup")]
-    public async Task<IActionResult> PostSignupAsync()
+    public async Task<IActionResult> PostSignupAsync([FromForm] SignupRequestForm signupForm)
     {
-        return Ok();
+        var newUser = await _authService.SignupUserAsync(signupForm);
+
+        if (newUser == null)
+        {
+            return BadRequest("Could not create your account");
+        }
+
+        return Ok(newUser);
     }
 
 

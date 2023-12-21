@@ -2,10 +2,11 @@
 
 export class LoginApiRequest
 {
-    username;
-    password;
+    username: string;
+    password: string;
 
-    constructor(username, password) {
+    constructor(username: string, password: string)
+    {
         this.username = username;
         this.password = password;
     }
@@ -13,8 +14,14 @@ export class LoginApiRequest
 
 export class SignupApiRequest
 {
-    email;
-    username;
-    password;
+    email: string;
+    username: string;
+    password: string;
+
+    constructor(email: string, username: string, password: string) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
 }
 

@@ -1,8 +1,10 @@
 ﻿using Deadit.Lib.Auth;
 using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Domain.HttpResponses;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace Deadit.Lib.Service.Implementations;
 
@@ -79,5 +81,34 @@ public class AuthService : IAuthService
         {
             ClientId = id
         };
+    }
+
+    public async Task<ViewUser?> SignupUserAsync(SignupRequestForm signupForm)
+    {
+
+        var existingUsers = await _userService.GetMatchingUsersAsync(signupForm.Email, signupForm.Username);
+
+        if (existingUsers.Any())
+        {
+            throw new HttpResponseException(HttpStatusCode.BadRequest, "The email or username is already taken");
+        }
+
+
+        var newUserId = await _userService.CreateUserAsync(signupForm);
+        
+        if (!newUserId.HasValue)
+        {
+            return null;
+        }
+
+
+        var newUser = await _userService.GetUserAsync(newUserId.Value);
+
+        if (newUser != null)
+        {
+            SetClientSessionId(Session, newUserId.Value);
+        }
+
+        return newUser;
     }
 }

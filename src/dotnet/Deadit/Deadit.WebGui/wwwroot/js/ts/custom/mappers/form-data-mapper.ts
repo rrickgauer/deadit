@@ -2,12 +2,8 @@
 
 export class FormDataMapper
 {
-    /**
-     * Map the specified object to a FormData object
-     * @param {Object} data - the object to map
-     * @returns {FormData} the form data
-     */
-    static toFormData(data) {
+
+    static toFormData(data: Object) : FormData  {
         const formData = new FormData();
 
         for (const key in data) {

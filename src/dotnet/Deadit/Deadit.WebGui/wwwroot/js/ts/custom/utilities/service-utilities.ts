@@ -1,10 +1,6 @@
 export class ServiceUtilities
 {
-    /**
-     * Handle a bad response
-     * @param {Response} response The response to handle
-     */
-    static handleBadResponse = async (response) =>
+    static handleBadResponse = async (response: Response): Promise<void> =>
     {
         if (!response.ok)
         {

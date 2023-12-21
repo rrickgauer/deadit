@@ -16,7 +16,6 @@ public class UserRepository : IUserRepository
         _dbConnection = dbConnection;
     }
 
-
     public async Task<DataRow?> SelectUserAsync(LoginRequestForm loginForm)
     {
         MySqlCommand command = new(UserRepositoryCommands.SelectUserByLoginInfo);
@@ -25,5 +24,37 @@ public class UserRepository : IUserRepository
         command.Parameters.AddWithValue("@password", loginForm.Password);
 
         return await _dbConnection.FetchAsync(command);
+    }
+
+    public async Task<DataRow?> SelectUserAsync(int userId)
+    {
+        MySqlCommand command = new(UserRepositoryCommands.SelectUserById);
+
+        command.Parameters.AddWithValue("@user_id", userId);
+
+        return await _dbConnection.FetchAsync(command);
+    }
+
+    public async Task<DataTable> SelectMatchingUsersAsync(string email, string username)
+    {
+        MySqlCommand command = new(UserRepositoryCommands.SelectByEmailOrUsername);
+
+        command.Parameters.AddWithValue("@email", email);
+        command.Parameters.AddWithValue("@username", username);
+
+        return await _dbConnection.FetchAllAsync(command);
+    }
+
+    public async Task<int?> InsertAsync(SignupRequestForm signupForm)
+    {
+        MySqlCommand command = new(UserRepositoryCommands.InsertUser);
+
+        command.Parameters.AddWithValue("@email", signupForm.Email);
+        command.Parameters.AddWithValue("@username", signupForm.Username);
+        command.Parameters.AddWithValue("@password", signupForm.Password);
+
+        var userId = await _dbConnection.ModifyWithRowIdAsync(command);
+
+        return userId;
     }
 }

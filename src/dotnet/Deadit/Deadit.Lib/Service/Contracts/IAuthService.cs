@@ -8,6 +8,7 @@ public interface IAuthService
 {
     public Task<ViewUser?> LoginUserAsync(LoginRequestForm loginForm, ISession session);
     public void ClearSessionData(ISession session);
+    public Task<ViewUser?> SignupUserAsync(SignupRequestForm signupForm);
 
     public bool IsClientLoggedIn();
 }
