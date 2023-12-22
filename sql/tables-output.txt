@@ -1,0 +1,154 @@
+Comment [BASE TABLE]
+
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| 1                | id          | char(36)     | None              | NO          |                   |
+| 2                | author_id   | int unsigned | None              | NO          |                   |
+| 3                | post_id     | char(36)     | None              | NO          |                   |
+| 4                | content     | text         | None              | NO          |                   |
+| 5                | parent_id   | char(36)     | None              | YES         |                   |
+| 6                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+
+
+Community [BASE TABLE]
+
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| 1                | id          | int unsigned | None              | NO          | auto_increment    |
+| 2                | name        | char(50)     | None              | NO          |                   |
+| 3                | title       | char(100)    | None              | NO          |                   |
+| 4                | owner_id    | int unsigned | None              | NO          |                   |
+| 5                | description | char(200)    | None              | YES         |                   |
+| 6                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+
+
+Community_Membership [BASE TABLE]
+
++------------------+--------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name  | column_type  | column_default    | is_nullable | extra             |
++------------------+--------------+--------------+-------------------+-------------+-------------------+
+| 1                | community_id | int unsigned | None              | NO          |                   |
+| 2                | user_id      | int unsigned | None              | NO          |                   |
+| 3                | created_on   | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+--------------+--------------+-------------------+-------------+-------------------+
+
+
+Error_Message [BASE TABLE]
+
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| 1                | id          | int unsigned | None              | NO          | auto_increment    |
+| 2                | message     | char(200)    | None              | NO          |                   |
+| 3                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+
+
+Post [BASE TABLE]
+
++------------------+--------------+-------------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name  | column_type       | column_default    | is_nullable | extra             |
++------------------+--------------+-------------------+-------------------+-------------+-------------------+
+| 1                | id           | char(36)          | None              | NO          |                   |
+| 2                | community_id | int unsigned      | None              | NO          |                   |
+| 3                | title        | char(250)         | None              | NO          |                   |
+| 4                | post_type    | smallint unsigned | None              | NO          |                   |
+| 5                | author_id    | int unsigned      | None              | NO          |                   |
+| 6                | created_on   | timestamp         | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+--------------+-------------------+-------------------+-------------+-------------------+
+
+
+Post_Link [BASE TABLE]
+
++------------------+-------------+-------------+----------------+-------------+-------+
+| ordinal_position | column_name | column_type | column_default | is_nullable | extra |
++------------------+-------------+-------------+----------------+-------------+-------+
+| 1                | id          | char(36)    | None           | NO          |       |
+| 2                | url         | text        | None           | NO          |       |
++------------------+-------------+-------------+----------------+-------------+-------+
+
+
+Post_Text [BASE TABLE]
+
++------------------+-------------+-------------+----------------+-------------+-------+
+| ordinal_position | column_name | column_type | column_default | is_nullable | extra |
++------------------+-------------+-------------+----------------+-------------+-------+
+| 1                | id          | char(36)    | None           | NO          |       |
+| 2                | content     | text        | None           | YES         |       |
++------------------+-------------+-------------+----------------+-------------+-------+
+
+
+Post_Type [BASE TABLE]
+
++------------------+-------------+-------------------+----------------+-------------+----------------+
+| ordinal_position | column_name | column_type       | column_default | is_nullable | extra          |
++------------------+-------------+-------------------+----------------+-------------+----------------+
+| 1                | id          | smallint unsigned | None           | NO          | auto_increment |
+| 2                | name        | char(50)          | None           | NO          |                |
++------------------+-------------+-------------------+----------------+-------------+----------------+
+
+
+User [BASE TABLE]
+
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| 1                | id          | int unsigned | None              | NO          | auto_increment    |
+| 2                | email       | char(200)    | None              | NO          |                   |
+| 3                | username    | char(30)     | None              | NO          |                   |
+| 4                | password    | char(250)    | None              | NO          |                   |
+| 5                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+
+
+View_User [VIEW]
+
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+| 1                | id          | int unsigned | 0                 | NO          |                   |
+| 2                | email       | char(200)    | None              | NO          |                   |
+| 3                | username    | char(30)     | None              | NO          |                   |
+| 4                | password    | char(250)    | None              | NO          |                   |
+| 5                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-------------+--------------+-------------------+-------------+-------------------+
+
+
+Vote_Comment [BASE TABLE]
+
++------------------+-------------+-------------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name | column_type       | column_default    | is_nullable | extra             |
++------------------+-------------+-------------------+-------------------+-------------+-------------------+
+| 1                | comment_id  | char(36)          | None              | NO          |                   |
+| 2                | user_id     | int unsigned      | None              | NO          |                   |
+| 3                | vote_type   | smallint unsigned | None              | NO          |                   |
+| 4                | created_on  | timestamp         | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-------------+-------------------+-------------------+-------------+-------------------+
+
+
+Vote_Post [BASE TABLE]
+
++------------------+-------------+-------------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name | column_type       | column_default    | is_nullable | extra             |
++------------------+-------------+-------------------+-------------------+-------------+-------------------+
+| 1                | post_id     | char(36)          | None              | NO          |                   |
+| 2                | user_id     | int unsigned      | None              | NO          |                   |
+| 3                | vote_type   | smallint unsigned | None              | NO          |                   |
+| 4                | created_on  | timestamp         | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-------------+-------------------+-------------------+-------------+-------------------+
+
+
+Vote_Type [BASE TABLE]
+
++------------------+-------------+-------------------+----------------+-------------+----------------+
+| ordinal_position | column_name | column_type       | column_default | is_nullable | extra          |
++------------------+-------------+-------------------+----------------+-------------+----------------+
+| 1                | id          | smallint unsigned | None           | NO          | auto_increment |
+| 2                | name        | char(20)          | None           | NO          |                |
++------------------+-------------+-------------------+----------------+-------------+----------------+
+
+

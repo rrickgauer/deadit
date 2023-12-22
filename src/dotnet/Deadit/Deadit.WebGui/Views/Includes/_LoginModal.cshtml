@@ -1,0 +1,102 @@
+﻿@* Log in / sign up modal *@
+<div class="modal" id="login-container" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+         
+            <div class="modal-body">
+                <button type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-underline mb-3" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login-tab-section-login" type="button" role="tab">Log in</button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#login-tab-section-signup" type="button" role="tab">Sign up</button>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+
+                    @* Log in *@
+                    <div class="tab-pane active" id="login-tab-section-login" role="tabpanel" tabindex="0">
+                        <div class="login-form-login-container">
+                            <form class="login-form-login">
+
+                                @* Username *@
+                                <div class="login-form-input-section username input-feedback">
+                                    <label for="login-form-login-input-username" class="form-label">Username</label>
+                                    <input type="text" class="form-control input-feedback-input" id="login-form-login-input-username">
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+
+                                @* Password *@
+                                <div class="login-form-input-section password input-feedback">
+                                    <label for="login-form-login-input-password" class="form-label">Password</label>
+                                    <input type="password" class="form-control input-feedback-input" id="login-form-login-input-password">
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+
+                                @* Action buttons *@
+                                <div class="login-form-input-section d-flex justify-content-between align-items-center">
+                                    <button type="submit" class="btn btn-success btn-submit">Log in</button>
+                                    <a href="/password-reset" class="text-decoration-none">Forgot your password?</a>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+                    @* Sign up *@
+                    <div class="tab-pane" id="login-tab-section-signup" role="tabpanel" tabindex="0">
+                        <div class="login-form-signup-container">
+                            <form class="login-form-signup">
+                                
+                                @* Email *@
+                                <div class="login-form-input-section email input-feedback">
+                                    <label for="login-form-signup-input-email" class="form-label">Email address</label>
+                                    <input type="email" class="form-control input-feedback-input" id="login-form-signup-input-email" required>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+
+                                @* Username *@
+                                <div class="login-form-input-section username input-feedback">
+                                    <label for="login-form-signup-input-username" class="form-label">Username</label>
+                                    <input type="text" class="form-control input-feedback-input" id="login-form-signup-input-username" required>
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                    <p class="form-text">Choose wisely—because once you get a name, you can’t change it</p>
+                                </div>
+
+                                @* Password *@
+                                <div class="login-form-input-section password input-feedback">
+                                    <label for="login-form-signup-input-password" class="form-label">Password</label>
+                                    <input type="password" class="form-control input-feedback-input" id="login-form-signup-input-password" required minlength="1">
+                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="invalid-feedback"></div>
+                                    <p class="form-text">Create a strong password by using at least 8 characters, including a mix of uppercase and lowercase letters, numbers, and special characters</p>
+                                </div>
+
+                                @* Action buttons *@
+                                <div class="login-form-input-section d-flex">
+                                    <button type="submit" class="btn btn-success btn-submit">Sign up</button>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+      
+        </div>
+    </div>
+</div>

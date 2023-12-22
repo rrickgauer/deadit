@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "outDir": "./ts/out",
+      "allowJs": true,
+      "target": "ES6",
+      "moduleResolution": "Bundler",
+    },
+    "include": ["./ts/custom/**/*"]
+  }
