@@ -7,11 +7,8 @@ namespace Deadit.Lib.Service.Contracts;
 
 public interface IAuthService
 {
-    public Task<ViewUser?> LoginUserAsync(LoginRequestForm loginForm, ISession session);
-    public void ClearSessionData(ISession session);
-    
-    //public Task<ViewUser?> SignupUserAsync(SignupRequestForm signupForm);
+    public Task<ServiceDataResponse<ViewUser>> LoginUserAsync2(LoginRequestForm loginForm, ISession session);
     public Task<ServiceDataResponse<ViewUser>> SignupUserAsync(SignupRequestForm signupForm);
-
+    public void ClearSessionData(ISession session);
     public bool IsClientLoggedIn();
 }

@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Model;
+using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.TableView;
 
@@ -18,10 +19,12 @@ public class ViewUser : ITableView<ViewUser, User>
     [CopyToPropertyAttribute<User>(nameof(User.Username))]
     public string? Username { get; set; }
 
+    [JsonIgnore]
     [SqlColumn("password")]
     [CopyToPropertyAttribute<User>(nameof(User.Password))]
     public string? Password { get; set; }
 
+    [JsonIgnore]
     [SqlColumn("created_on")]
     [CopyToPropertyAttribute<User>(nameof(User.CreatedOn))]
     public DateTime CreatedOn { get; set; } = DateTime.Now;

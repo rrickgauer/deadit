@@ -4,9 +4,7 @@ using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Microsoft.AspNetCore.Http;
-using System.Net;
 using Deadit.Lib.Domain.Enum;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Deadit.Lib.Service.Implementations;
 
@@ -40,29 +38,23 @@ public class AuthService : IAuthService
         return false;
     }
 
-    /// <summary>
-    /// Log the user in
-    /// </summary>
-    /// <param name="loginForm"></param>
-    /// <param name="session"></param>
-    /// <returns></returns>
-    public async Task<ViewUser?> LoginUserAsync(LoginRequestForm loginForm, ISession session)
+    public async Task<ServiceDataResponse<ViewUser>> LoginUserAsync2(LoginRequestForm loginForm, ISession session)
     {
         // clear the current session data
         ClearSessionData(session);
 
-        // validate the login credentials 
-        var user = await _userService.GetUserAsync(loginForm);
-
-        if (user == null)
+        ServiceDataResponse<ViewUser> result = new()
         {
-            return null;
+            Data = await _userService.GetUserAsync(loginForm)
+        };
+
+        if (result.Data != null)
+        {
+            // store the client's ID in session
+            SetClientSessionId(session, result.Data.Id);
         }
 
-        // store the client's ID in session
-        SetClientSessionId(session, user.Id);
-
-        return user;
+        return result;
     }
 
     /// <summary>

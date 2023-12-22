@@ -11,6 +11,9 @@ export class LoginModalElements
     public loginInputUsername: HTMLInputElement = document.querySelector(LoginModalSelectors.LOGIN_INPUT_USERNAME);
     public loginInputPassword: HTMLInputElement = document.querySelector(LoginModalSelectors.LOGIN_INPUT_PASSWORD);
 
+    public feedbackLoginUsername: InputFeedback = new InputFeedback(this.loginInputUsername);
+    public feedbackLoginPassword: InputFeedback = new InputFeedback(this.loginInputPassword);
+
     public loginSubmitButton: HTMLButtonElement = this.formLogin.querySelector('.btn-submit');
     public loginSpinnerButton: SpinnerButton = new SpinnerButton(this.loginSubmitButton);
 

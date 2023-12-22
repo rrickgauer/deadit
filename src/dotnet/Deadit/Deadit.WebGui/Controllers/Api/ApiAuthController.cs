@@ -1,11 +1,11 @@
-﻿using Deadit.Lib.Auth;
-using Deadit.Lib.Domain.Errors;
+﻿using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deadit.WebGui.Controllers.Api;
+
 
 [Route("api/auth")]
 [ApiController]
@@ -21,6 +21,11 @@ public class ApiAuthController : ControllerBase
         _responseService = responseService;
     }
 
+    /// <summary>
+    /// POST: /api/auth/signup
+    /// </summary>
+    /// <param name="signupForm"></param>
+    /// <returns></returns>
     [HttpPost("signup")]
     public async Task<IActionResult> PostSignupAsync([FromForm] SignupRequestForm signupForm)
     {
@@ -35,18 +40,23 @@ public class ApiAuthController : ControllerBase
         return Created($"/users/{newUserResponse.Data?.Id}", apiResponse);
     }
 
-
+    /// <summary>
+    /// POST: /api/auth/login
+    /// </summary>
+    /// <param name="loginForm"></param>
+    /// <returns></returns>
     [HttpPost("login")]
     public async Task<IActionResult> PostLoginAsync([FromForm] LoginRequestForm loginForm)
     {
-        var user = await _authService.LoginUserAsync(loginForm, HttpContext.Session);
+        var result = await _authService.LoginUserAsync2(loginForm, HttpContext.Session);
+        var apiResponse = _responseService.GetEmptyApiResponse();
 
-        if (user == null)
+        if (!result.HasData)
         {
-            return NotFound();
+            return NotFound(apiResponse);
         }
 
-        return Ok();
+        return Ok(apiResponse);
     }
 
 }

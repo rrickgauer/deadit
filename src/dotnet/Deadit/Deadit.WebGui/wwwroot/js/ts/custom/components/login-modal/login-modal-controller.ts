@@ -37,9 +37,12 @@ export class LoginModalController
             await this.onSignupFormSubmit();
         });
 
+
         this.clearFeedbackOnKeydown(this._elements.feedbackSignupEmail);
         this.clearFeedbackOnKeydown(this._elements.feedbackSignupUsername);
         this.clearFeedbackOnKeydown(this._elements.feedbackSignupPassword);
+        this.clearFeedbackOnKeydown(this._elements.feedbackLoginUsername);
+        this.clearFeedbackOnKeydown(this._elements.feedbackLoginPassword);
     }
 
     /**
@@ -63,21 +66,19 @@ export class LoginModalController
         this._elements.loginSpinnerButton.spin();
 
         const loginModel = this.getLoginApiRequestModel();
+        const response = await this._authService.login(loginModel);
 
-        try
+        this._elements.loginSpinnerButton.reset();
+
+        if (response.successful)
         {
-            const response = await this._authService.login(loginModel);
             window.location.href = window.location.href;
         }
-        catch (error)
+        else
         {
-            alert('Error logging in. Check log');
-            console.error(error);
+            this.badLogin();
         }
-        finally
-        {
-            this._elements.loginSpinnerButton.reset();
-        }
+
     }
 
     /**
@@ -90,10 +91,23 @@ export class LoginModalController
     }
 
     /**
+     * Display error message to user
+     */
+    private badLogin = () =>
+    {
+        this._elements.feedbackLoginUsername.showInvalid('Username and password do not match');
+        this._elements.feedbackLoginPassword.showInvalid('');
+    }
+
+    /**
      * Event handler for a signup form submission event
      */
     private onSignupFormSubmit = async () =>
     {
+        // clear the current input feedbacks
+        this._elements.feedbackLoginUsername.state = InputFeebackState.None;
+        this._elements.feedbackLoginPassword.state = InputFeebackState.None;
+
         this._elements.signupSpinnerButton.spin();
 
         // gather the form input data

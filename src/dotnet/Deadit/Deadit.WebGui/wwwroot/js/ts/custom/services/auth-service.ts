@@ -8,27 +8,23 @@ import { ServiceUtilities } from "../utilities/service-utilities";
 
 export class AuthService
 {
-    
-    login = async(loginCredentials: LoginApiRequest) : Promise<string> =>  {
-        
+
+    login = async (loginCredentials: LoginApiRequest): Promise<ServiceResponse<any>> =>
+    {
         const formData = FormDataMapper.toFormData(loginCredentials);
-        
         const api = new ApiLogin();
         const response = await api.post(formData);
-        await ServiceUtilities.handleBadResponse(response);
 
-        return await response.text();
+        return await ServiceUtilities.toServiceResponse<any>(response);
     }
 
-    signup = async (signupInfo: SignupApiRequest) : Promise<ServiceResponse<any>> => {
-
+    signup = async (signupInfo: SignupApiRequest): Promise<ServiceResponse<any>> =>
+    {
         const formData = FormDataMapper.toFormData(signupInfo);
         const api = new ApiSignup();
+        const response = await api.post(formData);
 
-        const response = await api.post(formData);  
-
-        const result = await ServiceUtilities.toServiceResponse<any>(response);
-        return result;
+        return await ServiceUtilities.toServiceResponse<any>(response);
     }
 
 }

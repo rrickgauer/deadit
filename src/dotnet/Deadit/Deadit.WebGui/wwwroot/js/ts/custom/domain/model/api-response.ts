@@ -22,6 +22,7 @@ export class ServiceResponse<T>
         this.response = response;
         this.successful = successful;
     }
-
-    
 }
+
+
+

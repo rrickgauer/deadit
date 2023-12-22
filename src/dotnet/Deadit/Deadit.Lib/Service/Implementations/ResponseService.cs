@@ -58,5 +58,10 @@ public class ResponseService : IResponseService
         return messages;
     }
 
-    
+    public ApiResponse<object> GetEmptyApiResponse()
+    {
+        return new();
+    }
+
+
 }
