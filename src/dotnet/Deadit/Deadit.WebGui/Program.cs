@@ -29,6 +29,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<ITableMapperService, TableMapperService>();
 builder.Services.AddSingleton<IErrorMessageService, ErrorMessageService>();
+builder.Services.AddSingleton<IResponseService, ResponseService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IErrorMessageRepository, ErrorMessageRepository>();

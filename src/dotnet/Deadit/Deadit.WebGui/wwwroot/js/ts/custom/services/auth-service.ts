@@ -1,7 +1,7 @@
 import { ApiLogin } from "../api/api-login"
 import { ApiSignup } from "../api/api-signup";
 import { LoginApiRequest, SignupApiRequest } from "../domain/model/api-auth-models";
-import { ApiResponseBase } from "../domain/model/api-response";
+import { ApiResponseBase, ServiceResponse } from "../domain/model/api-response";
 import { FormDataMapper } from "../mappers/form-data-mapper";
 import { ServiceUtilities } from "../utilities/service-utilities";
 
@@ -20,19 +20,15 @@ export class AuthService
         return await response.text();
     }
 
-    signup = async (signupInfo: SignupApiRequest) : Promise<ApiResponseBase<number>> => {
+    signup = async (signupInfo: SignupApiRequest) : Promise<ServiceResponse<any>> => {
 
         const formData = FormDataMapper.toFormData(signupInfo);
         const api = new ApiSignup();
+
         const response = await api.post(formData);  
 
-        const data = await response.json();
-        console.log({ data });
-
-/*        await ServiceUtilities.handleBadResponse(response);*/
-
-        return data;
-/*        return await response.text();*/
+        const result = await ServiceUtilities.toServiceResponse<any>(response);
+        return result;
     }
 
 }

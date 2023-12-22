@@ -1,5 +1,7 @@
 ﻿using Deadit.Lib.Auth;
+using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,23 +13,26 @@ namespace Deadit.WebGui.Controllers.Api;
 public class ApiAuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IResponseService _responseService;
 
-    public ApiAuthController(IAuthService authService)
+    public ApiAuthController(IAuthService authService, IResponseService responseService)
     {
         _authService = authService;
+        _responseService = responseService;
     }
 
     [HttpPost("signup")]
     public async Task<IActionResult> PostSignupAsync([FromForm] SignupRequestForm signupForm)
     {
-        var newUserResponse = await _authService.SignupUserAsync(signupForm);
+        ServiceDataResponse<ViewUser> newUserResponse = await _authService.SignupUserAsync(signupForm);
+        var apiResponse = await _responseService.ToApiResponseAsync(newUserResponse);
 
         if (!newUserResponse.Successful)
         {
-            return BadRequest(newUserResponse);
+            return BadRequest(apiResponse);
         }
 
-        return Created($"/users/{newUserResponse.Data?.Id}", newUserResponse);
+        return Created($"/users/{newUserResponse.Data?.Id}", apiResponse);
     }
 
 

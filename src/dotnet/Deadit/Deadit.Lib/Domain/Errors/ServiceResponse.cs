@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Enum;
+using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.Errors;
 
@@ -6,6 +7,7 @@ public class ServiceResponse
 {
     public List<ErrorCode> Errors { get; set; } = new();
 
+    [JsonIgnore]
     public bool Successful => Errors.Count == 0;
 
     public ServiceResponse() { }
