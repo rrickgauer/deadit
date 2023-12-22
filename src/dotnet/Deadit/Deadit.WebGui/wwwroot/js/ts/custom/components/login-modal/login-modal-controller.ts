@@ -60,6 +60,8 @@ export class LoginModalController
      */
     private onLoginFormSubmit = async () =>
     {
+        this._elements.loginSpinnerButton.spin();
+
         const loginModel = this.getLoginApiRequestModel();
 
         try
@@ -71,6 +73,10 @@ export class LoginModalController
         {
             alert('Error logging in. Check log');
             console.error(error);
+        }
+        finally
+        {
+            this._elements.loginSpinnerButton.reset();
         }
     }
 
@@ -88,11 +94,15 @@ export class LoginModalController
      */
     private onSignupFormSubmit = async () =>
     {
+        this._elements.signupSpinnerButton.spin();
+
         // gather the form input data
         const userData = new SignupApiRequest(this._elements.signupInputEmail.value, this._elements.signupInputUsername.value, this._elements.signupInputPassword.value);
 
         // send it over to the API to create their account
         const result = await this._authService.signup(userData);
+
+        this._elements.signupSpinnerButton.reset();
 
         // handle the api response
         if (result.successful)
