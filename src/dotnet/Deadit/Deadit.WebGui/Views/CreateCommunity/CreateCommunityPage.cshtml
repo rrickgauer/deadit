@@ -8,9 +8,61 @@
     <partial name="~/Views/Includes/_Navbar.cshtml" />
     <partial name="~/Views/Includes/_LoginModal.cshtml" />
 
+
+
+
     <div class="container mt-3">
         <h1>Create a community</h1>
     </div>
+
+
+    <div class="container mt-3">
+
+        <div class="create-community-form-container">
+
+            <form class="create-community-form">
+
+                @* Name *@
+                <div class="create-community-form-input-section input-feedback">
+                    <label for="create-community-form-input-name" class="form-label">Name</label>
+                    <input type="text" class="form-control input-feeback-input" id="create-community-form-input-name" required maxlength="50" minlength="3" />
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback"></div>
+                    <p class="form-text">Community names must be between 3–50 characters, and can only contain letters, numbers, or underscores.</p>
+                </div>
+
+                @* Title *@
+                <div class="create-community-form-input-section input-feedback">
+                    <label for="create-community-form-input-title" class="form-label">Title</label>
+                    <input type="text" class="form-control input-feeback-input" id="create-community-form-input-title" required maxlength="100" />
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback"></div>
+                    <p class="form-text">Titles must be between 1–100 characters.</p>
+                </div>
+
+                @* Description *@
+                <div class="create-community-form-input-section input-feedback">
+                    <label for="create-community-form-input-description" class="form-label">Description</label>
+                    <textarea class="form-control input-feeback-input" id="create-community-form-input-description" rows="10" maxlength="200"></textarea>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback"></div>
+                    <p class="form-text">This is how new members come to understand your community.</p>
+                </div>
+
+                <div class="create-community-form-input-section">
+                    <button type="submit" class="btn btn-success btn-submit">Create</button>
+                </div>
+
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
 
 
     <partial name="~/Views/Includes/_Footer.cshtml" />
