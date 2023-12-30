@@ -35,6 +35,7 @@ class RollupConfig
 const configs = [    
     new RollupConfig('ts/custom/pages/home/index.ts', 'dist/home.bundle.js'),
     new RollupConfig('ts/custom/pages/communities/communities-page/index.ts', 'dist/communities-page.bundle.js'),
+    new RollupConfig('ts/custom/pages/communities/create-community/index.ts', 'dist/create-community.bundle.js'),
 ];
 
 
