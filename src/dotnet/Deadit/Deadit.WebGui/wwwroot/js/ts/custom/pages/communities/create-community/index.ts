@@ -1,33 +1,23 @@
 import { LoginModalController } from "../../../components/login-modal/login-modal-controller";
 import { NativeEvents } from "../../../domain/constants/native-events";
 import { PageUtilities } from "../../../utilities/page-utilities";
+import { CreateCommunityController } from "./create-community-controller";
 
 
+
+/**
+ * Main page logic
+ */
 PageUtilities.pageReady(async () =>
 {
     const loginModal = LoginModalController.setupPage();
-    testing();
-    
+    run();
 });
 
-
-function testing()
+function run()
 {
-    /*    document.querySelector()*/
-
-    /*    create-community-form*/
-
-    const form: HTMLFormElement = document.querySelector('.create-community-form');
-
-    form.addEventListener(NativeEvents.Submit, async (e) =>
-    {
-        e.preventDefault();
-
-        if (confirm('Clear form?'))
-        {
-            form.reset();
-        }
-    });
+    const controller = new CreateCommunityController();
+    controller.control();
 }
 
 

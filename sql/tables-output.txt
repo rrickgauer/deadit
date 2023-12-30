@@ -105,6 +105,21 @@ User [BASE TABLE]
 +------------------+-------------+--------------+-------------------+-------------+-------------------+
 
 
+View_Community [VIEW]
+
++------------------+-----------------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name           | column_type  | column_default    | is_nullable | extra             |
++------------------+-----------------------+--------------+-------------------+-------------+-------------------+
+| 1                | id                    | int unsigned | 0                 | YES         |                   |
+| 2                | community_name        | char(50)     | None              | YES         |                   |
+| 3                | community_title       | char(100)    | None              | YES         |                   |
+| 4                | community_owner_id    | int unsigned | None              | YES         |                   |
+| 5                | community_description | char(200)    | None              | YES         |                   |
+| 6                | community_created_on  | timestamp    | CURRENT_TIMESTAMP | YES         | DEFAULT_GENERATED |
+| 7                | count_members         | bigint       | None              | YES         |                   |
++------------------+-----------------------+--------------+-------------------+-------------+-------------------+
+
+
 View_User [VIEW]
 
 +------------------+-------------+--------------+-------------------+-------------+-------------------+

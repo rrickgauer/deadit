@@ -16,7 +16,6 @@ public class InternalApiAuthFilter : IAsyncActionFilter
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-
         await next();   
     }
 }

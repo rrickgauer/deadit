@@ -38,7 +38,7 @@ public class AuthService : IAuthService
         return false;
     }
 
-    public async Task<ServiceDataResponse<ViewUser>> LoginUserAsync2(LoginRequestForm loginForm, ISession session)
+    public async Task<ServiceDataResponse<ViewUser>> LoginUserAsync(LoginRequestForm loginForm, ISession session)
     {
         // clear the current session data
         ClearSessionData(session);
@@ -71,7 +71,7 @@ public class AuthService : IAuthService
     /// </summary>
     /// <param name="session"></param>
     /// <param name="id"></param>
-    private void SetClientSessionId(ISession session, int? id) 
+    private void SetClientSessionId(ISession session, uint? id) 
     {
         SessionManager sessionManager = new(session)
         {

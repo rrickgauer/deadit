@@ -9,11 +9,11 @@ public class ViewUserMapper : TableMapper<ViewUser>
     {
         ViewUser user = new()
         {
-            Id        = row.Field<int?>(GetColumnName(nameof(ViewUser.Id))),
+            Id        = (uint?)row.Field<int?>(GetColumnName(nameof(ViewUser.Id))),
             Email     = row.Field<string?>(GetColumnName(nameof(ViewUser.Email))),
             Username  = row.Field<string?>(GetColumnName(nameof(ViewUser.Username))),
             Password  = row.Field<string?>(GetColumnName(nameof(ViewUser.Password))),
-            CreatedOn = row.Field<DateTime>(GetColumnName(nameof(ViewUser.CreatedOn)))
+            CreatedOn = row.Field<DateTime>(GetColumnName(nameof(ViewUser.CreatedOn))),
         };
 
         return user;

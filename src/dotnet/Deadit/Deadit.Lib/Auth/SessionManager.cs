@@ -8,13 +8,13 @@ public class SessionManager
 {
     private ISession Session { get; }
 
-    public int? ClientId
+    public uint? ClientId
     {
         get
         {
             var data = Session.GetString(SessionKeys.AuthUserId);
 
-            if (int.TryParse(data, out var userId))
+            if (uint.TryParse(data, out var userId))
             {
                 return userId;
             }

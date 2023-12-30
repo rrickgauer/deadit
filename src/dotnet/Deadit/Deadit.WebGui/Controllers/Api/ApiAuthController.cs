@@ -48,7 +48,7 @@ public class ApiAuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> PostLoginAsync([FromForm] LoginRequestForm loginForm)
     {
-        var result = await _authService.LoginUserAsync2(loginForm, HttpContext.Session);
+        var result = await _authService.LoginUserAsync(loginForm, HttpContext.Session);
         var apiResponse = _responseService.GetEmptyApiResponse();
 
         if (!result.HasData)

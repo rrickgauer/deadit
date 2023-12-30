@@ -2,7 +2,6 @@
 
 namespace Deadit.Lib.Domain.Forms;
 
-
 public class LoginRequestForm
 {
     [BindRequired]

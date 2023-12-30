@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
 -- ------------------------------------------------------
@@ -65,7 +65,7 @@ CREATE TABLE `Community` (
   UNIQUE KEY `name` (`name`),
   KEY `owner_id` (`owner_id`),
   CONSTRAINT `Community_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `User` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -84,6 +84,22 @@ CREATE TABLE `Community_Membership` (
   CONSTRAINT `Community_Membership_ibfk_1` FOREIGN KEY (`community_id`) REFERENCES `Community` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `Community_Membership_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `User` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Error_Message`
+--
+
+DROP TABLE IF EXISTS `Error_Message`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Error_Message` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `message` char(200) NOT NULL,
+  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,8 +191,42 @@ CREATE TABLE `User` (
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary view structure for view `View_Community`
+--
+
+DROP TABLE IF EXISTS `View_Community`;
+/*!50001 DROP VIEW IF EXISTS `View_Community`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `View_Community` AS SELECT 
+ 1 AS `id`,
+ 1 AS `community_name`,
+ 1 AS `community_title`,
+ 1 AS `community_owner_id`,
+ 1 AS `community_description`,
+ 1 AS `community_created_on`,
+ 1 AS `count_members`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `View_User`
+--
+
+DROP TABLE IF EXISTS `View_User`;
+/*!50001 DROP VIEW IF EXISTS `View_User`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `View_User` AS SELECT 
+ 1 AS `id`,
+ 1 AS `email`,
+ 1 AS `username`,
+ 1 AS `password`,
+ 1 AS `created_on`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `Vote_Comment`
@@ -242,6 +292,48 @@ CREATE TABLE `Vote_Type` (
 --
 -- Dumping routines for database 'Deadit_Dev'
 --
+
+--
+-- Current Database: `Deadit_Dev`
+--
+
+USE `Deadit_Dev`;
+
+--
+-- Final view structure for view `View_Community`
+--
+
+/*!50001 DROP VIEW IF EXISTS `View_Community`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `View_Community` AS select `c`.`id` AS `id`,`c`.`name` AS `community_name`,`c`.`title` AS `community_title`,`c`.`owner_id` AS `community_owner_id`,`c`.`description` AS `community_description`,`c`.`created_on` AS `community_created_on`,(select count(0) from `Community_Membership` `cm` where (`cm`.`community_id` = `c`.`id`)) AS `count_members` from `Community` `c` order by `c`.`id` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `View_User`
+--
+
+/*!50001 DROP VIEW IF EXISTS `View_User`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `View_User` AS select `u`.`id` AS `id`,`u`.`email` AS `email`,`u`.`username` AS `username`,`u`.`password` AS `password`,`u`.`created_on` AS `created_on` from `User` `u` order by `u`.`id` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -252,8 +344,8 @@ CREATE TABLE `Vote_Type` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-08 14:28:01
--- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
+-- Dump completed on 2023-12-30 14:37:41
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
 -- ------------------------------------------------------
@@ -291,6 +383,17 @@ LOCK TABLES `Post_Type` WRITE;
 REPLACE INTO `Post_Type` VALUES (1,'Text'),(2,'Link');
 /*!40000 ALTER TABLE `Post_Type` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping data for table `Error_Message`
+--
+-- ORDER BY:  `id`
+
+LOCK TABLES `Error_Message` WRITE;
+/*!40000 ALTER TABLE `Error_Message` DISABLE KEYS */;
+REPLACE INTO `Error_Message` VALUES (1,'The email is already registered with another account. Please choose a different one.','2023-12-13 20:40:05'),(2,'The username is already taken.','2023-12-13 20:40:05'),(3,'The password does not meet the criteria.','2023-12-13 20:40:05'),(4,'The community name contains an invalid character','2023-12-30 07:36:47'),(5,'The community name already exists','2023-12-30 07:39:45');
+/*!40000 ALTER TABLE `Error_Message` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -301,4 +404,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-08 14:28:05
+-- Dump completed on 2023-12-30 14:37:47

@@ -1,4 +1,4 @@
-import { ApiResponseBase, ServiceResponse } from "../domain/model/api-response";
+import { ApiResponse, ServiceResponse } from "../domain/model/api-response";
 
 export class ServiceUtilities
 {
@@ -14,7 +14,7 @@ export class ServiceUtilities
 
     static async toServiceResponse<T>(response: Response) {
 
-        const data: ApiResponseBase<T> = await response.json();
+        const data: ApiResponse<T> = await response.json();
         const result = new ServiceResponse<T>(data, response.ok);
 
         return result;

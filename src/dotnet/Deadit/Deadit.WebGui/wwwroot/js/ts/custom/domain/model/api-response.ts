@@ -6,7 +6,7 @@ export class ErrorMessage
 }
 
 
-export class ApiResponseBase<T>
+export class ApiResponse<T>
 {
     public errors: ErrorMessage[] = [];
     public data?: T = null;
@@ -15,10 +15,10 @@ export class ApiResponseBase<T>
 
 export class ServiceResponse<T>
 {
-    public response: ApiResponseBase<T>;
+    public response: ApiResponse<T>;
     public successful: boolean;
 
-    constructor(response: ApiResponseBase<T>, successful: boolean=true) {
+    constructor(response: ApiResponse<T>, successful: boolean=true) {
         this.response = response;
         this.successful = successful;
     }
