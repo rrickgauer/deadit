@@ -65,7 +65,7 @@ CREATE TABLE `Community` (
   UNIQUE KEY `name` (`name`),
   KEY `owner_id` (`owner_id`),
   CONSTRAINT `Community_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `User` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE `Error_Message` (
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -344,7 +344,7 @@ USE `Deadit_Dev`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-30 14:37:41
+-- Dump completed on 2024-01-04 22:37:24
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
@@ -391,7 +391,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Error_Message` WRITE;
 /*!40000 ALTER TABLE `Error_Message` DISABLE KEYS */;
-REPLACE INTO `Error_Message` VALUES (1,'The email is already registered with another account. Please choose a different one.','2023-12-13 20:40:05'),(2,'The username is already taken.','2023-12-13 20:40:05'),(3,'The password does not meet the criteria.','2023-12-13 20:40:05'),(4,'The community name contains an invalid character','2023-12-30 07:36:47'),(5,'The community name already exists','2023-12-30 07:39:45');
+REPLACE INTO `Error_Message` VALUES (1,'The email is already registered with another account. Please choose a different one.','2023-12-13 20:40:05'),(2,'The username is already taken.','2023-12-13 20:40:05'),(3,'The password does not meet the criteria.','2023-12-13 20:40:05'),(4,'The community name contains an invalid character','2023-12-30 07:36:47'),(5,'The community name already exists','2023-12-30 07:39:45'),(6,'Validation failed','2024-01-05 01:50:30');
 /*!40000 ALTER TABLE `Error_Message` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -404,4 +404,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-30 14:37:47
+-- Dump completed on 2024-01-04 22:37:28
