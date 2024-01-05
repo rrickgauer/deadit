@@ -2,6 +2,7 @@
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
+using Deadit.WebGui.Controllers.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deadit.WebGui.Controllers.Api;
@@ -9,9 +10,10 @@ namespace Deadit.WebGui.Controllers.Api;
 
 [Route("api/auth")]
 [ApiController]
-//[ServiceFilter(typeof(InternalApiAuthFilter))]
-public class ApiAuthController : ControllerBase
+public class ApiAuthController : ControllerBase, IControllerName
 {
+    public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiAuthController));
+
     private readonly IAuthService _authService;
     private readonly IResponseService _responseService;
 

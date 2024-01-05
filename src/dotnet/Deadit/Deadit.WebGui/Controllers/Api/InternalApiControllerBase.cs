@@ -8,5 +8,4 @@ public class InternalApiControllerBase : ControllerBase
 {
     protected SessionManager SessionManager => new(Request.HttpContext.Session);
     protected uint ClientId => SessionManager.ClientId.Value;
-
 }

@@ -1,14 +1,17 @@
 ﻿using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Filters;
 using Deadit.Lib.Service.Contracts;
+using Deadit.WebGui.Controllers.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deadit.WebGui.Controllers.Api;
 
 [ApiController]
 [Route("api/communities")]
-public class ApiCommunityController : InternalApiControllerBase
+public class ApiCommunityController : InternalApiControllerBase, IControllerName
 {
+    public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiCommunityController));
+
     private readonly ICommunityService _communityService;
     private readonly IResponseService _responseService;
     
@@ -18,6 +21,8 @@ public class ApiCommunityController : InternalApiControllerBase
         _communityService = communityService;
         _responseService = responseService;
     }
+
+    
 
     /// <summary>
     /// POST: /communities

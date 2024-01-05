@@ -24,15 +24,21 @@ builder.Services
     options.SuppressMapClientErrors = true;
 });
 
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<HttpResponseExceptionFilter>();
+    options.Filters.Add<ValidationErrorFilter>();
+});
 
-builder.Services.AddDistributedMemoryCache();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
-    //options.SerializerOptions.Converters.Add()
     options.SerializerOptions.WriteIndented = true;
 });
 
+
+// session management
+builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
@@ -77,14 +83,6 @@ builder.Services.AddScoped<InternalApiAuthFilter>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 #endregion
-
-builder.Services.AddControllersWithViews(options =>
-{
-    options.Filters.Add<HttpResponseExceptionFilter>();
-    options.Filters.Add<ValidationErrorFilter>();
-});
-
-
 
 
 
