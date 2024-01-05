@@ -30,10 +30,8 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     //options.SerializerOptions.Converters.Add()
+    options.SerializerOptions.WriteIndented = true;
 });
-
-
-
 
 
 builder.Services.AddSession(options =>

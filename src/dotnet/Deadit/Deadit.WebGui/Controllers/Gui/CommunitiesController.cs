@@ -27,4 +27,16 @@ public class CommunitiesController : Controller
         return View("Views/CreateCommunity/CreateCommunityPage.cshtml");
     }
 
+    [HttpGet("{communityName}")]
+    public async Task<IActionResult> ViewCommunityPageAsync([FromRoute] string communityName)
+    {
+        var output = new
+        {
+            CommunityName = communityName,
+            Bitch = true,
+        };
+
+        return Ok(output);
+    }
+
 }
