@@ -5,6 +5,7 @@ import { LoginModalSelectors } from "./LoginModalSelectors";
 
 export class LoginModalElements
 {
+    public modalContainer: HTMLDivElement = document.querySelector(LoginModalSelectors.CONTAINER);
 
     // login form
     public formLogin: HTMLFormElement = document.querySelector(LoginModalSelectors.FORM_LOGIN);

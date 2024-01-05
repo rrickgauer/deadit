@@ -19,12 +19,22 @@ export class LoginModalController
         this.addListeners();
     }
 
+
+    public openModal = () =>
+    {
+        /*        alert('open modal');*/
+
+        
+
+
+    }
+
+
     /**
      * Add the event listeners to the DOM
      */
     private addListeners = () =>
     {
-
         this._elements.formLogin.addEventListener(NativeEvents.Submit, async (e) =>
         {
             e.preventDefault();
@@ -121,13 +131,35 @@ export class LoginModalController
         // handle the api response
         if (result.successful)
         {
-            window.location.href = window.location.href;
+            this.handleSuccessfulSignup();
+            
         }
         else
         {
             this.handleBadSignup(result);
         }
     }
+
+
+    private handleSuccessfulSignup = () =>
+    {
+        const url = new URL(window.location.href);
+
+        const destinationUrlParm = url.searchParams.get('destination');
+
+        if (destinationUrlParm === null)
+        {
+            window.location.href = window.location.href;
+        }
+        else
+        {
+            window.location.href = destinationUrlParm;
+        }
+    }
+
+
+
+
 
     /**
      * Something is fucked up

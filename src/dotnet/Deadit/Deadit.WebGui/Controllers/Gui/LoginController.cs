@@ -17,6 +17,6 @@ public class LoginController : Controller, IControllerName
     [ActionName(nameof(LoginPageAsync))]
     public async Task<IActionResult> LoginPageAsync([FromQuery] string? dest)
     {
-        return Ok("login page");
+        return View("Views/Login/LoginPage.cshtml");
     }
 }
