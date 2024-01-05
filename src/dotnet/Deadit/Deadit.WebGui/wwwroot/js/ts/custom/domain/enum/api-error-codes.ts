@@ -10,4 +10,6 @@ export enum ApiErrorCode
     CreateCommunityNameTaken = 5,
 
     ValidationError = 6,
+
+    CreateCommunityNameBanned = 7,
 }

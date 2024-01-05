@@ -14,11 +14,13 @@ public class CommunityService : ICommunityService
 
     private readonly ICommunityRepository _communityRepository;
     private readonly ITableMapperService _tableMapperService;
+    private readonly IBannedCommunityNameService _bannedCommunityService;
 
-    public CommunityService(ICommunityRepository communityRepository, ITableMapperService tableMapperService)
+    public CommunityService(ICommunityRepository communityRepository, ITableMapperService tableMapperService, IBannedCommunityNameService bannedCommunityService)
     {
         _communityRepository = communityRepository;
         _tableMapperService = tableMapperService;
+        _bannedCommunityService = bannedCommunityService;
     }
 
     public async Task<ServiceDataResponse<ViewCommunity>> CreateCommunityAsync(CreateCommunityRequestForm form, uint userId)
@@ -59,6 +61,14 @@ public class CommunityService : ICommunityService
         if (communityNameTaken)
         {
             response.Add(ErrorCode.CreateCommunityNameTaken);
+        }
+
+        // ensure the name isn't banned
+        var communityNameIsBanned = (await _bannedCommunityService.IsBannedCommunityNameAsync(form.Name)).Data;
+
+        if (communityNameIsBanned)
+        {
+            response.Add(ErrorCode.CreateCommunityNameBanned);
         }
 
         return response;

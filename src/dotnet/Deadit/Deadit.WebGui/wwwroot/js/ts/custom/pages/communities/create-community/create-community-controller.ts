@@ -94,6 +94,10 @@ export class CreateCommunityController
                 case ApiErrorCode.CreateCommunityInvalidNameCharacter:
                     nameErrorMessage += errorMessage.message;
                     break;
+
+                case ApiErrorCode.CreateCommunityNameBanned:
+                    nameErrorMessage += errorMessage.message;
+                    break;
             }
         }
 

@@ -10,4 +10,6 @@ public enum ErrorCode : int
     CreateCommunityNameTaken = 5,
 
     ValidationError = 6,
+
+    CreateCommunityNameBanned = 7,
 }

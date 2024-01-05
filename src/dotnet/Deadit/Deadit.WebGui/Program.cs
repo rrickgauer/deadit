@@ -68,12 +68,14 @@ else
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICommunityService, CommunityService>();
+builder.Services.AddScoped<IBannedCommunityNameService, BannedCommunityNameService>();
 builder.Services.AddSingleton<ITableMapperService, TableMapperService>();
 builder.Services.AddSingleton<IErrorMessageService, ErrorMessageService>();
 builder.Services.AddSingleton<IResponseService, ResponseService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
+builder.Services.AddScoped<IBannedCommunityNameRepository, BannedCommunityNameRepository>();
 builder.Services.AddSingleton<IErrorMessageRepository, ErrorMessageRepository>();
 
 builder.Services.AddTransient<DatabaseConnection>();
