@@ -59,8 +59,6 @@ export class LoginForm
 
         if (response.successful)
         {
-            /*            window.location.href = window.location.href;*/
-
             SuccessfulLoginEvent.invoke(this);
         }
         else

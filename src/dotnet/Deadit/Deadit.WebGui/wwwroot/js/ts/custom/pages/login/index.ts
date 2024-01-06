@@ -1,25 +1,15 @@
 
-
-import { LoginModal } from "../../components/login-modal/login-modal";
-import { SuccessfulLoginEvent } from "../../domain/events/events";
 import { PageUtilities } from "../../utilities/page-utilities";
+import { LoginController } from "./login-controller";
 
 
 PageUtilities.pageReady(() =>
 {
-
-    const loginModal = new LoginModal(false);
-
-    addListeners();
+    const controller = new LoginController();
+    controller.control();
 });
 
 
-function addListeners()
-{
-    SuccessfulLoginEvent.addListener((e) =>
-    {
-        alert('from main page');
-    });
-}
+
 
 

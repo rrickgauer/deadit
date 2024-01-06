@@ -1,6 +1,7 @@
 import { NativeEvents } from "../../domain/constants/native-events";
 import { ApiErrorCode } from "../../domain/enum/api-error-codes";
 import { InputFeebackState } from "../../domain/enum/input-feedback-state";
+import { SuccessfulSignupEvent } from "../../domain/events/events";
 import { InputFeedback } from "../../domain/helpers/input-feedback";
 import { SignupApiRequest } from "../../domain/model/api-auth-models";
 import { ErrorMessage, ServiceResponse } from "../../domain/model/api-response";
@@ -65,29 +66,11 @@ export class SignupForm
         // handle the api response
         if (result.successful)
         {
-            this.handleSuccessfulSignup();
-
+            SuccessfulSignupEvent.invoke(this);
         }
         else
         {
             this.handleBadSignup(result);
-        }
-    }
-
-
-    private handleSuccessfulSignup = () =>
-    {
-        const url = new URL(window.location.href);
-
-        const destinationUrlParm = url.searchParams.get('destination');
-
-        if (destinationUrlParm === null)
-        {
-            window.location.href = window.location.href;
-        }
-        else
-        {
-            window.location.href = destinationUrlParm;
         }
     }
 

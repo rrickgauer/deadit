@@ -1,5 +1,5 @@
 import { BaseEventDetail } from "../../domain/events/custom-events";
-import { SuccessfulLoginEvent } from "../../domain/events/events";
+import { SuccessfulLoginEvent, SuccessfulSignupEvent } from "../../domain/events/events";
 import { LoginForm } from "../login-form/login-form";
 import { SignupForm } from "../signup-form/signup-form";
 import { LoginModalElements } from "./login-modal-elements";
@@ -27,13 +27,24 @@ export class LoginModal
     {
         if (this._useListeners)
         {
-            SuccessfulLoginEvent.addListener(this.onSuccessfulLogin);
-        }
-        
+            SuccessfulLoginEvent.addListener(this.handleSuccessfulFormSubmission);
+            SuccessfulSignupEvent.addListener(this.handleSuccessfulFormSubmission);
+        }   
     }
 
-    private onSuccessfulLogin = (data: BaseEventDetail) =>
+    private handleSuccessfulFormSubmission = (data: BaseEventDetail) =>
     {
-        window.location.href = window.location.href;
+        const url = new URL(window.location.href);
+
+        const destinationUrlParm = url.searchParams.get('destination');
+
+        if (destinationUrlParm === null)
+        {
+            window.location.href = window.location.href;
+        }
+        else
+        {
+            window.location.href = destinationUrlParm;
+        }
     }
 }
