@@ -5,6 +5,7 @@ using Deadit.Lib.Repository.Implementations;
 using Deadit.Lib.Repository.Other;
 using Deadit.Lib.Service.Contracts;
 using Deadit.Lib.Service.Implementations;
+using Deadit.WebGui.Filter;
 
 bool isProduction = true;
 
@@ -77,6 +78,7 @@ builder.Services.AddSingleton<IErrorMessageRepository, ErrorMessageRepository>()
 builder.Services.AddTransient<DatabaseConnection>();
 
 builder.Services.AddScoped<InternalApiAuthFilter>();
+builder.Services.AddScoped<LoginFirstRedirectFilter>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

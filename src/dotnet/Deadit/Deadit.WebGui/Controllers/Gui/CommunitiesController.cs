@@ -1,7 +1,6 @@
 ﻿using Deadit.Lib.Service.Contracts;
-using Deadit.WebGui.Controllers.Api;
 using Deadit.WebGui.Controllers.Contracts;
-using Microsoft.AspNetCore.Http.Extensions;
+using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deadit.WebGui.Controllers.Gui;
@@ -37,16 +36,9 @@ public class CommunitiesController : Controller, IControllerName
     /// </summary>
     /// <returns></returns>
     [HttpGet("create")]
+    [ServiceFilter(typeof(LoginFirstRedirectFilter))]
     public async Task<IActionResult> CreateCommunityPageAsync()
     {
-        if (!IsClientLoggedIn)
-        {
-            return RedirectToAction(nameof(LoginController.LoginPageAsync), LoginController.ControllerRedirectName, new
-            {
-                destination = Request.GetEncodedUrl(),
-            });
-        }
-
         return View("Views/CreateCommunity/CreateCommunityPage.cshtml");
     }
 

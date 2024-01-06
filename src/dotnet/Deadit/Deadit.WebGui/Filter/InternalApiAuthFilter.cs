@@ -3,7 +3,7 @@ using Deadit.Lib.Domain.Errors;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
-namespace Deadit.Lib.Filter;
+namespace Deadit.WebGui.Filter;
 
 public class InternalApiAuthFilter : IAsyncActionFilter
 {
