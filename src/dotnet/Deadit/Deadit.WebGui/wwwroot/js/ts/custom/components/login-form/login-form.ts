@@ -1,5 +1,6 @@
 import { NativeEvents } from "../../domain/constants/native-events";
 import { InputFeebackState } from "../../domain/enum/input-feedback-state";
+import { SuccessfulLoginEvent } from "../../domain/events/events";
 import { InputFeedback } from "../../domain/helpers/input-feedback";
 import { LoginApiRequest } from "../../domain/model/api-auth-models";
 import { AuthService } from "../../services/auth-service";
@@ -58,7 +59,9 @@ export class LoginForm
 
         if (response.successful)
         {
-            window.location.href = window.location.href;
+            /*            window.location.href = window.location.href;*/
+
+            SuccessfulLoginEvent.invoke(this);
         }
         else
         {
