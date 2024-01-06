@@ -1,6 +1,6 @@
 ﻿using Deadit.Lib.Domain.Enum;
-using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Service.Contracts;
 
 namespace Deadit.Lib.Service.Implementations;

@@ -103,7 +103,7 @@ public class DatabaseConnection
 
 
 
-    public async Task<int?> ModifyWithRowIdAsync(MySqlCommand command)
+    public async Task<uint?> ModifyWithRowIdAsync(MySqlCommand command)
     {
         var numRecords = await ModifyAsync(command);
 
@@ -113,7 +113,7 @@ public class DatabaseConnection
         }
 
         
-        if (!int.TryParse(command.LastInsertedId.ToString(), out var rowId))
+        if (!uint.TryParse(command.LastInsertedId.ToString(), out var rowId))
         {
             return null;
         }
@@ -149,6 +149,12 @@ public class DatabaseConnection
     /// <returns></returns>
     private MySqlConnection GetNewConnection()
     {
+
+        var sss = new MySqlConnection(ConnectionString)
+        {
+            
+        };
+
         return new MySqlConnection(ConnectionString);
     }
 

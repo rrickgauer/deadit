@@ -4,6 +4,7 @@ export const URL_PREFIX = '/api';
 export enum ApiEndpoints {
     LOGIN = `${URL_PREFIX}/auth/login`,
     SIGNUP = `${URL_PREFIX}/auth/signup`,
+    COMMUNITY = `${URL_PREFIX}/communities`,
 }
 
 export enum HttpMethods {

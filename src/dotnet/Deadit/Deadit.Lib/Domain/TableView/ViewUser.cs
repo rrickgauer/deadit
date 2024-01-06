@@ -9,7 +9,7 @@ public class ViewUser : ITableView<ViewUser, User>
 {
     [SqlColumn("id")]
     [CopyToPropertyAttribute<User>(nameof(User.Id))]
-    public int? Id { get; set; }
+    public uint? Id { get; set; }
 
     [SqlColumn("email")]
     [CopyToPropertyAttribute<User>(nameof(User.Email))]

@@ -1,36 +1,27 @@
-﻿
 import { NativeEvents } from "../../domain/constants/native-events";
-import { InputFeebackState } from "../../domain/enum/InputFeebackState";
 import { ApiErrorCode } from "../../domain/enum/api-error-codes";
+import { InputFeebackState } from "../../domain/enum/input-feedback-state";
+import { SuccessfulSignupEvent } from "../../domain/events/events";
 import { InputFeedback } from "../../domain/helpers/input-feedback";
-import { LoginApiRequest, SignupApiRequest } from "../../domain/model/api-auth-models";
+import { SignupApiRequest } from "../../domain/model/api-auth-models";
 import { ErrorMessage, ServiceResponse } from "../../domain/model/api-response";
 import { AuthService } from "../../services/auth-service";
-import { LoginModalElements } from "./LoginModalElements";
+import { SignupFormElements } from "./signup-form-elements";
 
-
-export class LoginModalController
+export class SignupForm
 {
-    private _elements = new LoginModalElements();
+    private _elements: SignupFormElements;
     private _authService = new AuthService();
 
-    public init = () =>
+    constructor(form: HTMLFormElement)
     {
+        this._elements = new SignupFormElements(form);
         this.addListeners();
     }
 
-    /**
-     * Add the event listeners to the DOM
-     */
+
     private addListeners = () =>
     {
-
-        this._elements.formLogin.addEventListener(NativeEvents.Submit, async (e) =>
-        {
-            e.preventDefault();
-            await this.onLoginFormSubmit();
-        });
-
         this._elements.formSignup.addEventListener(NativeEvents.Submit, async (e) =>
         {
             e.preventDefault();
@@ -41,8 +32,6 @@ export class LoginModalController
         this.clearFeedbackOnKeydown(this._elements.feedbackSignupEmail);
         this.clearFeedbackOnKeydown(this._elements.feedbackSignupUsername);
         this.clearFeedbackOnKeydown(this._elements.feedbackSignupPassword);
-        this.clearFeedbackOnKeydown(this._elements.feedbackLoginUsername);
-        this.clearFeedbackOnKeydown(this._elements.feedbackLoginPassword);
     }
 
     /**
@@ -57,57 +46,13 @@ export class LoginModalController
         });
     }
 
-    /**
-     * User tried to login.
-     * Event handler for login form submission event
-     */
-    private onLoginFormSubmit = async () =>
-    {
-        this._elements.loginSpinnerButton.spin();
-
-        const loginModel = this.getLoginApiRequestModel();
-        const response = await this._authService.login(loginModel);
-
-        this._elements.loginSpinnerButton.reset();
-
-        if (response.successful)
-        {
-            window.location.href = window.location.href;
-        }
-        else
-        {
-            this.badLogin();
-        }
-
-    }
-
-    /**
-     * Create a new LoginApiRequest object
-     * @returns
-     */
-    private getLoginApiRequestModel = () =>
-    {
-        return new LoginApiRequest(this._elements.loginInputUsername.value, this._elements.loginInputPassword.value);
-    }
-
-    /**
-     * Display error message to user
-     */
-    private badLogin = () =>
-    {
-        this._elements.feedbackLoginUsername.showInvalid('Username and password do not match');
-        this._elements.feedbackLoginPassword.showInvalid('');
-    }
 
     /**
      * Event handler for a signup form submission event
      */
     private onSignupFormSubmit = async () =>
     {
-        // clear the current input feedbacks
-        this._elements.feedbackLoginUsername.state = InputFeebackState.None;
-        this._elements.feedbackLoginPassword.state = InputFeebackState.None;
-
+        // disable the signup submit button
         this._elements.signupSpinnerButton.spin();
 
         // gather the form input data
@@ -121,7 +66,7 @@ export class LoginModalController
         // handle the api response
         if (result.successful)
         {
-            window.location.href = window.location.href;
+            SuccessfulSignupEvent.invoke(this);
         }
         else
         {
@@ -175,18 +120,4 @@ export class LoginModalController
         this._elements.feedbackSignupPassword.state = InputFeebackState.None;
     }
 
-
-    /**
-     * Setup a new LoginModalController instance for the current webpage
-     * @returns an instantiated LoginModalController
-     */
-    static setupPage = () : LoginModalController =>
-    {
-        const modal = new LoginModalController();
-        modal.init();
-
-        return modal;
-    }
 }
-
-

@@ -1,0 +1,31 @@
+﻿<form class="login-form-login">
+    <fieldset>
+        @* Username *@
+        <div class="login-form-input-section username input-feedback">
+            <label class="form-label-container">
+                <div class="form-label">Username</div>
+                <input type="text" class="form-control input-feedback-input" required />
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback"></div>
+            </label>
+        </div>
+
+
+        @* Password *@
+        <div class="login-form-input-section password input-feedback">
+            <label class="form-label-container">
+                <div class="form-label">Password</div>
+                <input type="password" class="form-control input-feedback-input" required />
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback"></div>
+            </label>
+        </div>
+
+        @* Action buttons *@
+        <div class="login-form-input-section d-flex justify-content-between align-items-center">
+            <button type="submit" class="btn btn-success btn-submit">Log in</button>
+            <a href="/password-reset" class="text-decoration-none">Forgot your password?</a>
+        </div>
+
+    </fieldset>
+</form>

@@ -19,7 +19,7 @@ mysqldump -u main -h 104.225.208.163 -p ^
 --replace ^
 --order-by-primary ^
 --result-file "C:\xampp\htdocs\files\deadit\sql\ddl\.data.sql" ^
-Deadit_Dev Vote_Type Post_Type Error_Message
+Deadit_Dev Vote_Type Post_Type Error_Message Banned_Community_Name
 
 
 @echo off

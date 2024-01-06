@@ -1,7 +1,7 @@
 import { ApiLogin } from "../api/api-login"
 import { ApiSignup } from "../api/api-signup";
 import { LoginApiRequest, SignupApiRequest } from "../domain/model/api-auth-models";
-import { ApiResponseBase, ServiceResponse } from "../domain/model/api-response";
+import { ApiResponse, ServiceResponse } from "../domain/model/api-response";
 import { FormDataMapper } from "../mappers/form-data-mapper";
 import { ServiceUtilities } from "../utilities/service-utilities";
 

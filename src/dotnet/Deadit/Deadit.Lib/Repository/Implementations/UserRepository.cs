@@ -26,7 +26,7 @@ public class UserRepository : IUserRepository
         return await _dbConnection.FetchAsync(command);
     }
 
-    public async Task<DataRow?> SelectUserAsync(int userId)
+    public async Task<DataRow?> SelectUserAsync(uint userId)
     {
         MySqlCommand command = new(UserRepositoryCommands.SelectUserById);
 
@@ -45,7 +45,7 @@ public class UserRepository : IUserRepository
         return await _dbConnection.FetchAllAsync(command);
     }
 
-    public async Task<int?> InsertAsync(SignupRequestForm signupForm)
+    public async Task<uint?> InsertAsync(SignupRequestForm signupForm)
     {
         MySqlCommand command = new(UserRepositoryCommands.InsertUser);
 

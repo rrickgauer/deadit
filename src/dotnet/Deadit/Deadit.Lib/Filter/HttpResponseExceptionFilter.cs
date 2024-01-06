@@ -2,15 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Deadit.Lib.Domain.Errors;
 
-namespace Deadit.Lib.Auth;
+namespace Deadit.Lib.Filter;
 
-public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
+public class HttpResponseExceptionFilter : IExceptionFilter
 {
-    public int Order => int.MaxValue - 10;
-
-    public void OnActionExecuting(ActionExecutingContext context) { }
-
-    public void OnActionExecuted(ActionExecutedContext context)
+    public void OnException(ExceptionContext context)
     {
         if (context.Exception is HttpResponseException httpResponseException)
         {

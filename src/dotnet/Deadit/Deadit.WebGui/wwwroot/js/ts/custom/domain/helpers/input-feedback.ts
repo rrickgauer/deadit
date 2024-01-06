@@ -1,4 +1,4 @@
-import { InputFeebackState } from "../enum/InputFeebackState";
+import { InputFeebackState } from "../enum/input-feedback-state";
 
 
 // SEE: https://getbootstrap.com/docs/5.3/forms/validation/#server-side

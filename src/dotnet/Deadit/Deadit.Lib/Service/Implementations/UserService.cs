@@ -30,7 +30,7 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<ViewUser?> GetUserAsync(int userId)
+    public async Task<ViewUser?> GetUserAsync(uint userId)
     {
         var dataRow = await _userRepository.SelectUserAsync(userId);
 
@@ -51,7 +51,7 @@ public class UserService : IUserService
         return users;   
     }
 
-    public async Task<int?> CreateUserAsync(SignupRequestForm signupForm)
+    public async Task<uint?> CreateUserAsync(SignupRequestForm signupForm)
     {
         var userId = await _userRepository.InsertAsync(signupForm);
         return userId;

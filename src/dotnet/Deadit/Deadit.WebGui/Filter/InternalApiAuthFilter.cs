@@ -3,7 +3,7 @@ using Deadit.Lib.Domain.Errors;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
-namespace Deadit.Lib.Filters;
+namespace Deadit.WebGui.Filter;
 
 public class InternalApiAuthFilter : IAsyncActionFilter
 {
@@ -11,12 +11,11 @@ public class InternalApiAuthFilter : IAsyncActionFilter
     {
         SessionManager sessionManager = new(context.HttpContext.Session);
 
-        if (!sessionManager.IsClientAuthorized()) 
+        if (!sessionManager.IsClientAuthorized())
         {
             throw new HttpResponseException(HttpStatusCode.Forbidden);
         }
 
-
-        await next();   
+        await next();
     }
 }

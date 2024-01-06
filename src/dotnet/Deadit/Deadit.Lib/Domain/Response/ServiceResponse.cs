@@ -1,7 +1,7 @@
 ﻿using Deadit.Lib.Domain.Enum;
 using System.Text.Json.Serialization;
 
-namespace Deadit.Lib.Domain.Errors;
+namespace Deadit.Lib.Domain.Response;
 
 public class ServiceResponse
 {
@@ -34,7 +34,7 @@ public class ServiceResponse
         Errors.AddRange(errors);
     }
 
-    
+
     public bool Exists(ErrorCode errorCode)
     {
         int matchingRecords = Errors.Where(e => e == errorCode).Count();
