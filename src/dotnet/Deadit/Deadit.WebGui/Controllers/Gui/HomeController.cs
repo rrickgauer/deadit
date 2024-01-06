@@ -1,3 +1,4 @@
+using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ public class HomeController : Controller, IControllerName
     [HttpGet]
     public async Task<IActionResult> HomePageAsync()
     {
-        return View("HomePage");
+        return View(GuiPageViewFiles.HomePage); 
     }
 
     [HttpGet("/logout")]

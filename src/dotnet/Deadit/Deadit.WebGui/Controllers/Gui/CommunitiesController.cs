@@ -1,4 +1,4 @@
-﻿using Deadit.Lib.Service.Contracts;
+﻿using Deadit.Lib.Domain.Constants;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
@@ -11,16 +11,6 @@ public class CommunitiesController : Controller, IControllerName
 {
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunitiesController));
 
-    private readonly IAuthService _authService;
-
-    private bool IsClientLoggedIn => _authService.IsClientLoggedIn();
-
-    public CommunitiesController(IAuthService authService)
-    {
-        _authService = authService;
-    }
-
-
     /// <summary>
     /// GET: /communities
     /// </summary>
@@ -28,7 +18,7 @@ public class CommunitiesController : Controller, IControllerName
     [HttpGet]
     public async Task<IActionResult> CommunitiesPageAsync()
     {
-        return View("CommunitiesPage");
+        return View(GuiPageViewFiles.CommunitiesPage);
     }
 
     /// <summary>
@@ -39,7 +29,7 @@ public class CommunitiesController : Controller, IControllerName
     [ServiceFilter(typeof(LoginFirstRedirectFilter))]
     public async Task<IActionResult> CreateCommunityPageAsync()
     {
-        return View("Views/CreateCommunity/CreateCommunityPage.cshtml");
+        return View(GuiPageViewFiles.CreateCommunitiesPage);
     }
 
     [HttpGet("{communityName}")]

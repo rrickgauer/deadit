@@ -1,4 +1,5 @@
-﻿using Deadit.WebGui.Controllers.Contracts;
+﻿using Deadit.Lib.Domain.Constants;
+using Deadit.WebGui.Controllers.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deadit.WebGui.Controllers.Gui;
@@ -17,6 +18,6 @@ public class LoginController : Controller, IControllerName
     [ActionName(nameof(LoginPageAsync))]
     public async Task<IActionResult> LoginPageAsync([FromQuery] string? dest)
     {
-        return View("Views/Login/LoginPage.cshtml");
+        return View(GuiPageViewFiles.LoginPage);
     }
 }
