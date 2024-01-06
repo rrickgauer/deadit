@@ -10,10 +10,7 @@ public class ValidationErrorFilter : IAsyncActionFilter
     {
         if (!context.ModelState.IsValid)
         {
-
-            ValidationFailureResponse response = new(context.ModelState);
-            context.Result = new UnprocessableEntityObjectResult(response);
-
+            context.Result = new UnprocessableEntityObjectResult(context.ModelState);
             return;
         }
 

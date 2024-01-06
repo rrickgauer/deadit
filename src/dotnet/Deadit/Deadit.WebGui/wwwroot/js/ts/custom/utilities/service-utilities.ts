@@ -1,8 +1,9 @@
-import { ApiResponse, ServiceResponse } from "../domain/model/api-response";
+import { HttpStatusCode } from "../domain/enum/http-status-code";
+import { ApiResponse, ApiValidationException, ServiceResponse, ValidationErrorsApiResponse } from "../domain/model/api-response";
 
 export class ServiceUtilities
 {
-    static handleBadResponse = async (response: Response): Promise<void> =>
+    public static handleBadResponse = async (response: Response): Promise<void> =>
     {
         if (!response.ok)
         {
@@ -12,10 +13,12 @@ export class ServiceUtilities
     }
 
 
-    static async toServiceResponse<T>(response: Response) 
+    public static async toServiceResponse<T>(response: Response) 
     {
-
-        
+        if (response.status === HttpStatusCode.UnprocessableEntity)
+        {
+            await ServiceUtilities.handleUnprocessableEntityApiResponse(response);
+        }
 
         const data: ApiResponse<T> = await response.json();
         const result = new ServiceResponse<T>(data, response.ok);
@@ -23,16 +26,13 @@ export class ServiceUtilities
         return result;
     }
 
-}
-
-
-
-
-export class ValidationError extends Error
-{
-    constructor(message)
+    private static handleUnprocessableEntityApiResponse = async (response: Response) =>
     {
-        super(message);
+        const validationErrors: ValidationErrorsApiResponse = await response.json();
+        throw new ApiValidationException(validationErrors);
     }
+
 }
+
+
 

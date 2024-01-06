@@ -2,8 +2,10 @@ import { NativeEvents } from "../../../domain/constants/native-events";
 import { InputFeebackState } from "../../../domain/enum/InputFeebackState";
 import { ApiErrorCode } from "../../../domain/enum/api-error-codes";
 import { CommunityApiRequest, CreateCommunityApiRequest } from "../../../domain/model/api-community-models";
-import { ApiResponse, ErrorMessage } from "../../../domain/model/api-response";
+import { ApiResponse, ApiValidationException, ErrorMessage } from "../../../domain/model/api-response";
 import { CommunityService } from "../../../services/community-service";
+import { ErrorService } from "../../../services/error-service";
+import { ServiceUtilities } from "../../../utilities/service-utilities";
 import { CreateCommunityElements } from "./create-community-elements";
 
 
@@ -56,7 +58,18 @@ export class CreateCommunityController
         }
         catch (error)
         {
-            alert('error. check console');
+            ErrorService.handleApiValidationException(error, {
+                onApiValidationException: () =>
+                {
+                    alert('validation exception');
+                },
+
+                onStandardError: () =>
+                {
+                    this._elements.submitButtonSpinner.reset();
+                    throw error;
+                }
+            });
         }
         finally
         {

@@ -6,33 +6,34 @@ using Deadit.Lib.Repository.Other;
 using Deadit.Lib.Service.Contracts;
 using Deadit.Lib.Service.Implementations;
 
+bool isProduction = true;
+
+#if DEBUG
+isProduction = false;
+#endif
+
+
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services
-.AddControllers(options =>
-{
-    options.Filters.Add<HttpResponseExceptionFilter>();
-    options.Filters.Add<ValidationErrorFilter>();
-    
-})
-
-// https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-8.0#disable-automatic-400-response
-.ConfigureApiBehaviorOptions(options =>
-{
-    //options.SuppressModelStateInvalidFilter = true;
-    //options.SuppressMapClientErrors = true;
-});
 
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<HttpResponseExceptionFilter>();
     options.Filters.Add<ValidationErrorFilter>();
-});
+})
 
-
-builder.Services.ConfigureHttpJsonOptions(options =>
+// https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-8.0#disable-automatic-400-response
+.ConfigureApiBehaviorOptions(options =>
 {
-    options.SerializerOptions.WriteIndented = true;
+    options.SuppressModelStateInvalidFilter = true;
+    options.SuppressMapClientErrors = true;
+})
+
+.AddJsonOptions(options =>
+{
+    if (isProduction)
+    {
+        options.JsonSerializerOptions.WriteIndented = true;
+    }
 });
 
 
@@ -47,11 +48,7 @@ builder.Services.AddSession(options =>
 });
 
 
-bool isProduction = true;
 
-#if DEBUG
-isProduction = false;
-#endif
 
 #region - Dependency Injection -
 
@@ -97,7 +94,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-//app.UseDeveloperExceptionPage();
+app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
