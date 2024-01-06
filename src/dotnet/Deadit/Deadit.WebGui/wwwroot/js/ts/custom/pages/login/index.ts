@@ -1,11 +1,10 @@
 
-import { LoginModalController } from "../../components/login-modal/login-modal-controller"
+
+import { LoginModal } from "../../components/login-modal/login-modal";
 import { PageUtilities } from "../../utilities/page-utilities";
 
 
 PageUtilities.pageReady(() =>
 {
-    const loginModal = LoginModalController.setupPage();
-    loginModal.openModal();
-
+    const loginModal = new LoginModal();
 });

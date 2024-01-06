@@ -1,5 +1,5 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
-import { InputFeebackState } from "../../../domain/enum/InputFeebackState";
+import { InputFeebackState } from "../../../domain/enum/input-feedback-state";
 import { ApiErrorCode } from "../../../domain/enum/api-error-codes";
 import { CommunityApiRequest, CreateCommunityApiRequest } from "../../../domain/model/api-community-models";
 import { ApiResponse, ApiValidationException, ErrorMessage } from "../../../domain/model/api-response";

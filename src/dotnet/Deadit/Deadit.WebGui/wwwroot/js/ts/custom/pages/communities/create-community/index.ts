@@ -1,5 +1,4 @@
-import { LoginModalController } from "../../../components/login-modal/login-modal-controller";
-import { NativeEvents } from "../../../domain/constants/native-events";
+import { LoginModal } from "../../../components/login-modal/login-modal";
 import { PageUtilities } from "../../../utilities/page-utilities";
 import { CreateCommunityController } from "./create-community-controller";
 
@@ -10,7 +9,7 @@ import { CreateCommunityController } from "./create-community-controller";
  */
 PageUtilities.pageReady(async () =>
 {
-    const loginModal = LoginModalController.setupPage();
+    const loginModal = new LoginModal();
     run();
 });
 
