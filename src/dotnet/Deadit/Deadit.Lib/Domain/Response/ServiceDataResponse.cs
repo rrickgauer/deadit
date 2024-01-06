@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Deadit.Lib.Domain.Errors;
+namespace Deadit.Lib.Domain.Response;
 
 public class ServiceDataResponse<T> : ServiceResponse
 {
@@ -8,4 +8,12 @@ public class ServiceDataResponse<T> : ServiceResponse
 
     [JsonIgnore]
     public bool HasData => Data != null;
+
+
+    public ServiceDataResponse() : base() { }
+
+    public ServiceDataResponse(T? data) : base()
+    {
+        Data = data;
+    }
 }

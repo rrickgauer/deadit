@@ -12,13 +12,4 @@ public class HttpResponseException : Exception
     public object? Value { get; }
 }
 
-public class ServiceErrorCodeException : Exception
-{
-    public ServiceErrorCodeException(HttpStatusCode statusCode, ErrorCode value) => (StatusCode, Value) = ((int)statusCode, value);
-
-    public int StatusCode { get; }
-
-    public ErrorCode Value { get; }
-}
-
 

@@ -14,10 +14,10 @@ public class ValidationFailureErrorMessage : ErrorMessage
         Message = "Validation failed";
         _errorsDict = errors;
 
-        SetDict(_errorsDict);
+        //SetDict(_errorsDict);
     }
 
-    private Dictionary<string, string?> SetDict(ModelStateDictionary dict)
+    private static Dictionary<string, string?> SetDict(ModelStateDictionary dict)
     {
         Dictionary<string, string?> result = new();
 

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Deadit.Lib.Domain.Errors;
 
-namespace Deadit.Lib.Auth;
+namespace Deadit.Lib.Filter;
 
 public class HttpResponseExceptionFilter : IExceptionFilter
 {

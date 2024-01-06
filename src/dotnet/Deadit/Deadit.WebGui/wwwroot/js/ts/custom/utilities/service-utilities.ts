@@ -12,7 +12,10 @@ export class ServiceUtilities
     }
 
 
-    static async toServiceResponse<T>(response: Response) {
+    static async toServiceResponse<T>(response: Response) 
+    {
+
+        
 
         const data: ApiResponse<T> = await response.json();
         const result = new ServiceResponse<T>(data, response.ok);
@@ -20,5 +23,16 @@ export class ServiceUtilities
         return result;
     }
 
-
 }
+
+
+
+
+export class ValidationError extends Error
+{
+    constructor(message)
+    {
+        super(message);
+    }
+}
+

@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Deadit.Lib.Domain.Response;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Deadit.Lib.Domain.Errors;
+namespace Deadit.Lib.Filter;
 
 public class ValidationErrorFilter : IAsyncActionFilter
 {
@@ -9,6 +10,7 @@ public class ValidationErrorFilter : IAsyncActionFilter
     {
         if (!context.ModelState.IsValid)
         {
+
             ValidationFailureResponse response = new(context.ModelState);
             context.Result = new UnprocessableEntityObjectResult(response);
 

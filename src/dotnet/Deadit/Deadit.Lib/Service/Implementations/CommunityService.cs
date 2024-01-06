@@ -1,6 +1,6 @@
 ﻿using Deadit.Lib.Domain.Enum;
-using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Service.Contracts;

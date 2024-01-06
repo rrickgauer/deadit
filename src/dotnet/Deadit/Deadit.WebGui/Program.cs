@@ -1,7 +1,5 @@
-using Deadit.Lib.Auth;
 using Deadit.Lib.Domain.Configurations;
-using Deadit.Lib.Domain.Errors;
-using Deadit.Lib.Filters;
+using Deadit.Lib.Filter;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Repository.Implementations;
 using Deadit.Lib.Repository.Other;
@@ -15,13 +13,14 @@ builder.Services
 {
     options.Filters.Add<HttpResponseExceptionFilter>();
     options.Filters.Add<ValidationErrorFilter>();
+    
 })
 
 // https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-8.0#disable-automatic-400-response
 .ConfigureApiBehaviorOptions(options =>
 {
-    options.SuppressModelStateInvalidFilter = true;
-    options.SuppressMapClientErrors = true;
+    //options.SuppressModelStateInvalidFilter = true;
+    //options.SuppressMapClientErrors = true;
 });
 
 builder.Services.AddControllersWithViews(options =>

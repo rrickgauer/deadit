@@ -1,4 +1,4 @@
-﻿using Deadit.Lib.Domain.Errors;
+﻿using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 
 namespace Deadit.Lib.Service.Contracts;

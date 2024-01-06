@@ -1,10 +1,10 @@
 ﻿using Deadit.Lib.Auth;
 using Deadit.Lib.Domain.Forms;
-using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Microsoft.AspNetCore.Http;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Response;
 
 namespace Deadit.Lib.Service.Implementations;
 

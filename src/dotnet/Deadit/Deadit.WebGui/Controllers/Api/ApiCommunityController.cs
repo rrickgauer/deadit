@@ -1,5 +1,5 @@
 ﻿using Deadit.Lib.Domain.Forms;
-using Deadit.Lib.Filters;
+using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
 using Microsoft.AspNetCore.Mvc;
