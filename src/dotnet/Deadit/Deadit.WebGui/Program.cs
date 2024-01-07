@@ -79,6 +79,7 @@ builder.Services.AddTransient<DatabaseConnection>();
 
 builder.Services.AddScoped<InternalApiAuthFilter>();
 builder.Services.AddScoped<LoginFirstRedirectFilter>();
+builder.Services.AddScoped<CommunityNameExistsFilter>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

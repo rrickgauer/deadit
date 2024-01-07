@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Constants;
+using Deadit.Lib.Filter;
 using Deadit.WebGui.Controllers.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ public class CommunityController : Controller, IControllerName
     /// <returns></returns>
     [HttpGet("{communityName}")]
     [ActionName(nameof(GetCommunityPage))]
+    [ServiceFilter(typeof(CommunityNameExistsFilter))]
     public async Task<IActionResult> GetCommunityPage([FromRoute] string communityName)
     {
         return View(GuiPageViewFiles.CommunityPage);
