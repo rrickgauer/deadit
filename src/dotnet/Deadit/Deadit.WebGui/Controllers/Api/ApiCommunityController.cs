@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
@@ -15,14 +16,16 @@ public class ApiCommunityController : InternalApiControllerBase, IControllerName
     private readonly ICommunityService _communityService;
     private readonly IResponseService _responseService;
     
-
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="communityService"></param>
+    /// <param name="responseService"></param>
     public ApiCommunityController(ICommunityService communityService, IResponseService responseService)
     {
         _communityService = communityService;
         _responseService = responseService;
     }
-
-    
 
     /// <summary>
     /// POST: /communities
@@ -31,6 +34,7 @@ public class ApiCommunityController : InternalApiControllerBase, IControllerName
     /// <returns></returns>
     [HttpPost]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ActionName(nameof(PostCommunityAsync))]
     public async Task<IActionResult> PostCommunityAsync([FromForm] CreateCommunityRequestForm newCommunityForm)
     {
         var community = await _communityService.CreateCommunityAsync(newCommunityForm, ClientId);
@@ -43,7 +47,5 @@ public class ApiCommunityController : InternalApiControllerBase, IControllerName
 
         return BadRequest(response);
     }
-
-
 
 }
