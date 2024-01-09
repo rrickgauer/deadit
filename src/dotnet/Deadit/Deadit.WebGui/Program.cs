@@ -1,11 +1,8 @@
 using Deadit.Lib.Domain.Configurations;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Filter;
-using Deadit.Lib.Repository.Contracts;
-using Deadit.Lib.Repository.Implementations;
-using Deadit.Lib.Repository.Other;
-using Deadit.Lib.Service.Contracts;
-using Deadit.Lib.Service.Implementations;
-using Deadit.WebGui.Filter;
+using Deadit.WebGui;
+using System.Reflection;
 
 bool isProduction = true;
 
@@ -31,7 +28,7 @@ builder.Services.AddControllersWithViews(options =>
 
 .AddJsonOptions(options =>
 {
-    if (isProduction)
+    if (!isProduction)
     {
         options.JsonSerializerOptions.WriteIndented = true;
     }
@@ -48,9 +45,6 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-
-
-
 #region - Dependency Injection -
 
 if (isProduction)
@@ -62,24 +56,22 @@ else
     builder.Services.AddSingleton<IConfigs, ConfigurationDev>();
 }
 
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ICommunityService, CommunityService>();
-builder.Services.AddScoped<IBannedCommunityNameService, BannedCommunityNameService>();
-builder.Services.AddSingleton<ITableMapperService, TableMapperService>();
-builder.Services.AddSingleton<IErrorMessageService, ErrorMessageService>();
-builder.Services.AddSingleton<IResponseService, ResponseService>();
+List<Assembly?> assemblies = new()
+{
+    Assembly.GetAssembly(typeof(IConfigs)),
+    Assembly.GetExecutingAssembly(),
+};
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
-builder.Services.AddScoped<IBannedCommunityNameRepository, BannedCommunityNameRepository>();
-builder.Services.AddSingleton<IErrorMessageRepository, ErrorMessageRepository>();
+foreach (var assembly in assemblies)
+{
+    if (assembly == null)
+    {
+        continue;
+    }
 
-builder.Services.AddTransient<DatabaseConnection>();
+    WebGuiSetup.InjectServicesIntoAssembly(builder.Services, InjectionProject.Always | InjectionProject.WebGui, assembly);
+}
 
-builder.Services.AddScoped<InternalApiAuthFilter>();
-builder.Services.AddScoped<LoginFirstRedirectFilter>();
-builder.Services.AddScoped<CommunityNameExistsFilter>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

@@ -1,4 +1,6 @@
 ﻿using System.Data;
+using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Repository.Commands;
 using Deadit.Lib.Repository.Contracts;
@@ -7,6 +9,7 @@ using MySql.Data.MySqlClient;
 
 namespace Deadit.Lib.Repository.Implementations;
 
+[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(ICommunityRepository))]
 public class CommunityRepository : ICommunityRepository
 {
     private readonly DatabaseConnection _dbConnection;

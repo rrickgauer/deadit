@@ -1,4 +1,5 @@
-﻿using Deadit.Lib.Domain.Enum;
+﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
@@ -8,6 +9,8 @@ using System.Text.RegularExpressions;
 
 namespace Deadit.Lib.Service.Implementations;
 
+
+[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(ICommunityService))]
 public class CommunityService : ICommunityService
 {
     private const string NewCommunityNameRegexPattern = @"^[a-zA-Z0-9_]*$";

@@ -1,10 +1,13 @@
-﻿using Deadit.Lib.Mapping.Tables;
+﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Mapping.Tables;
 using Deadit.Lib.Service.Contracts;
 using System.Data;
 using System.Reflection;
 
 namespace Deadit.Lib.Service.Implementations;
 
+[AutoInject(AutoInjectionType.Singleton, InjectionProject.Always, InterfaceType = typeof(ITableMapperService))]
 public class TableMapperService : ITableMapperService
 {
     private static readonly List<object> ModelMappers = GetAllModelMappers().ToList();

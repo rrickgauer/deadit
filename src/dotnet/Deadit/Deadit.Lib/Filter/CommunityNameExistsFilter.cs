@@ -1,10 +1,14 @@
-﻿using Deadit.Lib.Service.Contracts;
+﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Service.Contracts;
 using Deadit.Lib.Service.Implementations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Deadit.Lib.Filter;
 
+
+[AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui)]
 public class CommunityNameExistsFilter : IAsyncActionFilter
 {
     private readonly ICommunityService _communityService;

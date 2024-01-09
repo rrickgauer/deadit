@@ -6,6 +6,8 @@ This filter checks if the user is logged in:
 
 ********************************************************************************************/
 
+using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Gui;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -14,6 +16,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Deadit.WebGui.Filter;
 
+
+[AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui)]
 public class LoginFirstRedirectFilter : IAsyncActionFilter
 {
     private readonly IAuthService _authService;

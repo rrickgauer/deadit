@@ -5,9 +5,12 @@ using Deadit.Lib.Service.Contracts;
 using Microsoft.AspNetCore.Http;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Response;
+using Deadit.Lib.Domain.Attributes;
 
 namespace Deadit.Lib.Service.Implementations;
 
+
+[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(IAuthService))]
 public class AuthService : IAuthService
 {
     private const int MinPasswordLength = 8;

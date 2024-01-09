@@ -1,10 +1,12 @@
-﻿using Deadit.Lib.Domain.Enum;
+﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Service.Contracts;
 
 namespace Deadit.Lib.Service.Implementations;
 
+[AutoInject(AutoInjectionType.Singleton, InjectionProject.Always, InterfaceType = typeof(IErrorMessageService))]
 public class ErrorMessageService : IErrorMessageService
 {
     private static Dictionary<ErrorCode, ErrorMessage> _errorMessagesDict = new();
