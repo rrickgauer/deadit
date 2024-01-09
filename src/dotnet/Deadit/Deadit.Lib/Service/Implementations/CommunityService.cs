@@ -3,6 +3,7 @@ using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
+using Deadit.Lib.Domain.ViewModel;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Service.Contracts;
 using System.Text.RegularExpressions;
@@ -26,6 +27,34 @@ public class CommunityService : ICommunityService
         _bannedCommunityService = bannedCommunityService;
     }
 
+
+    public async Task<ServiceDataResponse<CommunityPageViewModel>> GetCommunityPageViewModelAsync(string communityName)
+    {
+        ServiceDataResponse<CommunityPageViewModel> result = new();
+
+        var getCommunityResponse = await GetCommunityAsync(communityName);
+
+        if (!getCommunityResponse.HasData)
+        {
+            return result;
+        }
+
+        result.Data = new()
+        {
+            Community = getCommunityResponse.Data,
+        };
+
+        return result;
+    }
+
+
+
+    /// <summary>
+    /// Create a new community
+    /// </summary>
+    /// <param name="form"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task<ServiceDataResponse<ViewCommunity>> CreateCommunityAsync(CreateCommunityRequestForm form, uint userId)
     {
         var validateFormResponse = await ValidateNewCommunityAsync(form);
@@ -47,7 +76,11 @@ public class CommunityService : ICommunityService
         return response;
     }
 
-
+    /// <summary>
+    /// Validate the new community info before saving it to the database
+    /// </summary>
+    /// <param name="form"></param>
+    /// <returns></returns>
     private async Task<ServiceDataResponse<ViewCommunity>> ValidateNewCommunityAsync(CreateCommunityRequestForm form)
     {
         ServiceDataResponse<ViewCommunity> response = new();
@@ -77,11 +110,21 @@ public class CommunityService : ICommunityService
         return response;
     }
 
+    /// <summary>
+    /// Ensure the given community name does not contain any invalid characters
+    /// </summary>
+    /// <param name="communityName"></param>
+    /// <returns></returns>
     private bool DoesCommunityNameContainInvalidCharacters(string communityName)
     {
         return !Regex.IsMatch(communityName, NewCommunityNameRegexPattern);
     }
 
+    /// <summary>
+    /// Checks if the given community name exists
+    /// </summary>
+    /// <param name="communityName"></param>
+    /// <returns></returns>
     private async Task<bool> DoesCommunityNameExist(string communityName)
     {
         // check if the name already exists
@@ -94,18 +137,23 @@ public class CommunityService : ICommunityService
 
         return false;
     }
-
-
-
+    
+    /// <summary>
+    /// Save the new community to the database
+    /// </summary>
+    /// <param name="form"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     private async Task<uint?> InsertNewCommunityAsync(CreateCommunityRequestForm form, uint userId)
     {
         return await _communityRepository.InsertCommunityAsync(form, userId);
     }
 
-
-
-
-
+    /// <summary>
+    /// Get the community by name
+    /// </summary>
+    /// <param name="communityName">Community Name</param>
+    /// <returns></returns>
     public async Task<ServiceDataResponse<ViewCommunity>> GetCommunityAsync(string communityName)
     {
         ServiceDataResponse<ViewCommunity> response = new();
@@ -120,6 +168,11 @@ public class CommunityService : ICommunityService
         return response;
     }
 
+    /// <summary>
+    /// Get the community by id
+    /// </summary>
+    /// <param name="communityId">Community id</param>
+    /// <returns></returns>
     public async Task<ServiceDataResponse<ViewCommunity>> GetCommunityAsync(uint communityId)
     {
         ServiceDataResponse<ViewCommunity> response = new();

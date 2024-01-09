@@ -1,15 +1,54 @@
-﻿<!DOCTYPE html>
+﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <partial name="~/Views/Includes/_Header.cshtml" />
-    <title>Create a community</title>
+    <title>c/@Model.Community.Name</title>
 </head>
 <body>
     <partial name="~/Views/Includes/_Navbar.cshtml" />
     <partial name="~/Views/Includes/_LoginModal.cshtml" />
 
     <div class="container mt-3">
-        <h1>Community Page</h1>
+        <h1>@Model.Community.Name</h1>
+        <hr />
+    </div>
+
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-9">
+
+                <div class="card card-body">
+
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="card card-body">
+                    <h6>About community</h6>
+                    <p>@Model.Community.Description</p>
+                    
+                    <hr />
+
+                    <p>@Model.Community.CountMembers members</p>
+
+                    <hr />
+
+                    <button type="button" class="btn btn-sm btn-secondary mb-1">Join</button>
+                    <a href="@HttpContextAccessor?.HttpContext?.Request.Path/submit" class="btn btn-sm btn-secondary mb-1">Create Post</a>
+
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
 
