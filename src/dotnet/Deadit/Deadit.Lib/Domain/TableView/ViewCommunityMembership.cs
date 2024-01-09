@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Model;
+using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.TableView;
 
@@ -59,6 +60,7 @@ public class ViewCommunityMembership :
     [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.Email))]
     public string? UserEmail { get; set; }
 
+    [JsonIgnore]
     [SqlColumn("user_password")]
     [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.Password))]
     public string? UserPassword { get; set; }

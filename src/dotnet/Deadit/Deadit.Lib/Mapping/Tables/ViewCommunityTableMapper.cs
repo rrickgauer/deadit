@@ -12,7 +12,7 @@ public class ViewCommunityTableMapper : TableMapper<ViewCommunity>
         result.Id = Convert.ToUInt32((row.Field<object?>(GetColumnName(nameof(ViewCommunity.Id)))));
         result.Name = row.Field<string?>(GetColumnName(nameof(ViewCommunity.Name)));
         result.Title = row.Field<string?>(GetColumnName(nameof(ViewCommunity.Title)));
-        result.OwnerId = Convert.ToInt32(row.Field<object?>(GetColumnName(nameof(ViewCommunity.OwnerId))));
+        result.OwnerId = Convert.ToUInt32(row.Field<object?>(GetColumnName(nameof(ViewCommunity.OwnerId))));
         result.Description = row.Field<string?>(GetColumnName(nameof(ViewCommunity.Description)));
         result.CreatedOn = row.Field<DateTime>(GetColumnName(nameof(ViewCommunity.CreatedOn)));
         result.CountMembers = row.Field<long>(GetColumnName(nameof(ViewCommunity.CountMembers)));

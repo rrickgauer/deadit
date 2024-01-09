@@ -20,7 +20,7 @@ public class ViewCommunity : ITableView<ViewCommunity, Community>
 
     [SqlColumn("community_owner_id")]
     [CopyToPropertyAttribute<Community>(nameof(Community.OwnerId))]
-    public int? OwnerId { get; set; }
+    public uint? OwnerId { get; set; }
 
     [SqlColumn("community_description")]
     [CopyToPropertyAttribute<Community>(nameof(Community.Description))]
@@ -33,8 +33,7 @@ public class ViewCommunity : ITableView<ViewCommunity, Community>
     [SqlColumn("count_members")]
     public long CountMembers { get; set; } = 0;
 
-
-    public string UrlGui => $"communities/{Id}";
+    public string UrlGui => $"c/{Name}";
 
     // ITableView
     public static explicit operator Community(ViewCommunity other)
