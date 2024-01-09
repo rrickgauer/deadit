@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Deadit.Lib.Service.Implementations;
+namespace Deadit.Lib.Utility;
 
-public static class FilterService
+public static class FilterUtiltities
 {
 
     public static string GetCommunityNameRouteValue(ActionExecutingContext context) => GetRequestRouteValue<string>(context, "communityName");

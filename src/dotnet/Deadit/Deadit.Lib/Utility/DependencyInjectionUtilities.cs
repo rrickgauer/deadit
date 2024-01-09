@@ -1,11 +1,27 @@
 ﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Configurations;
 using Deadit.Lib.Domain.Enum;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace Deadit.WebGui;
+namespace Deadit.Lib.Utility;
 
-public class WebGuiSetup
+public class DependencyInjectionUtilities
 {
+
+    public static void InjectConfigs(IServiceCollection services, bool isProduction)
+    {
+        if (isProduction)
+        {
+            services.AddSingleton<IConfigs, ConfigurationProduction>();
+        }
+        else
+        {
+            services.AddSingleton<IConfigs, ConfigurationDev>();
+        }
+    }
+
+
 
     public static void InjectServicesIntoAssembly(IServiceCollection services, InjectionProject projectType, Assembly assembly)
     {
@@ -46,9 +62,9 @@ public class WebGuiSetup
         return attr.AutoInjectionType switch
         {
             AutoInjectionType.Singleton => services.AddSingleton,
-            AutoInjectionType.Scoped    => services.AddScoped,
+            AutoInjectionType.Scoped => services.AddScoped,
             AutoInjectionType.Transient => services.AddTransient,
-            _                           => throw new NotImplementedException(),
+            _ => throw new NotImplementedException(),
         };
     }
 
@@ -57,14 +73,10 @@ public class WebGuiSetup
         return attr.AutoInjectionType switch
         {
             AutoInjectionType.Singleton => services.AddSingleton,
-            AutoInjectionType.Scoped    => services.AddScoped,
+            AutoInjectionType.Scoped => services.AddScoped,
             AutoInjectionType.Transient => services.AddTransient,
-            _                           => throw new NotImplementedException(),
+            _ => throw new NotImplementedException(),
         };
     }
-
-
-
-
 
 }

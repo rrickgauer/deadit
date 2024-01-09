@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Deadit.Lib.Domain.Constants;
 
-public class SessionKeys
+public class GuiSessionKeys
 {
     public const string AuthUserId = "auth:user_id";
+
+    public const string SessionName = ".Deadit.Session";
 }

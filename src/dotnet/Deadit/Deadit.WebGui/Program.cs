@@ -1,7 +1,8 @@
 using Deadit.Lib.Domain.Configurations;
+using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Filter;
-using Deadit.WebGui;
+using Deadit.Lib.Utility;
 using System.Reflection;
 
 bool isProduction = true;
@@ -10,8 +11,10 @@ bool isProduction = true;
 isProduction = false;
 #endif
 
-
 var builder = WebApplication.CreateBuilder(args);
+
+
+#region - Setup web application builder -
 
 builder.Services.AddControllersWithViews(options =>
 {
@@ -40,46 +43,43 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = ".Deadit.Session";
-    //options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.Name = GuiSessionKeys.SessionName;
     options.Cookie.IsEssential = true;
 });
 
+
+#endregion
+
 #region - Dependency Injection -
 
-if (isProduction)
-{
-    builder.Services.AddSingleton<IConfigs, ConfigurationProduction>();
-}
-else
-{
-    builder.Services.AddSingleton<IConfigs, ConfigurationDev>();
-}
+// inject the appropriate IConfigs instance
+DependencyInjectionUtilities.InjectConfigs(builder.Services, isProduction);
 
+// inject the services into the web application
 List<Assembly?> assemblies = new()
 {
     Assembly.GetAssembly(typeof(IConfigs)),
     Assembly.GetExecutingAssembly(),
 };
 
+InjectionProject projectTypes = InjectionProject.Always | InjectionProject.WebGui;
+
 foreach (var assembly in assemblies)
 {
-    if (assembly == null)
+    if (assembly != null)
     {
-        continue;
+        DependencyInjectionUtilities.InjectServicesIntoAssembly(builder.Services, projectTypes, assembly);
     }
-
-    WebGuiSetup.InjectServicesIntoAssembly(builder.Services, InjectionProject.Always | InjectionProject.WebGui, assembly);
 }
 
-
+// additional services to inject
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 #endregion
 
-
-
 var app = builder.Build();
+
+#region - Build and run the web application -
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -103,3 +103,5 @@ app.MapControllers();
 app.UseSession();
 
 app.Run();
+
+#endregion

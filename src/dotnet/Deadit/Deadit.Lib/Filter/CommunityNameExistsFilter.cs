@@ -1,7 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Service.Contracts;
-using Deadit.Lib.Service.Implementations;
+using Deadit.Lib.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -20,7 +20,7 @@ public class CommunityNameExistsFilter : IAsyncActionFilter
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        string communityName = FilterService.GetCommunityNameRouteValue(context);
+        string communityName = FilterUtiltities.GetCommunityNameRouteValue(context);
 
         var getCommunityResponse = await _communityService.GetCommunityAsync(communityName);
 
