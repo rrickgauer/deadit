@@ -1,14 +1,12 @@
-﻿using Deadit.Lib.Domain.Configurations;
+﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Configurations;
+using Deadit.Lib.Domain.Enum;
 using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Deadit.Lib.Repository.Other;
 
+[AutoInject(AutoInjectionType.Transient, InjectionProject.Always)]
 public class DatabaseConnection
 {
     private readonly IConfigs _configs;

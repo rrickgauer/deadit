@@ -8,6 +8,8 @@ public sealed class GuiPageViewFiles
     
     public static string LoginPage => $"{ParentDirectory}/Login/LoginPage.cshtml";
 
+    public static string CommunityPage => $"{ParentDirectory}/Community/CommunityPage.cshtml";
+
     public static string CreateCommunitiesPage => $"{ParentDirectory}/CreateCommunity/CreateCommunityPage.cshtml";
     public static string CommunitiesPage       => $"{ParentDirectory}/Communities/CommunitiesPage.cshtml";
 }

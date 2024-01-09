@@ -41,7 +41,12 @@ public class CommunitiesController : Controller, IControllerName
             Bitch = true,
         };
 
-        return Ok(output);
+
+        return RedirectToAction(nameof(CommunityController.GetCommunityPage), CommunityController.ControllerRedirectName, new
+        {
+            communityName = communityName,
+        });
+
     }
 
 }

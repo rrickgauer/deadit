@@ -12,7 +12,7 @@ public class SessionManager
     {
         get
         {
-            var data = Session.GetString(SessionKeys.AuthUserId);
+            var data = Session.GetString(GuiSessionKeys.AuthUserId);
 
             if (uint.TryParse(data, out var userId))
             {
@@ -26,11 +26,11 @@ public class SessionManager
         {
             if (value == null)
             {
-                Session.Remove(SessionKeys.AuthUserId);
+                Session.Remove(GuiSessionKeys.AuthUserId);
             }
             else
             {
-                Session.SetString(SessionKeys.AuthUserId, $"{value}");
+                Session.SetString(GuiSessionKeys.AuthUserId, $"{value}");
             }
         }
     }

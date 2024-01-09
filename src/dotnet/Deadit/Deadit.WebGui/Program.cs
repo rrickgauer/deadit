@@ -1,11 +1,9 @@
 using Deadit.Lib.Domain.Configurations;
+using Deadit.Lib.Domain.Constants;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Filter;
-using Deadit.Lib.Repository.Contracts;
-using Deadit.Lib.Repository.Implementations;
-using Deadit.Lib.Repository.Other;
-using Deadit.Lib.Service.Contracts;
-using Deadit.Lib.Service.Implementations;
-using Deadit.WebGui.Filter;
+using Deadit.Lib.Utility;
+using System.Reflection;
 
 bool isProduction = true;
 
@@ -13,8 +11,10 @@ bool isProduction = true;
 isProduction = false;
 #endif
 
-
 var builder = WebApplication.CreateBuilder(args);
+
+
+#region - Setup web application builder -
 
 builder.Services.AddControllersWithViews(options =>
 {
@@ -31,7 +31,7 @@ builder.Services.AddControllersWithViews(options =>
 
 .AddJsonOptions(options =>
 {
-    if (isProduction)
+    if (!isProduction)
     {
         options.JsonSerializerOptions.WriteIndented = true;
     }
@@ -43,50 +43,43 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = ".Deadit.Session";
-    //options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.Name = GuiSessionKeys.SessionName;
     options.Cookie.IsEssential = true;
 });
 
 
-
+#endregion
 
 #region - Dependency Injection -
 
-if (isProduction)
+// inject the appropriate IConfigs instance
+DependencyInjectionUtilities.InjectConfigs(builder.Services, isProduction);
+
+// inject the services into the web application
+List<Assembly?> assemblies = new()
 {
-    builder.Services.AddSingleton<IConfigs, ConfigurationProduction>();
-}
-else
+    Assembly.GetAssembly(typeof(IConfigs)),
+    Assembly.GetExecutingAssembly(),
+};
+
+InjectionProject projectTypes = InjectionProject.Always | InjectionProject.WebGui;
+
+foreach (var assembly in assemblies)
 {
-    builder.Services.AddSingleton<IConfigs, ConfigurationDev>();
+    if (assembly != null)
+    {
+        DependencyInjectionUtilities.InjectServicesIntoAssembly(builder.Services, projectTypes, assembly);
+    }
 }
 
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ICommunityService, CommunityService>();
-builder.Services.AddScoped<IBannedCommunityNameService, BannedCommunityNameService>();
-builder.Services.AddSingleton<ITableMapperService, TableMapperService>();
-builder.Services.AddSingleton<IErrorMessageService, ErrorMessageService>();
-builder.Services.AddSingleton<IResponseService, ResponseService>();
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
-builder.Services.AddScoped<IBannedCommunityNameRepository, BannedCommunityNameRepository>();
-builder.Services.AddSingleton<IErrorMessageRepository, ErrorMessageRepository>();
-
-builder.Services.AddTransient<DatabaseConnection>();
-
-builder.Services.AddScoped<InternalApiAuthFilter>();
-builder.Services.AddScoped<LoginFirstRedirectFilter>();
-
+// additional services to inject
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 #endregion
 
-
-
 var app = builder.Build();
+
+#region - Build and run the web application -
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -110,3 +103,5 @@ app.MapControllers();
 app.UseSession();
 
 app.Run();
+
+#endregion

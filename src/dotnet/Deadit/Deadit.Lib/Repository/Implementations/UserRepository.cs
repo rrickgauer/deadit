@@ -1,4 +1,6 @@
-﻿using Deadit.Lib.Domain.Forms;
+﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Repository.Commands;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Repository.Other;
@@ -7,6 +9,7 @@ using System.Data;
 
 namespace Deadit.Lib.Repository.Implementations;
 
+[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType=typeof(IUserRepository))]
 public class UserRepository : IUserRepository
 {
     private readonly DatabaseConnection _dbConnection;
