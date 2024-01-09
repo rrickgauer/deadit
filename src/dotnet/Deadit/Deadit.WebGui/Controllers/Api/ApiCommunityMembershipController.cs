@@ -13,6 +13,12 @@ public class ApiCommunityMembershipController : ControllerBase, IControllerName
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiCommunityController));
 
+
+    /// <summary>
+    /// PUT: /api/communities/:communityName/members
+    /// </summary>
+    /// <param name="communityName"></param>
+    /// <returns></returns>
     [HttpPut("members")]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
     [ActionName(nameof(JoinCommunityAsync))]
