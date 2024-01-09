@@ -16,44 +16,34 @@
         <hr />
     </div>
 
-
     <div class="container">
 
         <div class="row">
             <div class="col-md-9">
-
-                <div class="card card-body">
-
-
-                </div>
-
+                <h6>Posts</h6>
             </div>
 
             <div class="col-md-3">
-
                 <div class="card card-body">
+                    @* Description *@
                     <h6>About community</h6>
                     <p>@Model.Community.Description</p>
                     
+                    @* Community stats *@
                     <hr />
+                    <p class="mb-0">@Model.Community.CountMembers members</p>
 
-                    <p>@Model.Community.CountMembers members</p>
-
+                    @* Action buttons *@
                     <hr />
-
                     <button type="button" class="btn btn-sm btn-secondary mb-1">Join</button>
                     <a href="@HttpContextAccessor?.HttpContext?.Request.Path/submit" class="btn btn-sm btn-secondary mb-1">Create Post</a>
-
                 </div>
             </div>
-
         </div>
 
     </div>
 
-
     <partial name="~/Views/Includes/_Footer.cshtml" />
-    <script src="~/js/dist/community-page.bundle.js"></script>
-
+    <script src="~/js/dist/community-page.bundle.js"></script
 </body>
 </html>

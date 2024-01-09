@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
-[Route("/c")]
+[Route("/c/{communityName}")]
+[ServiceFilter(typeof(CommunityNameExistsFilter))]
 public class CommunityController : Controller, IControllerName
 {
     // IControllerName
@@ -24,12 +25,21 @@ public class CommunityController : Controller, IControllerName
     /// /c/:communityName
     /// </summary>
     /// <returns></returns>
-    [HttpGet("{communityName}")]
+    [HttpGet]
     [ActionName(nameof(GetCommunityPage))]
-    [ServiceFilter(typeof(CommunityNameExistsFilter))]
     public async Task<IActionResult> GetCommunityPage([FromRoute] string communityName)
     {
         var serviceResponse = await _communityService.GetCommunityPageViewModelAsync(communityName);
         return View(GuiPageViewFiles.CommunityPage, serviceResponse.Data);
     }
+
+
+    [HttpGet("submit")]
+    [ActionName(nameof(GetNewPostCommunityPage))]
+    public async Task<IActionResult> GetNewPostCommunityPage([FromRoute] string communityName)
+    {
+        return Ok("create new post");
+    }
+
+
 }
