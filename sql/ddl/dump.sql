@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
 -- ------------------------------------------------------
@@ -81,7 +81,7 @@ CREATE TABLE `Community` (
   UNIQUE KEY `name` (`name`),
   KEY `owner_id` (`owner_id`),
   CONSTRAINT `Community_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `User` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `User` (
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -226,6 +226,30 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `community_description`,
  1 AS `community_created_on`,
  1 AS `count_members`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `View_Community_Membership`
+--
+
+DROP TABLE IF EXISTS `View_Community_Membership`;
+/*!50001 DROP VIEW IF EXISTS `View_Community_Membership`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `View_Community_Membership` AS SELECT 
+ 1 AS `community_id`,
+ 1 AS `community_name`,
+ 1 AS `community_title`,
+ 1 AS `community_owner_id`,
+ 1 AS `community_description`,
+ 1 AS `community_created_on`,
+ 1 AS `count_members`,
+ 1 AS `user_id`,
+ 1 AS `user_email`,
+ 1 AS `user_username`,
+ 1 AS `user_password`,
+ 1 AS `user_created_on`,
+ 1 AS `joined_community_on`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -334,6 +358,24 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `View_Community_Membership`
+--
+
+/*!50001 DROP VIEW IF EXISTS `View_Community_Membership`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `View_Community_Membership` AS with `community_membership_counts` as (select `counts`.`community_id` AS `community_id`,count(0) AS `count_members` from `Community_Membership` `counts` group by `counts`.`community_id`) select `cm`.`community_id` AS `community_id`,`c`.`name` AS `community_name`,`c`.`title` AS `community_title`,`c`.`owner_id` AS `community_owner_id`,`c`.`description` AS `community_description`,`c`.`created_on` AS `community_created_on`,`community_membership_counts`.`count_members` AS `count_members`,`cm`.`user_id` AS `user_id`,`u`.`email` AS `user_email`,`u`.`username` AS `user_username`,`u`.`password` AS `user_password`,`u`.`created_on` AS `user_created_on`,`cm`.`created_on` AS `joined_community_on` from (((`Community_Membership` `cm` left join `Community` `c` on((`c`.`id` = `cm`.`community_id`))) left join `View_User` `u` on((`u`.`id` = `cm`.`user_id`))) left join `community_membership_counts` on((`community_membership_counts`.`community_id` = `cm`.`community_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `View_User`
 --
 
@@ -360,8 +402,8 @@ USE `Deadit_Dev`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-05 14:33:49
--- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
+-- Dump completed on 2024-01-09 13:44:38
+-- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
 -- ------------------------------------------------------
@@ -431,4 +473,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-05 14:33:58
+-- Dump completed on 2024-01-09 13:44:42
