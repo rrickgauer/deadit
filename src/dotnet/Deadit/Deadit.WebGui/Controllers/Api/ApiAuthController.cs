@@ -39,7 +39,7 @@ public class ApiAuthController : ControllerBase, IControllerName
             return BadRequest(apiResponse);
         }
 
-        return Created($"/users/{newUserResponse.Data?.Id}", apiResponse);
+        return Created($"/users/{newUserResponse.Data?.UserId}", apiResponse);
     }
 
     /// <summary>

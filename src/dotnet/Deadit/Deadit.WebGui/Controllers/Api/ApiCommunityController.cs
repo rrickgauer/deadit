@@ -41,7 +41,7 @@ public class ApiCommunityController : InternalApiControllerBase, IControllerName
         
         if (community.Successful)
         {
-            return Created($"/communities/{community.Data?.Id}", response);    
+            return Created($"/communities/{community.Data?.CommunityId}", response);    
         }
 
         return BadRequest(response);

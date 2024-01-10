@@ -54,7 +54,7 @@ public class AuthService : IAuthService
         if (result.Data != null)
         {
             // store the client's ID in session
-            SetClientSessionId(session, result.Data.Id);
+            SetClientSessionId(session, result.Data.UserId);
         }
 
         return result;
@@ -128,12 +128,12 @@ public class AuthService : IAuthService
 
         foreach(var user in existingUsers)
         {
-            if (user.Email == signupForm.Email)
+            if (user.UserEmail == signupForm.Email)
             {
                 errors.Add(ErrorCode.SignUpEmailTaken);
             }
             
-            if (user.Username == signupForm.Username)
+            if (user.UserUsername == signupForm.Username)
             {
                 errors.Add(ErrorCode.SignupUsernameTaken);
             }

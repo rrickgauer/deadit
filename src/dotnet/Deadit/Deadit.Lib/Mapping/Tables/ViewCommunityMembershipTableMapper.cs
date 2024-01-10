@@ -15,7 +15,7 @@ public class ViewCommunityMembershipTableMapper : TableMapper<ViewCommunityMembe
         community.CommunityName        = row.Field<string?>(GetColumnName(nameof(ViewCommunityMembership.CommunityName)));
         community.CommunityOwnerId     = row.Field<uint?>(GetColumnName(nameof(ViewCommunityMembership.CommunityOwnerId)));
         community.CommunityTitle       = row.Field<string?>(GetColumnName(nameof(ViewCommunityMembership.CommunityTitle)));
-        community.JoinedOn             = row.Field<DateTime>(GetColumnName(nameof(ViewCommunityMembership.JoinedOn)));
+        community.UserJoinedOn             = row.Field<DateTime>(GetColumnName(nameof(ViewCommunityMembership.UserJoinedOn)));
         community.CountMembers         = row.Field<long>(GetColumnName(nameof(ViewCommunityMembership.CountMembers)));
         community.UserCreatedOn        = row.Field<DateTime>(GetColumnName(nameof(ViewCommunityMembership.UserCreatedOn)));
         community.UserEmail            = row.Field<string?>(GetColumnName(nameof(ViewCommunityMembership.UserEmail)));

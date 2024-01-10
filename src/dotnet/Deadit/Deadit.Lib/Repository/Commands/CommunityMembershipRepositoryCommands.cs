@@ -13,7 +13,7 @@ public sealed class CommunityMembershipRepositoryCommands
         WHERE
             m.user_id = @user_id
         ORDER BY
-            m.joined_community_on DESC;";
+            m.user_joined_community_on DESC;";
 
 
 }

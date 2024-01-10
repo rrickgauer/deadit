@@ -117,30 +117,51 @@ User [BASE TABLE]
 
 View_Community [VIEW]
 
-+------------------+-----------------------+--------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name           | column_type  | column_default    | is_nullable | extra             |
-+------------------+-----------------------+--------------+-------------------+-------------+-------------------+
-| 1                | id                    | int unsigned | 0                 | YES         |                   |
-| 2                | community_name        | char(50)     | None              | YES         |                   |
-| 3                | community_title       | char(100)    | None              | YES         |                   |
-| 4                | community_owner_id    | int unsigned | None              | YES         |                   |
-| 5                | community_description | char(200)    | None              | YES         |                   |
-| 6                | community_created_on  | timestamp    | CURRENT_TIMESTAMP | YES         | DEFAULT_GENERATED |
-| 7                | count_members         | bigint       | None              | YES         |                   |
-+------------------+-----------------------+--------------+-------------------+-------------+-------------------+
++------------------+-------------------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name             | column_type  | column_default    | is_nullable | extra             |
++------------------+-------------------------+--------------+-------------------+-------------+-------------------+
+| 1                | community_id            | int unsigned | 0                 | YES         |                   |
+| 2                | community_name          | char(50)     | None              | YES         |                   |
+| 3                | community_title         | char(100)    | None              | YES         |                   |
+| 4                | community_owner_id      | int unsigned | None              | YES         |                   |
+| 5                | community_description   | char(200)    | None              | YES         |                   |
+| 6                | community_created_on    | timestamp    | CURRENT_TIMESTAMP | YES         | DEFAULT_GENERATED |
+| 7                | community_count_members | bigint       | None              | YES         |                   |
++------------------+-------------------------+--------------+-------------------+-------------+-------------------+
+
+
+View_Community_Membership [VIEW]
+
++------------------+--------------------------+--------------+---------------------+-------------+-------------------+
+| ordinal_position | column_name              | column_type  | column_default      | is_nullable | extra             |
++------------------+--------------------------+--------------+---------------------+-------------+-------------------+
+| 1                | community_id             | int unsigned | None                | NO          |                   |
+| 2                | community_name           | char(50)     | None                | YES         |                   |
+| 3                | community_title          | char(100)    | None                | YES         |                   |
+| 4                | community_owner_id       | int unsigned | None                | YES         |                   |
+| 5                | community_description    | char(200)    | None                | YES         |                   |
+| 6                | community_created_on     | timestamp    | CURRENT_TIMESTAMP   | YES         | DEFAULT_GENERATED |
+| 7                | community_count_members  | bigint       | 0                   | YES         |                   |
+| 8                | user_id                  | int unsigned | None                | NO          |                   |
+| 9                | user_email               | char(200)    | None                | YES         |                   |
+| 10               | user_username            | char(30)     | None                | YES         |                   |
+| 11               | user_password            | char(250)    | None                | YES         |                   |
+| 12               | user_created_on          | timestamp    | 0000-00-00 00:00:00 | YES         |                   |
+| 13               | user_joined_community_on | timestamp    | CURRENT_TIMESTAMP   | NO          | DEFAULT_GENERATED |
++------------------+--------------------------+--------------+---------------------+-------------+-------------------+
 
 
 View_User [VIEW]
 
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| 1                | id          | int unsigned | 0                 | NO          |                   |
-| 2                | email       | char(200)    | None              | NO          |                   |
-| 3                | username    | char(30)     | None              | NO          |                   |
-| 4                | password    | char(250)    | None              | NO          |                   |
-| 5                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
++------------------+-----------------+--------------+-------------------+-------------+-------------------+
+| ordinal_position | column_name     | column_type  | column_default    | is_nullable | extra             |
++------------------+-----------------+--------------+-------------------+-------------+-------------------+
+| 1                | user_id         | int unsigned | 0                 | NO          |                   |
+| 2                | user_email      | char(200)    | None              | NO          |                   |
+| 3                | user_username   | char(30)     | None              | NO          |                   |
+| 4                | user_password   | char(250)    | None              | NO          |                   |
+| 5                | user_created_on | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
++------------------+-----------------+--------------+-------------------+-------------+-------------------+
 
 
 Vote_Comment [BASE TABLE]

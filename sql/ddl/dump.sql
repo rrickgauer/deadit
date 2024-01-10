@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
 -- ------------------------------------------------------
@@ -219,13 +219,13 @@ DROP TABLE IF EXISTS `View_Community`;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
 /*!50001 CREATE VIEW `View_Community` AS SELECT 
- 1 AS `id`,
+ 1 AS `community_id`,
  1 AS `community_name`,
  1 AS `community_title`,
  1 AS `community_owner_id`,
  1 AS `community_description`,
  1 AS `community_created_on`,
- 1 AS `count_members`*/;
+ 1 AS `community_count_members`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -243,13 +243,13 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `community_owner_id`,
  1 AS `community_description`,
  1 AS `community_created_on`,
- 1 AS `count_members`,
+ 1 AS `community_count_members`,
  1 AS `user_id`,
  1 AS `user_email`,
  1 AS `user_username`,
  1 AS `user_password`,
  1 AS `user_created_on`,
- 1 AS `joined_community_on`*/;
+ 1 AS `user_joined_community_on`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -261,11 +261,11 @@ DROP TABLE IF EXISTS `View_User`;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
 /*!50001 CREATE VIEW `View_User` AS SELECT 
- 1 AS `id`,
- 1 AS `email`,
- 1 AS `username`,
- 1 AS `password`,
- 1 AS `created_on`*/;
+ 1 AS `user_id`,
+ 1 AS `user_email`,
+ 1 AS `user_username`,
+ 1 AS `user_password`,
+ 1 AS `user_created_on`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -352,7 +352,7 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `View_Community` AS select `c`.`id` AS `id`,`c`.`name` AS `community_name`,`c`.`title` AS `community_title`,`c`.`owner_id` AS `community_owner_id`,`c`.`description` AS `community_description`,`c`.`created_on` AS `community_created_on`,(select count(0) from `Community_Membership` `cm` where (`cm`.`community_id` = `c`.`id`)) AS `count_members` from `Community` `c` order by `c`.`id` */;
+/*!50001 VIEW `View_Community` AS select `c`.`id` AS `community_id`,`c`.`name` AS `community_name`,`c`.`title` AS `community_title`,`c`.`owner_id` AS `community_owner_id`,`c`.`description` AS `community_description`,`c`.`created_on` AS `community_created_on`,(select count(0) from `Community_Membership` `cm` where (`cm`.`community_id` = `c`.`id`)) AS `community_count_members` from `Community` `c` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -370,7 +370,7 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `View_Community_Membership` AS with `community_membership_counts` as (select `counts`.`community_id` AS `community_id`,count(0) AS `count_members` from `Community_Membership` `counts` group by `counts`.`community_id`) select `cm`.`community_id` AS `community_id`,`c`.`name` AS `community_name`,`c`.`title` AS `community_title`,`c`.`owner_id` AS `community_owner_id`,`c`.`description` AS `community_description`,`c`.`created_on` AS `community_created_on`,`community_membership_counts`.`count_members` AS `count_members`,`cm`.`user_id` AS `user_id`,`u`.`email` AS `user_email`,`u`.`username` AS `user_username`,`u`.`password` AS `user_password`,`u`.`created_on` AS `user_created_on`,`cm`.`created_on` AS `joined_community_on` from (((`Community_Membership` `cm` left join `Community` `c` on((`c`.`id` = `cm`.`community_id`))) left join `View_User` `u` on((`u`.`id` = `cm`.`user_id`))) left join `community_membership_counts` on((`community_membership_counts`.`community_id` = `cm`.`community_id`))) */;
+/*!50001 VIEW `View_Community_Membership` AS with `community_membership_counts` as (select `counts`.`community_id` AS `community_id`,count(0) AS `count_members` from `Community_Membership` `counts` group by `counts`.`community_id`) select `cm`.`community_id` AS `community_id`,`c`.`name` AS `community_name`,`c`.`title` AS `community_title`,`c`.`owner_id` AS `community_owner_id`,`c`.`description` AS `community_description`,`c`.`created_on` AS `community_created_on`,`community_membership_counts`.`count_members` AS `community_count_members`,`cm`.`user_id` AS `user_id`,`u`.`user_email` AS `user_email`,`u`.`user_username` AS `user_username`,`u`.`user_password` AS `user_password`,`u`.`user_created_on` AS `user_created_on`,`cm`.`created_on` AS `user_joined_community_on` from (((`Community_Membership` `cm` left join `Community` `c` on((`c`.`id` = `cm`.`community_id`))) left join `View_User` `u` on((`u`.`user_id` = `cm`.`user_id`))) left join `community_membership_counts` on((`community_membership_counts`.`community_id` = `cm`.`community_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -388,7 +388,7 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `View_User` AS select `u`.`id` AS `id`,`u`.`email` AS `email`,`u`.`username` AS `username`,`u`.`password` AS `password`,`u`.`created_on` AS `created_on` from `User` `u` order by `u`.`id` */;
+/*!50001 VIEW `View_User` AS select `u`.`id` AS `user_id`,`u`.`email` AS `user_email`,`u`.`username` AS `user_username`,`u`.`password` AS `user_password`,`u`.`created_on` AS `user_created_on` from `User` `u` order by `u`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -402,8 +402,8 @@ USE `Deadit_Dev`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-09 13:44:38
--- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
+-- Dump completed on 2024-01-09 20:04:10
+-- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
 -- ------------------------------------------------------
@@ -473,4 +473,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-09 13:44:42
+-- Dump completed on 2024-01-09 20:04:14

@@ -5,14 +5,14 @@
 <html lang="en">
 <head>
     <partial name="~/Views/Includes/_Header.cshtml" />
-    <title>c/@Model.Community.Name</title>
+    <title>c/@Model.Community.CommunityName</title>
 </head>
 <body>
     <partial name="~/Views/Includes/_Navbar.cshtml" />
     <partial name="~/Views/Includes/_LoginModal.cshtml" />
 
     <div class="container mt-3">
-        <h1>@Model.Community.Name</h1>
+        <h1>@Model.Community.CommunityName</h1>
         <hr />
     </div>
 
@@ -27,11 +27,11 @@
                 <div class="card card-body">
                     @* Description *@
                     <h6>About community</h6>
-                    <p>@Model.Community.Description</p>
+                    <p>@Model.Community.CommunityDescription</p>
                     
                     @* Community stats *@
                     <hr />
-                    <p class="mb-0">@Model.Community.CountMembers members</p>
+                    <p class="mb-0">@Model.Community.CommunityCountMembers members</p>
 
                     @* Action buttons *@
                     <hr />

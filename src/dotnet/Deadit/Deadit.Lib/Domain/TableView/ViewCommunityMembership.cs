@@ -15,32 +15,32 @@ public class ViewCommunityMembership :
     #region - Community -
 
     [SqlColumn("community_id")]
-    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.Id))]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityId))]
     [CopyToPropertyAttribute<CommunityMembership>(nameof(CommunityMembership.CommunityId))]
     public uint? CommunityId { get; set; }
 
     [SqlColumn("community_name")]
-    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.Name))]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityName))]
     public string? CommunityName { get; set; }
 
     [SqlColumn("community_title")]
-    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.Title))]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityTitle))]
     public string? CommunityTitle { get; set; }
 
     [SqlColumn("community_description")]
-    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.Description))]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityDescription))]
     public string? CommunityDescription { get; set; }
 
     [SqlColumn("community_owner_id")]
-    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.OwnerId))]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityOwnerId))]
     public uint? CommunityOwnerId { get; set; }
 
     [SqlColumn("community_created_on")]
-    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CreatedOn))]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityCreatedOn))]
     public DateTime CommunityCreatedOn { get; set; } = DateTime.Now;
 
-    [SqlColumn("count_members")]
-    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CountMembers))]
+    [SqlColumn("community_count_members")]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityCountMembers))]
     public long CountMembers { get; set; } = 0;
 
     #endregion
@@ -48,37 +48,33 @@ public class ViewCommunityMembership :
     #region - User -
 
     [SqlColumn("user_id")]
-    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.Id))]
+    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.UserId))]
     [CopyToPropertyAttribute<CommunityMembership>(nameof(CommunityMembership.UserId))]
     public uint? UserId { get; set; }
 
     [SqlColumn("user_username")]
-    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.Username))]
+    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.UserUsername))]
     public string? UserUsername { get; set; }
 
     [SqlColumn("user_email")]
-    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.Email))]
+    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.UserEmail))]
     public string? UserEmail { get; set; }
 
     [JsonIgnore]
     [SqlColumn("user_password")]
-    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.Password))]
+    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.UserPassword))]
     public string? UserPassword { get; set; }
 
     [SqlColumn("user_created_on")]
-    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.CreatedOn))]
+    [CopyToPropertyAttribute<ViewUser>(nameof(ViewUser.UserCreatedOn))]
     public DateTime UserCreatedOn { get; set; } = DateTime.Now;
 
-
-    #endregion
-
-    #region - Membership -
-
-    [SqlColumn("joined_community_on")]
+    [SqlColumn("user_joined_community_on")]
     [CopyToPropertyAttribute<CommunityMembership>(nameof(CommunityMembership.CreatedOn))]
-    public DateTime JoinedOn { get; set; } = DateTime.Now;
+    public DateTime UserJoinedOn { get; set; } = DateTime.Now;
 
     #endregion
+
 
     #region - ITableView -
 
