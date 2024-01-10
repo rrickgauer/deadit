@@ -10,7 +10,7 @@ namespace Deadit.WebGui.Controllers.Api;
 
 [Route("api/auth")]
 [ApiController]
-public class ApiAuthController : ControllerBase, IControllerName
+public class ApiAuthController : InternalApiController, IControllerName
 {
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiAuthController));
 

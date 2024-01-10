@@ -1,5 +1,4 @@
-﻿using Deadit.Lib.Auth;
-using Deadit.Lib.Domain.Constants;
+﻿using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
@@ -10,15 +9,13 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/communities")]
-public class CommunitiesController : Controller, IControllerName
+public class CommunitiesController : GuiController, IControllerName
 {
+    // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunitiesController));
 
     private readonly ICommunityService _communityService;
     private readonly ICommunityMemberService _memberService;
-
-    private SessionManager SessionManager => new(Request.HttpContext.Session);
-    private uint ClientId => SessionManager.ClientId.Value;
 
     public CommunitiesController(ICommunityService communityService, ICommunityMemberService memberService)
     {
@@ -27,13 +24,12 @@ public class CommunitiesController : Controller, IControllerName
     }
 
 
-
-
     /// <summary>
     /// GET: /communities
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [ActionName(nameof(CommunitiesPageAsync))]
     public async Task<IActionResult> CommunitiesPageAsync()
     {
         return View(GuiPageViewFiles.CommunitiesPage);
@@ -57,7 +53,7 @@ public class CommunitiesController : Controller, IControllerName
     [ActionName(nameof(JoinedCommunitiesPage))]
     public async Task<IActionResult> JoinedCommunitiesPage()
     {
-        var result = await _memberService.GetJoinedCommunitiesAsync(ClientId);
+        var result = await _memberService.GetJoinedCommunitiesAsync(ClientId.Value);
 
         var payload = result?.Data?.Select(m => (ViewCommunity)m);
 

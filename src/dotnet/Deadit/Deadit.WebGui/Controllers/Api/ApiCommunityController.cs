@@ -8,7 +8,7 @@ namespace Deadit.WebGui.Controllers.Api;
 
 [ApiController]
 [Route("api/communities")]
-public class ApiCommunityController : InternalApiControllerBase, IControllerName
+public class ApiCommunityController : InternalApiController, IControllerName
 {
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiCommunityController));
 

@@ -2,7 +2,6 @@
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Forms;
-using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Domain.ViewModel;
@@ -35,34 +34,7 @@ public class CommunityService : ICommunityService
     
 
 
-    public async Task<ServiceDataResponse<CommunityPageViewModel>> GetCommunityPageViewModelAsync(string communityName, uint? userId)
-    {
-        ServiceDataResponse<CommunityPageViewModel> result = new();
 
-        var community = (await GetCommunityAsync(communityName)).Data;
-
-        if (community == null)
-        {
-            throw new HttpResponseException(HttpStatusCode.NotFound);
-        }
-
-        var communityId = community?.CommunityId;
-
-        bool isMember = false;
-
-        if (userId.HasValue && communityId.HasValue)
-        {
-            isMember = (await _memberService.IsMemberAsync(userId.Value, communityId.Value)).Data;
-        }
-
-        result.Data = new()
-        {
-            Community = community,
-            IsMember = isMember,
-        };
-
-        return result;
-    }
 
 
 

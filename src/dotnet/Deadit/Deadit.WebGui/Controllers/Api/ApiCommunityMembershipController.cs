@@ -12,7 +12,7 @@ namespace Deadit.WebGui.Controllers.Api;
 [ApiController]
 [Route("api/communities/{communityName}/members")]
 [ServiceFilter(typeof(CommunityNameExistsFilter))]
-public class ApiCommunityMembershipController : InternalApiControllerBase, IControllerName
+public class ApiCommunityMembershipController : InternalApiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiCommunityMembershipController));
