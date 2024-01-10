@@ -27,12 +27,22 @@ public class CommunityMembershipRepository : ICommunityMembershipRepository
         return await _dbConnection.FetchAllAsync(command);
     }
 
-    public async Task<DataRow?> SelectByUserIdAndCommunityIdAsync(uint userId, uint communityId)
+    public async Task<DataRow?> SelectCommunityMembershipAsync(uint userId, uint communityId)
     {
         MySqlCommand command = new(CommunityMembershipRepositoryCommands.SelectByUserIdCommunityId);
 
         command.Parameters.AddWithValue("@user_id", userId);
         command.Parameters.AddWithValue("@community_id", communityId);
+
+        return await _dbConnection.FetchAsync(command);
+    }
+
+    public async Task<DataRow?> SelectCommunityMembershipAsync(uint userId, string communityName)
+    {
+        MySqlCommand command = new(CommunityMembershipRepositoryCommands.SelectByUserIdCommunityName);
+
+        command.Parameters.AddWithValue("@user_id", userId);
+        command.Parameters.AddWithValue("@community_name", communityName);
 
         return await _dbConnection.FetchAsync(command);
     }
@@ -46,6 +56,16 @@ public class CommunityMembershipRepository : ICommunityMembershipRepository
     public async Task<int> DeleteMembershipAsync(uint userId, string communityName)
     {
         MySqlCommand command = new(CommunityMembershipRepositoryCommands.DeleteByUserIdAndCommunityName);
+
+        command.Parameters.AddWithValue("@user_id", userId);
+        command.Parameters.AddWithValue("@community_name", communityName);
+
+        return await _dbConnection.ModifyAsync(command);
+    }
+
+    public async Task<int> InsertMembershipAsync(uint userId, string communityName)
+    {
+        MySqlCommand command = new(CommunityMembershipRepositoryCommands.InsertByUserIdAndCommunityName);
 
         command.Parameters.AddWithValue("@user_id", userId);
         command.Parameters.AddWithValue("@community_name", communityName);

@@ -1,7 +1,10 @@
-﻿using Deadit.Lib.Filter;
+﻿using Deadit.Lib.Domain.Dto;
+using Deadit.Lib.Domain.Response;
+using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deadit.WebGui.Controllers.Api;
@@ -32,11 +35,19 @@ public class ApiCommunityMembershipController : InternalApiControllerBase, ICont
     [HttpPut]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
     [ActionName(nameof(JoinCommunityAsync))]
-    public async Task<IActionResult> JoinCommunityAsync([FromRoute] string communityName)
+    public async Task<ActionResult<ApiResponse<GetJoinedCommunity>>> JoinCommunityAsync([FromRoute] string communityName)
     {
-        int x = 10;
+        
+        var newCommunityMembership = await _communityMemberService.JoinCommunityAsync(ClientId.Value, communityName);
+        var apiResponse = await _responseService.ToApiResponseAsync(newCommunityMembership);
 
-        return Ok();
+        if (!newCommunityMembership.Successful)
+        {
+            return BadRequest(apiResponse);
+        }
+
+        string uri = $"{Request.GetEncodedUrl()}/{ClientId}";
+        return Created(uri, apiResponse);
     }
 
     [HttpDelete]

@@ -27,6 +27,17 @@ public sealed class CommunityMembershipRepositoryCommands
         LIMIT
             1;";
 
+    public const string SelectByUserIdCommunityName = @"
+        SELECT
+            *
+        FROM
+            View_Community_Membership vcb
+        WHERE
+            vcb.community_name = @community_name
+            AND vcb.user_id = @user_id
+        LIMIT
+            1;";
+
     /// <summary>
     /// @user_id
     /// @community_name
@@ -38,6 +49,24 @@ public sealed class CommunityMembershipRepositoryCommands
         user_id = @user_id
         AND community_id = (
             SELECT
+                c.id
+            FROM
+                Community c
+            WHERE
+                c.name = @community_name
+            LIMIT
+                1
+        );";
+
+
+    /// <summary>
+    /// @user_id
+    /// @community_id
+    /// </summary>
+    public const string InsertByUserIdAndCommunityName = @"
+        REPLACE INTO Community_Membership (user_id, community_id) (
+            SELECT
+                @user_id,
                 c.id
             FROM
                 Community c

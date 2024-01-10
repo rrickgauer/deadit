@@ -26,3 +26,4 @@ export class CommunityApiRequest
     public countMembers?: number;
     public urlGui?: string;
 }
+
