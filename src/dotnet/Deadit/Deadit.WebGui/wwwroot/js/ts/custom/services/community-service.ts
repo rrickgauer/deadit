@@ -4,8 +4,6 @@ import { ServiceResponse } from "../domain/model/api-response";
 import { FormDataMapper } from "../mappers/form-data-mapper";
 import { ServiceUtilities } from "../utilities/service-utilities";
 
-
-
 export class CommunityService
 {
 

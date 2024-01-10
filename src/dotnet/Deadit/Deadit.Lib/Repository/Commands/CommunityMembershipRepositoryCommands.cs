@@ -16,4 +16,35 @@ public sealed class CommunityMembershipRepositoryCommands
             m.user_joined_community_on DESC;";
 
 
+    public const string SelectByUserIdCommunityId = @"
+        SELECT
+            *
+        FROM
+            View_Community_Membership vcb
+        WHERE
+            vcb.community_id = @community_id
+            AND vcb.user_id = @user_id
+        LIMIT
+            1;";
+
+    /// <summary>
+    /// @user_id
+    /// @community_name
+    /// </summary>
+    public const string DeleteByUserIdAndCommunityName = @"
+    DELETE FROM
+        Community_Membership
+    WHERE
+        user_id = @user_id
+        AND community_id = (
+            SELECT
+                c.id
+            FROM
+                Community c
+            WHERE
+                c.name = @community_name
+            LIMIT
+                1
+        );";
+
 }

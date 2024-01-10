@@ -1,5 +1,5 @@
 import { HttpStatusCode } from "../domain/enum/http-status-code";
-import { ApiResponse, ApiValidationException, ServiceResponse, ValidationErrorsApiResponse } from "../domain/model/api-response";
+import { ApiResponse, ApiResponseNoContent, ApiValidationException, ServiceResponse, ValidationErrorsApiResponse } from "../domain/model/api-response";
 
 export class ServiceUtilities
 {
@@ -10,6 +10,17 @@ export class ServiceUtilities
             const text = await response.text();
             throw new Error(text);
         }
+    }
+
+    public static async toServiceResponseNoContent(response: Response): Promise<ServiceResponse<any>>
+    {
+        if (response.status === HttpStatusCode.UnprocessableEntity)
+        {
+            await ServiceUtilities.handleUnprocessableEntityApiResponse(response);
+        }
+
+        const apiResponse = new ApiResponseNoContent(response);
+        return await apiResponse.toServiceResponse();
     }
 
 

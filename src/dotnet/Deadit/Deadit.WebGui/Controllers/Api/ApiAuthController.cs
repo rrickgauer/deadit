@@ -29,7 +29,7 @@ public class ApiAuthController : ControllerBase, IControllerName
     /// <param name="signupForm"></param>
     /// <returns></returns>
     [HttpPost("signup")]
-    public async Task<IActionResult> PostSignupAsync([FromForm] SignupRequestForm signupForm)
+    public async Task<ActionResult<ApiResponse<ViewUser>>> PostSignupAsync([FromForm] SignupRequestForm signupForm)
     {
         ServiceDataResponse<ViewUser> newUserResponse = await _authService.SignupUserAsync(signupForm);
         var apiResponse = await _responseService.ToApiResponseAsync(newUserResponse);

@@ -36,7 +36,7 @@ public class ApiCommunityController : InternalApiControllerBase, IControllerName
     [ActionName(nameof(PostCommunityAsync))]
     public async Task<IActionResult> PostCommunityAsync([FromForm] CreateCommunityRequestForm newCommunityForm)
     {
-        var community = await _communityService.CreateCommunityAsync(newCommunityForm, ClientId);
+        var community = await _communityService.CreateCommunityAsync(newCommunityForm, ClientId.Value);
         var response = await _responseService.ToApiResponseAsync(community);
         
         if (community.Successful)

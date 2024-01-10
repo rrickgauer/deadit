@@ -1,6 +1,11 @@
 ﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
+
+@{
+    var requestPath = HttpContextAccessor?.HttpContext?.Request.Path.ToString();
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,8 +40,15 @@
 
                     @* Action buttons *@
                     <hr />
-                    <button type="button" class="btn btn-sm btn-secondary mb-1">Join</button>
-                    <a href="@HttpContextAccessor?.HttpContext?.Request.Path/submit" class="btn btn-sm btn-secondary mb-1">Create Post</a>
+                    
+                    
+                    @{
+                        string toggleMembershipButtonText = Model.IsMember ? "Leave" : "Join";
+                        string membershipStatus = Model.IsMember ? "data-js-is-member" : string.Empty;
+                    }
+
+                    <button type="button" class="btn btn-sm btn-secondary mb-1 btn-toggle-membership" @membershipStatus>@toggleMembershipButtonText</button>
+                    <a href="@requestPath/submit" class="btn btn-sm btn-secondary mb-1">Create Post</a>
                 </div>
             </div>
         </div>
