@@ -1,10 +1,11 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
+import { IController } from "../../../domain/contracts/i-controller";
 import { CommunityMembershipService } from "../../../services/community-membership-service";
 import { UrlUtilities } from "../../../utilities/url-utilities";
 import { CommunityPageElements } from "./community-page-elements";
 
 
-export class ToggleMembershipController
+export class ToggleMembershipController implements IController
 {
     private static readonly IsMemberDataAttribute = 'data-js-is-member';
 
