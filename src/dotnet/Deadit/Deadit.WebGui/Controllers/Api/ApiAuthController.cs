@@ -10,7 +10,7 @@ namespace Deadit.WebGui.Controllers.Api;
 
 [Route("api/auth")]
 [ApiController]
-public class ApiAuthController : ControllerBase, IControllerName
+public class ApiAuthController : InternalApiController, IControllerName
 {
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiAuthController));
 
@@ -29,7 +29,7 @@ public class ApiAuthController : ControllerBase, IControllerName
     /// <param name="signupForm"></param>
     /// <returns></returns>
     [HttpPost("signup")]
-    public async Task<IActionResult> PostSignupAsync([FromForm] SignupRequestForm signupForm)
+    public async Task<ActionResult<ApiResponse<ViewUser>>> PostSignupAsync([FromForm] SignupRequestForm signupForm)
     {
         ServiceDataResponse<ViewUser> newUserResponse = await _authService.SignupUserAsync(signupForm);
         var apiResponse = await _responseService.ToApiResponseAsync(newUserResponse);
@@ -39,7 +39,7 @@ public class ApiAuthController : ControllerBase, IControllerName
             return BadRequest(apiResponse);
         }
 
-        return Created($"/users/{newUserResponse.Data?.Id}", apiResponse);
+        return Created($"/users/{newUserResponse.Data?.UserId}", apiResponse);
     }
 
     /// <summary>

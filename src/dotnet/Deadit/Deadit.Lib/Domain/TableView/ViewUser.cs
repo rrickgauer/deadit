@@ -7,27 +7,27 @@ namespace Deadit.Lib.Domain.TableView;
 
 public class ViewUser : ITableView<ViewUser, User>
 {
-    [SqlColumn("id")]
+    [SqlColumn("user_id")]
     [CopyToPropertyAttribute<User>(nameof(User.Id))]
-    public uint? Id { get; set; }
+    public uint? UserId { get; set; }
 
-    [SqlColumn("email")]
+    [SqlColumn("user_email")]
     [CopyToPropertyAttribute<User>(nameof(User.Email))]
-    public string? Email { get; set; }
+    public string? UserEmail { get; set; }
 
-    [SqlColumn("username")]
+    [SqlColumn("user_username")]
     [CopyToPropertyAttribute<User>(nameof(User.Username))]
-    public string? Username { get; set; }
+    public string? UserUsername { get; set; }
 
     [JsonIgnore]
-    [SqlColumn("password")]
+    [SqlColumn("user_password")]
     [CopyToPropertyAttribute<User>(nameof(User.Password))]
-    public string? Password { get; set; }
+    public string? UserPassword { get; set; }
 
     [JsonIgnore]
-    [SqlColumn("created_on")]
+    [SqlColumn("user_created_on")]
     [CopyToPropertyAttribute<User>(nameof(User.CreatedOn))]
-    public DateTime CreatedOn { get; set; } = DateTime.Now;
+    public DateTime UserCreatedOn { get; set; } = DateTime.Now;
 
 
     // ITableView

@@ -9,13 +9,13 @@ public class ViewCommunityTableMapper : TableMapper<ViewCommunity>
     {
         ViewCommunity result = new();
 
-        result.Id = Convert.ToUInt32((row.Field<object?>(GetColumnName(nameof(ViewCommunity.Id)))));
-        result.Name = row.Field<string?>(GetColumnName(nameof(ViewCommunity.Name)));
-        result.Title = row.Field<string?>(GetColumnName(nameof(ViewCommunity.Title)));
-        result.OwnerId = Convert.ToInt32(row.Field<object?>(GetColumnName(nameof(ViewCommunity.OwnerId))));
-        result.Description = row.Field<string?>(GetColumnName(nameof(ViewCommunity.Description)));
-        result.CreatedOn = row.Field<DateTime>(GetColumnName(nameof(ViewCommunity.CreatedOn)));
-        result.CountMembers = row.Field<long>(GetColumnName(nameof(ViewCommunity.CountMembers)));
+        result.CommunityId = Convert.ToUInt32((row.Field<object?>(GetColumnName(nameof(ViewCommunity.CommunityId)))));
+        result.CommunityName = row.Field<string?>(GetColumnName(nameof(ViewCommunity.CommunityName)));
+        result.CommunityTitle = row.Field<string?>(GetColumnName(nameof(ViewCommunity.CommunityTitle)));
+        result.CommunityOwnerId = Convert.ToUInt32(row.Field<object?>(GetColumnName(nameof(ViewCommunity.CommunityOwnerId))));
+        result.CommunityDescription = row.Field<string?>(GetColumnName(nameof(ViewCommunity.CommunityDescription)));
+        result.CommunityCreatedOn = row.Field<DateTime>(GetColumnName(nameof(ViewCommunity.CommunityCreatedOn)));
+        result.CommunityCountMembers = row.Field<long>(GetColumnName(nameof(ViewCommunity.CommunityCountMembers)));
         
 
         return result;

@@ -7,7 +7,7 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("")]
-public class HomeController : Controller, IControllerName
+public class HomeController : GuiController, IControllerName
 {
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(HomeController));
 
@@ -23,12 +23,15 @@ public class HomeController : Controller, IControllerName
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [ActionName(nameof(HomePageAsync))]
     public async Task<IActionResult> HomePageAsync()
     {
         return View(GuiPageViewFiles.HomePage); 
     }
 
+
     [HttpGet("/logout")]
+    [ActionName(nameof(LogoutPage))]
     public async Task<IActionResult> LogoutPage()
     {
         // clear client session data

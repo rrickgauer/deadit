@@ -10,10 +10,10 @@ public sealed class UserRepositoryCommands
         SELECT
             u.*
         FROM
-            User u
+            View_User u
         WHERE
-            u.username = @username
-            AND u.password = @password
+            u.user_username = @username
+            AND u.user_password = @password
         LIMIT
             1;";
 
@@ -24,7 +24,7 @@ public sealed class UserRepositoryCommands
         FROM
             View_User u
         WHERE
-            u.id = @user_id
+            u.user_id = @user_id
         LIMIT
             1;";
 
@@ -50,8 +50,8 @@ public sealed class UserRepositoryCommands
         FROM
             View_User u
         WHERE
-            u.email = @email
-            OR u.username = @username
+            u.user_email = @email
+            OR u.user_username = @username
         LIMIT
             2;";
 }

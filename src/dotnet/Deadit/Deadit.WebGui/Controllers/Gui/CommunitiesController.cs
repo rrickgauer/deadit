@@ -1,4 +1,6 @@
 ﻿using Deadit.Lib.Domain.Constants;
+using Deadit.Lib.Domain.TableView;
+using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
@@ -7,15 +9,27 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/communities")]
-public class CommunitiesController : Controller, IControllerName
+public class CommunitiesController : GuiController, IControllerName
 {
+    // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunitiesController));
+
+    private readonly ICommunityService _communityService;
+    private readonly ICommunityMemberService _memberService;
+
+    public CommunitiesController(ICommunityService communityService, ICommunityMemberService memberService)
+    {
+        _communityService = communityService;
+        _memberService = memberService;
+    }
+
 
     /// <summary>
     /// GET: /communities
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [ActionName(nameof(CommunitiesPageAsync))]
     public async Task<IActionResult> CommunitiesPageAsync()
     {
         return View(GuiPageViewFiles.CommunitiesPage);
@@ -27,26 +41,25 @@ public class CommunitiesController : Controller, IControllerName
     /// <returns></returns>
     [HttpGet("create")]
     [ServiceFilter(typeof(LoginFirstRedirectFilter))]
+    [ActionName(nameof(CreateCommunityPageAsync))]
     public async Task<IActionResult> CreateCommunityPageAsync()
     {
         return View(GuiPageViewFiles.CreateCommunitiesPage);
     }
 
-    [HttpGet("{communityName}")]
-    public async Task<IActionResult> ViewCommunityPageAsync([FromRoute] string communityName)
+
+    [HttpGet("joined")]
+    [ServiceFilter(typeof(LoginFirstRedirectFilter))]
+    [ActionName(nameof(JoinedCommunitiesPage))]
+    public async Task<IActionResult> JoinedCommunitiesPage()
     {
-        var output = new
-        {
-            CommunityName = communityName,
-            Bitch = true,
-        };
+        var result = await _memberService.GetJoinedCommunitiesAsync(ClientId.Value);
 
+        var payload = result?.Data?.Select(m => (ViewCommunity)m);
 
-        return RedirectToAction(nameof(CommunityController.GetCommunityPage), CommunityController.ControllerRedirectName, new
-        {
-            communityName = communityName,
-        });
-
+        return Ok(payload);
     }
+
+    
 
 }

@@ -1,18 +1,25 @@
 ﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http.Extensions;
+
+@{
+    var requestPath = HttpContextAccessor?.HttpContext?.Request.Path.ToString();
+    var absoluteUrl = HttpContextAccessor?.HttpContext?.Request.GetEncodedUrl();
+    var loginUrl = $"/auth/login?destination={absoluteUrl}";
+}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <partial name="~/Views/Includes/_Header.cshtml" />
-    <title>c/@Model.Community.Name</title>
+    <title>c/@Model.Community.CommunityName</title>
 </head>
 <body>
     <partial name="~/Views/Includes/_Navbar.cshtml" />
     <partial name="~/Views/Includes/_LoginModal.cshtml" />
 
     <div class="container mt-3">
-        <h1>@Model.Community.Name</h1>
+        <h1>@Model.Community.CommunityName</h1>
         <hr />
     </div>
 
@@ -27,16 +34,30 @@
                 <div class="card card-body">
                     @* Description *@
                     <h6>About community</h6>
-                    <p>@Model.Community.Description</p>
+                    <p>@Model.Community.CommunityDescription</p>
                     
                     @* Community stats *@
                     <hr />
-                    <p class="mb-0">@Model.Community.CountMembers members</p>
+                    <p class="mb-0">@Model.Community.CommunityCountMembers members</p>
 
                     @* Action buttons *@
                     <hr />
-                    <button type="button" class="btn btn-sm btn-secondary mb-1">Join</button>
-                    <a href="@HttpContextAccessor?.HttpContext?.Request.Path/submit" class="btn btn-sm btn-secondary mb-1">Create Post</a>
+                                        
+                    @{
+                        if (Model.IsLoggedIn)
+                        {
+                            string toggleMembershipButtonText = Model.IsMember ? "Leave" : "Join";
+                            string membershipStatus = Model.IsMember ? "data-js-is-member" : string.Empty;
+
+                            <button type="button" class="btn btn-sm btn-secondary mb-1 btn-toggle-membership" @membershipStatus>@toggleMembershipButtonText</button>
+                        }
+                        else
+                        {
+                            <a href="@loginUrl" class="btn btn-sm btn-secondary mb-1">Log in to join</a>
+                        }
+                    }
+
+                    <a href="@requestPath/submit" class="btn btn-sm btn-secondary mb-1">Create Post</a>
                 </div>
             </div>
         </div>
@@ -44,6 +65,6 @@
     </div>
 
     <partial name="~/Views/Includes/_Footer.cshtml" />
-    <script src="~/js/dist/community-page.bundle.js"></script
+    <script src="~/js/dist/community-page.bundle.js"></script>
 </body>
 </html>

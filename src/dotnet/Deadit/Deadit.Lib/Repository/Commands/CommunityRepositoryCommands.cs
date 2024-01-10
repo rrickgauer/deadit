@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Deadit.Lib.Repository.Commands;
+﻿namespace Deadit.Lib.Repository.Commands;
 
 public sealed class CommunityRepositoryCommands
 {
@@ -24,7 +18,7 @@ public sealed class CommunityRepositoryCommands
         FROM
             View_Community c
         WHERE
-            c.id = @id
+            c.community_id = @id
         LIMIT
             1;";
 

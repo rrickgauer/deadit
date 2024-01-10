@@ -6,7 +6,7 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/auth")]
-public class LoginController : Controller, IControllerName
+public class LoginController : GuiController, IControllerName
 {
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(LoginController));
 
@@ -16,7 +16,7 @@ public class LoginController : Controller, IControllerName
     /// <returns></returns>
     [HttpGet("login")]
     [ActionName(nameof(LoginPageAsync))]
-    public async Task<IActionResult> LoginPageAsync([FromQuery] string? dest)
+    public async Task<ViewResult> LoginPageAsync([FromQuery] string? dest)
     {
         return View(GuiPageViewFiles.LoginPage);
     }

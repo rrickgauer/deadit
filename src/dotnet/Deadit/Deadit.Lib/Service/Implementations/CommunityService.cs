@@ -1,11 +1,13 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Domain.ViewModel;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Service.Contracts;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace Deadit.Lib.Service.Implementations;
@@ -19,33 +21,22 @@ public class CommunityService : ICommunityService
     private readonly ICommunityRepository _communityRepository;
     private readonly ITableMapperService _tableMapperService;
     private readonly IBannedCommunityNameService _bannedCommunityService;
+    private readonly ICommunityMemberService _memberService;
 
-    public CommunityService(ICommunityRepository communityRepository, ITableMapperService tableMapperService, IBannedCommunityNameService bannedCommunityService)
+    public CommunityService(ICommunityRepository communityRepository, ITableMapperService tableMapperService, IBannedCommunityNameService bannedCommunityService, ICommunityMemberService memberService)
     {
         _communityRepository = communityRepository;
         _tableMapperService = tableMapperService;
         _bannedCommunityService = bannedCommunityService;
+        _memberService = memberService;
     }
 
+    
 
-    public async Task<ServiceDataResponse<CommunityPageViewModel>> GetCommunityPageViewModelAsync(string communityName)
-    {
-        ServiceDataResponse<CommunityPageViewModel> result = new();
 
-        var getCommunityResponse = await GetCommunityAsync(communityName);
 
-        if (!getCommunityResponse.HasData)
-        {
-            return result;
-        }
 
-        result.Data = new()
-        {
-            Community = getCommunityResponse.Data,
-        };
 
-        return result;
-    }
 
 
 
@@ -156,14 +147,10 @@ public class CommunityService : ICommunityService
     /// <returns></returns>
     public async Task<ServiceDataResponse<ViewCommunity>> GetCommunityAsync(string communityName)
     {
-        ServiceDataResponse<ViewCommunity> response = new();
-
-        var datarow = await _communityRepository.SelectCommunityAsync(communityName);
-
-        if (datarow != null)
+        ServiceDataResponse<ViewCommunity> response = new()
         {
-            response.Data = _tableMapperService.ToModel<ViewCommunity>(datarow);
-        }
+            Data = await TryGetCommunityByNameAsync(communityName),
+        };
 
         return response;
     }
@@ -185,6 +172,21 @@ public class CommunityService : ICommunityService
         }
 
         return response;
+    }
+
+
+    private async Task<ViewCommunity?> TryGetCommunityByNameAsync(string communityName)
+    {
+        var datarow = await _communityRepository.SelectCommunityAsync(communityName);
+        
+        if (datarow == null)
+        {
+            return null;
+        }
+
+        var community = _tableMapperService.ToModel<ViewCommunity>(datarow);
+
+        return community;
     }
 
 }
