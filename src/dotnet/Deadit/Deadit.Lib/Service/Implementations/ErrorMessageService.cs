@@ -21,17 +21,6 @@ public class ErrorMessageService : IErrorMessageService
         _tableMapperService = tableMapperService;
     }
 
-    public async Task<ErrorMessage> GetErrorMessageAsync(ErrorCode errorCode)
-    {
-        return await GetErrorMessageAsync((int)errorCode);
-    }
-
-    public async Task<ErrorMessage> GetErrorMessageAsync(int errorCode)
-    {
-        var messagesDict = await GetErrorMessagesAsync();
-        return messagesDict[(ErrorCode)errorCode];
-    }
-
     public async Task<Dictionary<ErrorCode, ErrorMessage>> GetErrorMessagesAsync()
     {
         if (!_messagesSet)

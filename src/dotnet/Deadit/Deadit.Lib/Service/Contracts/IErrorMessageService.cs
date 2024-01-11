@@ -10,7 +10,7 @@ namespace Deadit.Lib.Service.Contracts;
 
 public interface IErrorMessageService
 {
-    public Task<ErrorMessage> GetErrorMessageAsync(ErrorCode errorCode);
-    public Task<ErrorMessage> GetErrorMessageAsync(int errorCode);
+    //public Task<ErrorMessage> GetErrorMessageAsync(ErrorCode errorCode);
+    //public Task<ErrorMessage> GetErrorMessageAsync(int errorCode);
     public Task<Dictionary<ErrorCode, ErrorMessage>> GetErrorMessagesAsync();
 }
