@@ -4,6 +4,9 @@
       "allowJs": true,
       "target": "ES6",
       "moduleResolution": "Bundler",
+      "esModuleInterop": true,
+      "inlineSourceMap": true,
     },
-    "include": ["./ts/custom/**/*"]
+    "include": ["./ts/custom/**/*"],
+    "ts-node": {}
   }

@@ -7,18 +7,11 @@ using Deadit.Lib.Service.Contracts;
 
 namespace Deadit.Lib.Service.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(IBannedCommunityNameService))]
-public class BannedCommunityNameService : IBannedCommunityNameService
+[AutoInject<IBannedCommunityNameService>(AutoInjectionType.Scoped, InjectionProject.Always)]
+public class BannedCommunityNameService(ITableMapperService tableMapperService, IBannedCommunityNameRepository bannedCommunityNameRepository) : IBannedCommunityNameService
 {
-    private readonly ITableMapperService _tableMapperService;
-    private readonly IBannedCommunityNameRepository _bannedCommunityNameRepository;
-
-    public BannedCommunityNameService(ITableMapperService tableMapperService, IBannedCommunityNameRepository bannedCommunityNameRepository)
-    {
-        _tableMapperService = tableMapperService;
-        _bannedCommunityNameRepository = bannedCommunityNameRepository;
-    }
-
+    private readonly ITableMapperService _tableMapperService = tableMapperService;
+    private readonly IBannedCommunityNameRepository _bannedCommunityNameRepository = bannedCommunityNameRepository;
 
     public async Task<ServiceDataResponse<bool>> IsBannedCommunityNameAsync(string communityName)
     {
@@ -32,7 +25,7 @@ public class BannedCommunityNameService : IBannedCommunityNameService
         };
     }
 
-    public async Task<ServiceDataResponse<IEnumerable<ViewBannedCommunityName>>> GetBannedCommunityNamesAsync()
+    public async Task<ServiceDataResponse<List<ViewBannedCommunityName>>> GetBannedCommunityNamesAsync()
     {
         var datatable = await _bannedCommunityNameRepository.SelectAllBannedCommunityNamesAsync();
         var models = _tableMapperService.ToModels<ViewBannedCommunityName>(datatable);

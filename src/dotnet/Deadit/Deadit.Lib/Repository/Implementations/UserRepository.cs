@@ -9,15 +9,10 @@ using System.Data;
 
 namespace Deadit.Lib.Repository.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType=typeof(IUserRepository))]
-public class UserRepository : IUserRepository
+[AutoInject<IUserRepository>(AutoInjectionType.Scoped, InjectionProject.Always)]
+public class UserRepository(DatabaseConnection dbConnection) : IUserRepository
 {
-    private readonly DatabaseConnection _dbConnection;
-
-    public UserRepository(DatabaseConnection dbConnection)
-    {
-        _dbConnection = dbConnection;
-    }
+    private readonly DatabaseConnection _dbConnection = dbConnection;
 
     public async Task<DataRow?> SelectUserAsync(LoginRequestForm loginForm)
     {

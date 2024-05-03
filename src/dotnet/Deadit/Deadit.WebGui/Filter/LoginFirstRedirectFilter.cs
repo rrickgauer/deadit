@@ -18,16 +18,11 @@ namespace Deadit.WebGui.Filter;
 
 
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui)]
-public class LoginFirstRedirectFilter : IAsyncActionFilter
+public class LoginFirstRedirectFilter(IAuthService authService) : IAsyncActionFilter
 {
-    private readonly IAuthService _authService;
+    private readonly IAuthService _authService = authService;
 
     private bool IsClientLoggedIn => _authService.IsClientLoggedIn();
-
-    public LoginFirstRedirectFilter(IAuthService authService)
-    {
-        _authService = authService;
-    }
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {

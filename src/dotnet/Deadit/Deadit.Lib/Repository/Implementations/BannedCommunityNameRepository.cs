@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 
 namespace Deadit.Lib.Repository.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(IBannedCommunityNameRepository))]
+[AutoInject<IBannedCommunityNameRepository>(AutoInjectionType.Scoped, InjectionProject.Always)]
 public class BannedCommunityNameRepository : IBannedCommunityNameRepository
 {
     private readonly DatabaseConnection _dbConnection;

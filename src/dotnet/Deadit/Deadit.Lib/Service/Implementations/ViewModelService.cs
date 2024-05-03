@@ -8,25 +8,13 @@ using Deadit.Lib.Service.Contracts;
 
 namespace Deadit.Lib.Service.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui, InterfaceType = typeof(IViewModelService))]
-public class ViewModelService : IViewModelService
-{
-    private readonly ICommunityService _communityService;
-    private readonly ICommunityMemberService _memberService;
-    private readonly IAuthService _authService;
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="communityService"></param>
-    /// <param name="memberService"></param>
-    /// <param name="authService"></param>
-    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService)
-    {
-        _communityService = communityService;
-        _memberService = memberService;
-        _authService = authService;
-    }
+[AutoInject<IViewModelService>(AutoInjectionType.Scoped, InjectionProject.WebGui)]
+public class ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService) : IViewModelService
+{
+    private readonly ICommunityService _communityService = communityService;
+    private readonly ICommunityMemberService _memberService = memberService;
+    private readonly IAuthService _authService = authService;
 
     /// <summary>
     /// Get the view model for the CommunityPage

@@ -12,7 +12,7 @@ public interface IControllerName
 
         if (controllerName.EndsWith(ControllerSuffix))
         {
-            result = controllerName.Substring(0, controllerName.Length - ControllerSuffix.Length);
+            result = controllerName[..^ControllerSuffix.Length];
         }
 
         return result;

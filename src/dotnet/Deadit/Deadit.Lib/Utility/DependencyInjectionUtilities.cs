@@ -25,7 +25,7 @@ public class DependencyInjectionUtilities
 
     public static void InjectServicesIntoAssembly(IServiceCollection services, InjectionProject projectType, Assembly assembly)
     {
-        var serviceTypes = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<AutoInjectAttribute>() != null).ToList() ?? new List<Type>();
+        var serviceTypes = assembly.GetTypes().Where(t => t.IsClass && t.GetCustomAttribute<AutoInjectBaseAttribute>() != null).ToList() ?? new List<Type>();
 
         foreach (var serviceType in serviceTypes)
         {
@@ -35,9 +35,7 @@ public class DependencyInjectionUtilities
 
     private static void InjectService(IServiceCollection services, InjectionProject project, Type serviceType)
     {
-        var attr = serviceType.GetCustomAttribute<AutoInjectAttribute>();
-
-        if (attr == null)
+        if (serviceType.GetCustomAttribute<AutoInjectBaseAttribute>() is not AutoInjectBaseAttribute attr)
         {
             return;
         }
@@ -57,25 +55,25 @@ public class DependencyInjectionUtilities
         }
     }
 
-    private static Func<Type, IServiceCollection> GetInjectionMethod(IServiceCollection services, AutoInjectAttribute attr)
+    private static Func<Type, IServiceCollection> GetInjectionMethod(IServiceCollection services, AutoInjectBaseAttribute attr)
     {
         return attr.AutoInjectionType switch
         {
             AutoInjectionType.Singleton => services.AddSingleton,
-            AutoInjectionType.Scoped => services.AddScoped,
+            AutoInjectionType.Scoped    => services.AddScoped,
             AutoInjectionType.Transient => services.AddTransient,
-            _ => throw new NotImplementedException(),
+            _                           => throw new NotImplementedException(),
         };
     }
 
-    private static Func<Type, Type, IServiceCollection> GetInterfaceInjectionMethod(IServiceCollection services, AutoInjectAttribute attr)
+    private static Func<Type, Type, IServiceCollection> GetInterfaceInjectionMethod(IServiceCollection services, AutoInjectBaseAttribute attr)
     {
         return attr.AutoInjectionType switch
         {
             AutoInjectionType.Singleton => services.AddSingleton,
-            AutoInjectionType.Scoped => services.AddScoped,
+            AutoInjectionType.Scoped    => services.AddScoped,
             AutoInjectionType.Transient => services.AddTransient,
-            _ => throw new NotImplementedException(),
+            _                           => throw new NotImplementedException(),
         };
     }
 

@@ -20,10 +20,13 @@ class RollupConfig
         this.input = input;
 
         this.output = {
-            format: 'es',
+            // format: 'es',
             compact: true,
             sourcemap: true,
             file: output,
+            inlineDynamicImports: true,
+            interop: "auto",
+            format: 'iife',
         }
 
         this.plugins = [typescript()];

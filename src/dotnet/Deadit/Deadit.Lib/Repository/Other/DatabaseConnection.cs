@@ -6,21 +6,16 @@ using System.Data;
 
 namespace Deadit.Lib.Repository.Other;
 
+/// <summary>
+/// Constructor
+/// </summary>
+/// <param name="configs"></param>
 [AutoInject(AutoInjectionType.Transient, InjectionProject.Always)]
-public class DatabaseConnection
+public class DatabaseConnection(IConfigs configs)
 {
-    private readonly IConfigs _configs;
+    private readonly IConfigs _configs = configs;
 
     public string ConnectionString => $"server={_configs.DbServer};user={_configs.DbUser};database={_configs.DbDataBase};password={_configs.DbPassword}";
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="configs"></param>
-    public DatabaseConnection(IConfigs configs)
-    {
-        _configs = configs;
-    }
 
 
     /// <summary>
@@ -90,7 +85,7 @@ public class DatabaseConnection
             await CloseConnectionAsync(connection);
         }
 
-        catch (Exception ex)
+        catch (Exception)
         {
             await transaction.RollbackAsync();
             throw;
@@ -147,12 +142,6 @@ public class DatabaseConnection
     /// <returns></returns>
     private MySqlConnection GetNewConnection()
     {
-
-        var sss = new MySqlConnection(ConnectionString)
-        {
-            
-        };
-
         return new MySqlConnection(ConnectionString);
     }
 

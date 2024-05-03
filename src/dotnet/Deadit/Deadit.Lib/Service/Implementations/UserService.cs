@@ -7,17 +7,11 @@ using Deadit.Lib.Service.Contracts;
 
 namespace Deadit.Lib.Service.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(IUserService))]
-public class UserService : IUserService
+[AutoInject<IUserService>(AutoInjectionType.Scoped, InjectionProject.Always)]
+public class UserService(IUserRepository userRepository, ITableMapperService tableMapperService) : IUserService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly ITableMapperService _tableMapperService;
-
-    public UserService(IUserRepository userRepository, ITableMapperService tableMapperService)
-    {
-        _userRepository = userRepository;
-        _tableMapperService = tableMapperService;
-    }
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly ITableMapperService _tableMapperService = tableMapperService;
 
     public async Task<ViewUser?> GetUserAsync(LoginRequestForm loginForm)
     {
@@ -45,7 +39,7 @@ public class UserService : IUserService
         return null;
     }
 
-    public async Task<IEnumerable<ViewUser>> GetMatchingUsersAsync(string email, string username)
+    public async Task<List<ViewUser>> GetMatchingUsersAsync(string email, string username)
     {
         var dataTable = await _userRepository.SelectMatchingUsersAsync(email, username);
 

@@ -9,19 +9,13 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/communities")]
-public class CommunitiesController : GuiController, IControllerName
+public class CommunitiesController(ICommunityService communityService, ICommunityMemberService memberService) : GuiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunitiesController));
 
-    private readonly ICommunityService _communityService;
-    private readonly ICommunityMemberService _memberService;
-
-    public CommunitiesController(ICommunityService communityService, ICommunityMemberService memberService)
-    {
-        _communityService = communityService;
-        _memberService = memberService;
-    }
+    private readonly ICommunityService _communityService = communityService;
+    private readonly ICommunityMemberService _memberService = memberService;
 
 
     /// <summary>
@@ -53,11 +47,12 @@ public class CommunitiesController : GuiController, IControllerName
     [ActionName(nameof(JoinedCommunitiesPage))]
     public async Task<IActionResult> JoinedCommunitiesPage()
     {
-        var result = await _memberService.GetJoinedCommunitiesAsync(ClientId.Value);
+        var result = await _memberService.GetJoinedCommunitiesAsync(ClientId!.Value);
 
-        var payload = result?.Data?.Select(m => (ViewCommunity)m);
+        return Ok(result);
 
-        return Ok(payload);
+        //var payload = result?.Data?.Select(m => (ViewCommunity)m);
+        //return Ok(payload);
     }
 
     

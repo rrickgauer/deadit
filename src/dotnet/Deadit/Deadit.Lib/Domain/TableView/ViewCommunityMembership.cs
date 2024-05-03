@@ -89,7 +89,7 @@ public class ViewCommunityMembership :
 
     public static explicit operator Community(ViewCommunityMembership other)
     {
-        return (Community)((ViewCommunity)other);
+        return (Community)(ViewCommunity)other;
     }
 
     public static explicit operator ViewCommunity(ViewCommunityMembership other)

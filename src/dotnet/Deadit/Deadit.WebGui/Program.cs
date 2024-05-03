@@ -2,6 +2,8 @@ using Deadit.Lib.Domain.Configurations;
 using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Filter;
+using Deadit.Lib.JsonConverters;
+using Deadit.Lib.Service.Contracts;
 using Deadit.Lib.Utility;
 using System.Reflection;
 
@@ -35,6 +37,8 @@ builder.Services.AddControllersWithViews(options =>
     {
         options.JsonSerializerOptions.WriteIndented = true;
     }
+
+    options.JsonSerializerOptions.Converters.Add(new ServiceDataResponseFactory());
 });
 
 
@@ -77,7 +81,14 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 #endregion
 
+
 var app = builder.Build();
+
+
+#region - Load the error messages into memory -
+var errorMessages = app.Services.GetRequiredService<IErrorMessageService>();
+await errorMessages.LoadStaticErrorMessagesAsync();
+#endregion
 
 #region - Build and run the web application -
 
@@ -103,5 +114,8 @@ app.MapControllers();
 app.UseSession();
 
 app.Run();
+
+
+
 
 #endregion
