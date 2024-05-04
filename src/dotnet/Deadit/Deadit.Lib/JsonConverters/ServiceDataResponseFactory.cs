@@ -13,7 +13,7 @@ public class ServiceDataResponseFactory : JsonConverterFactory
             return true;
         }
 
-        if (IsServiceDataResponse(typeToConvert))
+        if (IsServiceResponse(typeToConvert))
         {
             return true;
         }
@@ -26,6 +26,11 @@ public class ServiceDataResponseFactory : JsonConverterFactory
         if (IsServiceDataResponse(typeToConvert))
         {
             return GetServiceDataResponseJsonConverter(typeToConvert);
+        }
+
+        if (IsServiceResponse(typeToConvert))
+        {
+            return new ServiceResponseJsonConverter();
         }
 
         throw new JsonException($"No converter for {typeToConvert}");

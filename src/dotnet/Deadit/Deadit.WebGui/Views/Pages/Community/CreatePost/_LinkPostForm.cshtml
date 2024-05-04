@@ -1,0 +1,35 @@
+﻿
+
+<form class="create-post-link-form">
+
+    <div class="form-feedback"></div>
+
+    <fieldset>
+
+        @* Title *@
+        <div class="input-feedback standard-spacing">
+            <label class="form-label-container">
+                <div class="form-label">Title</div>
+                <input type="text" class="form-control input-feedback-input" name="title" required maxlength="250" />
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+            </label>
+        </div>
+
+        @* Content *@
+        <div class="input-feedback standard-spacing">
+            <label class="form-label-container">
+                <div class="form-label">Link</div>
+                <input type="url" class="form-control input-feedback-input" name="content" required />
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+            </label>
+        </div>
+
+        <div class="input-feedback standard-spacing d-flex">
+            <button type="submit" class="btn btn-success btn-submit">Create post</button>
+        </div>
+    </fieldset>
+
+</form>
+

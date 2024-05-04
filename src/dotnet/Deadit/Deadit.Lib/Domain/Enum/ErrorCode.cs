@@ -1,15 +1,32 @@
-﻿namespace Deadit.Lib.Domain.Enum;
+﻿using Deadit.Lib.Domain.Attributes;
 
-public enum ErrorCode : int
+namespace Deadit.Lib.Domain.Enum;
+
+public enum ErrorCode : uint
 {
-    SignUpEmailTaken = 1,
-    SignupUsernameTaken = 2,
-    SignupInvalidPassword = 3,
+    #region - Signup -
 
-    CreateCommunityInvalidNameCharacter = 4,
-    CreateCommunityNameTaken = 5,
+    [ErrorCodeGroup(ErrorCodeGroup.AccountSignup)]
+    SignUpEmailTaken = 200,
+    
+    [ErrorCodeGroup(ErrorCodeGroup.AccountSignup)]
+    SignupUsernameTaken = 201,
 
-    ValidationError = 6,
+    [ErrorCodeGroup(ErrorCodeGroup.AccountSignup)]
+    SignupInvalidPassword = 202,
 
-    CreateCommunityNameBanned = 7,
+    #endregion
+
+    #region - Create Community -
+
+    [ErrorCodeGroup(ErrorCodeGroup.CreateCommunity)]
+    CreateCommunityInvalidNameCharacter = 300,
+
+    [ErrorCodeGroup(ErrorCodeGroup.CreateCommunity)]
+    CreateCommunityNameTaken = 301,
+
+    [ErrorCodeGroup(ErrorCodeGroup.CreateCommunity)]
+    CreateCommunityNameBanned = 302,
+
+    #endregion
 }

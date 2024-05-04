@@ -1,40 +1,51 @@
 import { HttpStatusCode } from "../domain/enum/http-status-code";
-import { ApiResponse, ApiResponseNoContent, ApiValidationException, ServiceResponse, ValidationErrorsApiResponse } from "../domain/model/api-response";
+import { ApiNotFoundException, ApiResponse, ApiResponseNoContent, ApiValidationException, ServiceResponse, ValidationErrorsApiResponse } from "../domain/model/api-response";
+
+
 
 export class ServiceUtilities
 {
-    public static handleBadResponse = async (response: Response): Promise<void> =>
-    {
-        if (!response.ok)
-        {
-            const text = await response.text();
-            throw new Error(text);
-        }
-    }
-
     public static async toServiceResponseNoContent(response: Response): Promise<ServiceResponse<any>>
     {
-        if (response.status === HttpStatusCode.UnprocessableEntity)
+        if (response.ok || response.status === HttpStatusCode.BadRequest)
+        {
+            const apiResponse = new ApiResponseNoContent(response);
+            return await apiResponse.toServiceResponse();
+        }
+        else if (response.status === HttpStatusCode.UnprocessableEntity)
         {
             await ServiceUtilities.handleUnprocessableEntityApiResponse(response);
         }
+        else if (response.status === HttpStatusCode.NotFound)
+        {
+            ServiceUtilities.handleNotFoundApiResponse(response);
+        }
 
-        const apiResponse = new ApiResponseNoContent(response);
-        return await apiResponse.toServiceResponse();
+        const responseText = await response.text();
+        throw new Error(responseText);
     }
 
 
     public static async toServiceResponse<T>(response: Response) 
     {
-        if (response.status === HttpStatusCode.UnprocessableEntity)
+        if (response.ok || response.status === HttpStatusCode.BadRequest)
+        {
+            const data: ApiResponse<T> = await response.json();
+            const result = new ServiceResponse<T>(data, response.ok);
+
+            return result;
+        }
+        else if (response.status === HttpStatusCode.UnprocessableEntity)
         {
             await ServiceUtilities.handleUnprocessableEntityApiResponse(response);
         }
+        else if (response.status === HttpStatusCode.NotFound)
+        {
+            ServiceUtilities.handleNotFoundApiResponse(response);
+        }
 
-        const data: ApiResponse<T> = await response.json();
-        const result = new ServiceResponse<T>(data, response.ok);
-
-        return result;
+        const responseText = await response.text();
+        throw new Error(responseText);
     }
 
     private static handleUnprocessableEntityApiResponse = async (response: Response) =>
@@ -43,7 +54,16 @@ export class ServiceUtilities
         throw new ApiValidationException(validationErrors);
     }
 
+    private static handleNotFoundApiResponse = (response: Response) =>
+    {
+        throw new ApiNotFoundException();
+    }
+
 }
+
+
+
+
 
 
 

@@ -1,7 +1,15 @@
+import { JsonObject } from "../domain/types/aliases";
+
 
 
 export class FormDataMapper
 {
+
+    static toJsonObject = (data: Object): JsonObject =>
+    {
+        return JSON.stringify(data);
+    }
+
 
     static toFormData(data: Object) : FormData  {
         const formData = new FormData();

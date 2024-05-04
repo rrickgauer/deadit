@@ -1,4 +1,4 @@
-﻿using Deadit.Lib.Auth;
+﻿using Deadit.Lib.Domain.Other;
 
 namespace Deadit.WebGui.Controllers.Contracts;
 

@@ -22,6 +22,7 @@ builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<HttpResponseExceptionFilter>();
     options.Filters.Add<ValidationErrorFilter>();
+    options.SuppressAsyncSuffixInActionNames = false;
 })
 
 // https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-8.0#disable-automatic-400-response

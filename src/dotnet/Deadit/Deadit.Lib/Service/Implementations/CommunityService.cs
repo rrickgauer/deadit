@@ -1,5 +1,6 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
@@ -27,23 +28,34 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
     /// <returns></returns>
     public async Task<ServiceDataResponse<ViewCommunity>> CreateCommunityAsync(CreateCommunityRequestForm form, uint userId)
     {
-        var validateFormResponse = await ValidateNewCommunityAsync(form);
 
-        if (!validateFormResponse.Successful)
+        try
         {
-            return validateFormResponse;
+            var validateFormResponse = await ValidateNewCommunityAsync(form);
+
+            if (!validateFormResponse.Successful)
+            {
+                return validateFormResponse;
+            }
+
+            ServiceDataResponse<ViewCommunity> response = new();
+
+            var newCommunityId = await InsertNewCommunityAsync(form, userId);
+
+            if (newCommunityId.HasValue)
+            {
+                response.Data = (await GetCommunityAsync(newCommunityId.Value)).Data;
+            }
+
+            return response;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
         }
 
-        ServiceDataResponse<ViewCommunity> response = new();
 
-        var newCommunityId = await InsertNewCommunityAsync(form, userId);
 
-        if (newCommunityId.HasValue)
-        {
-            response.Data = (await GetCommunityAsync(newCommunityId.Value)).Data;
-        }
-
-        return response;
     }
 
     /// <summary>
@@ -53,31 +65,40 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
     /// <returns></returns>
     private async Task<ServiceDataResponse<ViewCommunity>> ValidateNewCommunityAsync(CreateCommunityRequestForm form)
     {
-        ServiceDataResponse<ViewCommunity> response = new();
-
-        // ensure no invalid characters
-        if (DoesCommunityNameContainInvalidCharacters(form.Name))
+        try
         {
-            response.AddError(ErrorCode.CreateCommunityInvalidNameCharacter);
+            ServiceDataResponse<ViewCommunity> response = new();
+
+            // ensure no invalid characters
+            if (DoesCommunityNameContainInvalidCharacters(form.Name))
+            {
+                response.AddError(ErrorCode.CreateCommunityInvalidNameCharacter);
+            }
+
+            // check if the name already exists
+            var communityNameTaken = await DoesCommunityNameExist(form.Name);
+
+            if (communityNameTaken)
+            {
+                response.AddError(ErrorCode.CreateCommunityNameTaken);
+            }
+
+            // ensure the name isn't banned
+            var communityNameIsBanned = (await _bannedCommunityService.IsBannedCommunityNameAsync(form.Name)).Data;
+
+            if (communityNameIsBanned)
+            {
+                response.AddError(ErrorCode.CreateCommunityNameBanned);
+            }
+
+            return response;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
         }
 
-        // check if the name already exists
-        var communityNameTaken = await DoesCommunityNameExist(form.Name);
 
-        if (communityNameTaken)
-        {
-            response.AddError(ErrorCode.CreateCommunityNameTaken);
-        }
-
-        // ensure the name isn't banned
-        var communityNameIsBanned = (await _bannedCommunityService.IsBannedCommunityNameAsync(form.Name)).Data;
-
-        if (communityNameIsBanned)
-        {
-            response.AddError(ErrorCode.CreateCommunityNameBanned);
-        }
-
-        return response;
     }
 
     /// <summary>
@@ -126,12 +147,21 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
     /// <returns></returns>
     public async Task<ServiceDataResponse<ViewCommunity>> GetCommunityAsync(string communityName)
     {
-        ServiceDataResponse<ViewCommunity> response = new()
+        try
         {
-            Data = await TryGetCommunityByNameAsync(communityName),
-        };
+            ServiceDataResponse<ViewCommunity> response = new()
+            {
+                Data = await TryGetCommunityByNameAsync(communityName),
+            };
 
-        return response;
+            return response;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+
+
     }
 
     /// <summary>
@@ -141,16 +171,24 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
     /// <returns></returns>
     public async Task<ServiceDataResponse<ViewCommunity>> GetCommunityAsync(uint communityId)
     {
-        ServiceDataResponse<ViewCommunity> response = new();
-
-        var datarow = await _communityRepository.SelectCommunityAsync(communityId);
-
-        if (datarow != null)
+        try
         {
-            response.Data = _tableMapperService.ToModel<ViewCommunity>(datarow);
+            ServiceDataResponse<ViewCommunity> response = new();
+
+            var datarow = await _communityRepository.SelectCommunityAsync(communityId);
+
+            if (datarow != null)
+            {
+                response.Data = _tableMapperService.ToModel<ViewCommunity>(datarow);
+            }
+
+            return response;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
         }
 
-        return response;
     }
 
 

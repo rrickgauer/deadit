@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Errors;
 using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.Response;
@@ -28,6 +29,12 @@ public class ServiceResponse
         Errors = other.Errors;
     }
 
+
+    public ServiceResponse(RepositoryException ex)
+    {
+        AddError(ex.ErrorCode);
+    }
+
     public void AddError(ErrorCode errorCode)
     {
         Errors.Add(errorCode);
@@ -45,5 +52,12 @@ public class ServiceResponse
         int matchingRecords = Errors.Where(e => e == errorCode).Count();
 
         return matchingRecords > 0;
+    }
+
+
+
+    public static implicit operator ServiceResponse(RepositoryException ex)
+    {
+        return new ServiceResponse(ex);
     }
 }

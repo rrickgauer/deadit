@@ -1,200 +1,306 @@
-Banned_Community_Name [BASE TABLE]
-
-+------------------+-------------+--------------+----------------+-------------+----------------+
-| ordinal_position | column_name | column_type  | column_default | is_nullable | extra          |
-+------------------+-------------+--------------+----------------+-------------+----------------+
-| 1                | id          | int unsigned | None           | NO          | auto_increment |
-| 2                | name        | char(50)     | None           | NO          |                |
-+------------------+-------------+--------------+----------------+-------------+----------------+
 
 
-Comment [BASE TABLE]
+Banned_Community_Name
 
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| 1                | id          | char(36)     | None              | NO          |                   |
-| 2                | author_id   | int unsigned | None              | NO          |                   |
-| 3                | post_id     | char(36)     | None              | NO          |                   |
-| 4                | content     | text         | None              | NO          |                   |
-| 5                | parent_id   | char(36)     | None              | YES         |                   |
-| 6                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
+| Position | Name | Type         | IsNullable | DefaultValue | Extra |
+|----------|------|--------------|------------|--------------|-------|
+| 1        | id   | int unsigned | False      |              |       |
+| 2        | name | char(50)     | False      |              |       |
 
 
-Community [BASE TABLE]
-
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| 1                | id          | int unsigned | None              | NO          | auto_increment    |
-| 2                | name        | char(50)     | None              | NO          |                   |
-| 3                | title       | char(100)    | None              | NO          |                   |
-| 4                | owner_id    | int unsigned | None              | NO          |                   |
-| 5                | description | char(200)    | None              | YES         |                   |
-| 6                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
 
 
-Community_Membership [BASE TABLE]
+Comment
 
-+------------------+--------------+--------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name  | column_type  | column_default    | is_nullable | extra             |
-+------------------+--------------+--------------+-------------------+-------------+-------------------+
-| 1                | community_id | int unsigned | None              | NO          |                   |
-| 2                | user_id      | int unsigned | None              | NO          |                   |
-| 3                | created_on   | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+--------------+--------------+-------------------+-------------+-------------------+
-
-
-Error_Message [BASE TABLE]
-
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| 1                | id          | int unsigned | None              | NO          | auto_increment    |
-| 2                | message     | char(200)    | None              | NO          |                   |
-| 3                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
+| Position | Name       | Type         | IsNullable | DefaultValue      | Extra |
+|----------|------------|--------------|------------|-------------------|-------|
+| 1        | id         | char(36)     | False      |                   |       |
+| 2        | author_id  | int unsigned | False      |                   |       |
+| 3        | post_id    | char(36)     | False      |                   |       |
+| 4        | content    | text         | False      |                   |       |
+| 5        | parent_id  | char(36)     | True       |                   |       |
+| 6        | created_on | timestamp    | False      | CURRENT_TIMESTAMP |       |
 
 
-Post [BASE TABLE]
-
-+------------------+--------------+-------------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name  | column_type       | column_default    | is_nullable | extra             |
-+------------------+--------------+-------------------+-------------------+-------------+-------------------+
-| 1                | id           | char(36)          | None              | NO          |                   |
-| 2                | community_id | int unsigned      | None              | NO          |                   |
-| 3                | title        | char(250)         | None              | NO          |                   |
-| 4                | post_type    | smallint unsigned | None              | NO          |                   |
-| 5                | author_id    | int unsigned      | None              | NO          |                   |
-| 6                | created_on   | timestamp         | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+--------------+-------------------+-------------------+-------------+-------------------+
 
 
-Post_Link [BASE TABLE]
+Community
 
-+------------------+-------------+-------------+----------------+-------------+-------+
-| ordinal_position | column_name | column_type | column_default | is_nullable | extra |
-+------------------+-------------+-------------+----------------+-------------+-------+
-| 1                | id          | char(36)    | None           | NO          |       |
-| 2                | url         | text        | None           | NO          |       |
-+------------------+-------------+-------------+----------------+-------------+-------+
-
-
-Post_Text [BASE TABLE]
-
-+------------------+-------------+-------------+----------------+-------------+-------+
-| ordinal_position | column_name | column_type | column_default | is_nullable | extra |
-+------------------+-------------+-------------+----------------+-------------+-------+
-| 1                | id          | char(36)    | None           | NO          |       |
-| 2                | content     | text        | None           | YES         |       |
-+------------------+-------------+-------------+----------------+-------------+-------+
+| Position | Name        | Type         | IsNullable | DefaultValue      | Extra |
+|----------|-------------|--------------|------------|-------------------|-------|
+| 1        | id          | int unsigned | False      |                   |       |
+| 2        | name        | char(50)     | False      |                   |       |
+| 3        | title       | char(100)    | False      |                   |       |
+| 4        | owner_id    | int unsigned | False      |                   |       |
+| 5        | description | char(200)    | True       |                   |       |
+| 6        | created_on  | timestamp    | False      | CURRENT_TIMESTAMP |       |
 
 
-Post_Type [BASE TABLE]
-
-+------------------+-------------+-------------------+----------------+-------------+----------------+
-| ordinal_position | column_name | column_type       | column_default | is_nullable | extra          |
-+------------------+-------------+-------------------+----------------+-------------+----------------+
-| 1                | id          | smallint unsigned | None           | NO          | auto_increment |
-| 2                | name        | char(50)          | None           | NO          |                |
-+------------------+-------------+-------------------+----------------+-------------+----------------+
 
 
-User [BASE TABLE]
+Community_Membership
 
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name | column_type  | column_default    | is_nullable | extra             |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
-| 1                | id          | int unsigned | None              | NO          | auto_increment    |
-| 2                | email       | char(200)    | None              | NO          |                   |
-| 3                | username    | char(30)     | None              | NO          |                   |
-| 4                | password    | char(250)    | None              | NO          |                   |
-| 5                | created_on  | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+-------------+--------------+-------------------+-------------+-------------------+
+| Position | Name         | Type         | IsNullable | DefaultValue      | Extra |
+|----------|--------------|--------------|------------|-------------------|-------|
+| 1        | community_id | int unsigned | False      |                   |       |
+| 2        | user_id      | int unsigned | False      |                   |       |
+| 3        | created_on   | timestamp    | False      | CURRENT_TIMESTAMP |       |
 
 
-View_Community [VIEW]
-
-+------------------+-------------------------+--------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name             | column_type  | column_default    | is_nullable | extra             |
-+------------------+-------------------------+--------------+-------------------+-------------+-------------------+
-| 1                | community_id            | int unsigned | 0                 | YES         |                   |
-| 2                | community_name          | char(50)     | None              | YES         |                   |
-| 3                | community_title         | char(100)    | None              | YES         |                   |
-| 4                | community_owner_id      | int unsigned | None              | YES         |                   |
-| 5                | community_description   | char(200)    | None              | YES         |                   |
-| 6                | community_created_on    | timestamp    | CURRENT_TIMESTAMP | YES         | DEFAULT_GENERATED |
-| 7                | community_count_members | bigint       | None              | YES         |                   |
-+------------------+-------------------------+--------------+-------------------+-------------+-------------------+
 
 
-View_Community_Membership [VIEW]
+Error_Message
 
-+------------------+--------------------------+--------------+---------------------+-------------+-------------------+
-| ordinal_position | column_name              | column_type  | column_default      | is_nullable | extra             |
-+------------------+--------------------------+--------------+---------------------+-------------+-------------------+
-| 1                | community_id             | int unsigned | None                | NO          |                   |
-| 2                | community_name           | char(50)     | None                | YES         |                   |
-| 3                | community_title          | char(100)    | None                | YES         |                   |
-| 4                | community_owner_id       | int unsigned | None                | YES         |                   |
-| 5                | community_description    | char(200)    | None                | YES         |                   |
-| 6                | community_created_on     | timestamp    | CURRENT_TIMESTAMP   | YES         | DEFAULT_GENERATED |
-| 7                | community_count_members  | bigint       | 0                   | YES         |                   |
-| 8                | user_id                  | int unsigned | None                | NO          |                   |
-| 9                | user_email               | char(200)    | None                | YES         |                   |
-| 10               | user_username            | char(30)     | None                | YES         |                   |
-| 11               | user_password            | char(250)    | None                | YES         |                   |
-| 12               | user_created_on          | timestamp    | 0000-00-00 00:00:00 | YES         |                   |
-| 13               | user_joined_community_on | timestamp    | CURRENT_TIMESTAMP   | NO          | DEFAULT_GENERATED |
-+------------------+--------------------------+--------------+---------------------+-------------+-------------------+
+| Position | Name                   | Type         | IsNullable | DefaultValue      | Extra |
+|----------|------------------------|--------------|------------|-------------------|-------|
+| 1        | id                     | int unsigned | False      |                   |       |
+| 2        | error_message_group_id | int unsigned | False      |                   |       |
+| 3        | message                | varchar(250) | False      |                   |       |
+| 4        | created_on             | timestamp    | False      | CURRENT_TIMESTAMP |       |
 
 
-View_User [VIEW]
-
-+------------------+-----------------+--------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name     | column_type  | column_default    | is_nullable | extra             |
-+------------------+-----------------+--------------+-------------------+-------------+-------------------+
-| 1                | user_id         | int unsigned | 0                 | NO          |                   |
-| 2                | user_email      | char(200)    | None              | NO          |                   |
-| 3                | user_username   | char(30)     | None              | NO          |                   |
-| 4                | user_password   | char(250)    | None              | NO          |                   |
-| 5                | user_created_on | timestamp    | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+-----------------+--------------+-------------------+-------------+-------------------+
 
 
-Vote_Comment [BASE TABLE]
+Error_Message_Group
 
-+------------------+-------------+-------------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name | column_type       | column_default    | is_nullable | extra             |
-+------------------+-------------+-------------------+-------------------+-------------+-------------------+
-| 1                | comment_id  | char(36)          | None              | NO          |                   |
-| 2                | user_id     | int unsigned      | None              | NO          |                   |
-| 3                | vote_type   | smallint unsigned | None              | NO          |                   |
-| 4                | created_on  | timestamp         | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+-------------+-------------------+-------------------+-------------+-------------------+
+| Position | Name       | Type         | IsNullable | DefaultValue      | Extra |
+|----------|------------|--------------|------------|-------------------|-------|
+| 1        | id         | int unsigned | False      |                   |       |
+| 2        | name       | varchar(50)  | False      |                   |       |
+| 3        | created_on | timestamp    | False      | CURRENT_TIMESTAMP |       |
 
 
-Vote_Post [BASE TABLE]
-
-+------------------+-------------+-------------------+-------------------+-------------+-------------------+
-| ordinal_position | column_name | column_type       | column_default    | is_nullable | extra             |
-+------------------+-------------+-------------------+-------------------+-------------+-------------------+
-| 1                | post_id     | char(36)          | None              | NO          |                   |
-| 2                | user_id     | int unsigned      | None              | NO          |                   |
-| 3                | vote_type   | smallint unsigned | None              | NO          |                   |
-| 4                | created_on  | timestamp         | CURRENT_TIMESTAMP | NO          | DEFAULT_GENERATED |
-+------------------+-------------+-------------------+-------------------+-------------+-------------------+
 
 
-Vote_Type [BASE TABLE]
+Post
 
-+------------------+-------------+-------------------+----------------+-------------+----------------+
-| ordinal_position | column_name | column_type       | column_default | is_nullable | extra          |
-+------------------+-------------+-------------------+----------------+-------------+----------------+
-| 1                | id          | smallint unsigned | None           | NO          | auto_increment |
-| 2                | name        | char(20)          | None           | NO          |                |
-+------------------+-------------+-------------------+----------------+-------------+----------------+
+| Position | Name         | Type              | IsNullable | DefaultValue      | Extra |
+|----------|--------------|-------------------|------------|-------------------|-------|
+| 1        | id           | char(36)          | False      |                   |       |
+| 2        | community_id | int unsigned      | False      |                   |       |
+| 3        | title        | char(250)         | False      |                   |       |
+| 4        | post_type    | smallint unsigned | False      |                   |       |
+| 5        | author_id    | int unsigned      | False      |                   |       |
+| 6        | created_on   | timestamp         | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
+Post_Link
+
+| Position | Name | Type     | IsNullable | DefaultValue | Extra |
+|----------|------|----------|------------|--------------|-------|
+| 1        | id   | char(36) | False      |              |       |
+| 2        | url  | text     | False      |              |       |
+
+
+
+
+Post_Text
+
+| Position | Name    | Type     | IsNullable | DefaultValue | Extra |
+|----------|---------|----------|------------|--------------|-------|
+| 1        | id      | char(36) | False      |              |       |
+| 2        | content | text     | True       |              |       |
+
+
+
+
+Post_Type
+
+| Position | Name | Type              | IsNullable | DefaultValue | Extra |
+|----------|------|-------------------|------------|--------------|-------|
+| 1        | id   | smallint unsigned | False      |              |       |
+| 2        | name | char(50)          | False      |              |       |
+
+
+
+
+User
+
+| Position | Name       | Type         | IsNullable | DefaultValue      | Extra |
+|----------|------------|--------------|------------|-------------------|-------|
+| 1        | id         | int unsigned | False      |                   |       |
+| 2        | email      | char(200)    | False      |                   |       |
+| 3        | username   | char(30)     | False      |                   |       |
+| 4        | password   | char(250)    | False      |                   |       |
+| 5        | created_on | timestamp    | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
+View_Community
+
+| Position | Name                    | Type         | IsNullable | DefaultValue      | Extra |
+|----------|-------------------------|--------------|------------|-------------------|-------|
+| 1        | community_id            | int unsigned | True       | 0                 |       |
+| 2        | community_name          | char(50)     | True       |                   |       |
+| 3        | community_title         | char(100)    | True       |                   |       |
+| 4        | community_owner_id      | int unsigned | True       |                   |       |
+| 5        | community_description   | char(200)    | True       |                   |       |
+| 6        | community_created_on    | timestamp    | True       | CURRENT_TIMESTAMP |       |
+| 7        | community_count_members | bigint       | True       |                   |       |
+
+
+
+
+View_Community_Membership
+
+| Position | Name                     | Type         | IsNullable | DefaultValue        | Extra |
+|----------|--------------------------|--------------|------------|---------------------|-------|
+| 1        | community_id             | int unsigned | False      |                     |       |
+| 2        | community_name           | char(50)     | True       |                     |       |
+| 3        | community_title          | char(100)    | True       |                     |       |
+| 4        | community_owner_id       | int unsigned | True       |                     |       |
+| 5        | community_description    | char(200)    | True       |                     |       |
+| 6        | community_created_on     | timestamp    | True       | CURRENT_TIMESTAMP   |       |
+| 7        | community_count_members  | bigint       | True       | 0                   |       |
+| 8        | user_id                  | int unsigned | False      |                     |       |
+| 9        | user_email               | char(200)    | True       |                     |       |
+| 10       | user_username            | char(30)     | True       |                     |       |
+| 11       | user_password            | char(250)    | True       |                     |       |
+| 12       | user_created_on          | timestamp    | True       | 0000-00-00 00:00:00 |       |
+| 13       | user_joined_community_on | timestamp    | False      | CURRENT_TIMESTAMP   |       |
+
+
+
+
+View_Error_Message
+
+| Position | Name                           | Type         | IsNullable | DefaultValue      | Extra |
+|----------|--------------------------------|--------------|------------|-------------------|-------|
+| 1        | error_message_id               | int unsigned | False      | 0                 |       |
+| 2        | error_message_group_name       | varchar(50)  | False      |                   |       |
+| 3        | error_message_message          | varchar(250) | False      |                   |       |
+| 4        | error_message_created_on       | timestamp    | False      | CURRENT_TIMESTAMP |       |
+| 5        | error_message_group_id         | int unsigned | False      |                   |       |
+| 6        | error_message_group_created_on | timestamp    | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
+View_Post
+
+| Position | Name                    | Type              | IsNullable | DefaultValue        | Extra |
+|----------|-------------------------|-------------------|------------|---------------------|-------|
+| 1        | post_id                 | char(36)          | False      |                     |       |
+| 2        | post_community_id       | int unsigned      | False      |                     |       |
+| 3        | post_title              | char(250)         | False      |                     |       |
+| 4        | post_post_type          | smallint unsigned | False      |                     |       |
+| 5        | post_author_id          | int unsigned      | False      |                     |       |
+| 6        | post_created_on         | timestamp         | False      | CURRENT_TIMESTAMP   |       |
+| 7        | community_id            | int unsigned      | True       | 0                   |       |
+| 8        | community_name          | char(50)          | True       |                     |       |
+| 9        | community_title         | char(100)         | True       |                     |       |
+| 10       | community_owner_id      | int unsigned      | True       |                     |       |
+| 11       | community_description   | char(200)         | True       |                     |       |
+| 12       | community_created_on    | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 13       | community_count_members | bigint            | True       |                     |       |
+| 14       | user_id                 | int unsigned      | False      | 0                   |       |
+| 15       | user_email              | char(200)         | False      |                     |       |
+| 16       | user_username           | char(30)          | False      |                     |       |
+| 17       | user_password           | char(250)         | False      |                     |       |
+| 18       | user_created_on         | timestamp         | False      | 0000-00-00 00:00:00 |       |
+
+
+
+
+View_Post_Link
+
+| Position | Name                    | Type              | IsNullable | DefaultValue        | Extra |
+|----------|-------------------------|-------------------|------------|---------------------|-------|
+| 1        | post_url                | text              | False      |                     |       |
+| 2        | post_id                 | char(36)          | False      |                     |       |
+| 3        | post_community_id       | int unsigned      | False      |                     |       |
+| 4        | post_title              | char(250)         | False      |                     |       |
+| 5        | post_post_type          | smallint unsigned | False      |                     |       |
+| 6        | post_author_id          | int unsigned      | False      |                     |       |
+| 7        | post_created_on         | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| 8        | community_id            | int unsigned      | True       | 0                   |       |
+| 9        | community_name          | char(50)          | True       |                     |       |
+| 10       | community_title         | char(100)         | True       |                     |       |
+| 11       | community_owner_id      | int unsigned      | True       |                     |       |
+| 12       | community_description   | char(200)         | True       |                     |       |
+| 13       | community_created_on    | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 14       | community_count_members | bigint            | True       |                     |       |
+| 15       | user_id                 | int unsigned      | False      | 0                   |       |
+| 16       | user_email              | char(200)         | False      |                     |       |
+| 17       | user_username           | char(30)          | False      |                     |       |
+| 18       | user_password           | char(250)         | False      |                     |       |
+| 19       | user_created_on         | timestamp         | False      | 0000-00-00 00:00:00 |       |
+
+
+
+
+View_Post_Text
+
+| Position | Name                    | Type              | IsNullable | DefaultValue        | Extra |
+|----------|-------------------------|-------------------|------------|---------------------|-------|
+| 1        | post_content            | text              | True       |                     |       |
+| 2        | post_id                 | char(36)          | False      |                     |       |
+| 3        | post_community_id       | int unsigned      | False      |                     |       |
+| 4        | post_title              | char(250)         | False      |                     |       |
+| 5        | post_post_type          | smallint unsigned | False      |                     |       |
+| 6        | post_author_id          | int unsigned      | False      |                     |       |
+| 7        | post_created_on         | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| 8        | community_id            | int unsigned      | True       | 0                   |       |
+| 9        | community_name          | char(50)          | True       |                     |       |
+| 10       | community_title         | char(100)         | True       |                     |       |
+| 11       | community_owner_id      | int unsigned      | True       |                     |       |
+| 12       | community_description   | char(200)         | True       |                     |       |
+| 13       | community_created_on    | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 14       | community_count_members | bigint            | True       |                     |       |
+| 15       | user_id                 | int unsigned      | False      | 0                   |       |
+| 16       | user_email              | char(200)         | False      |                     |       |
+| 17       | user_username           | char(30)          | False      |                     |       |
+| 18       | user_password           | char(250)         | False      |                     |       |
+| 19       | user_created_on         | timestamp         | False      | 0000-00-00 00:00:00 |       |
+
+
+
+
+View_User
+
+| Position | Name            | Type         | IsNullable | DefaultValue      | Extra |
+|----------|-----------------|--------------|------------|-------------------|-------|
+| 1        | user_id         | int unsigned | False      | 0                 |       |
+| 2        | user_email      | char(200)    | False      |                   |       |
+| 3        | user_username   | char(30)     | False      |                   |       |
+| 4        | user_password   | char(250)    | False      |                   |       |
+| 5        | user_created_on | timestamp    | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
+Vote_Comment
+
+| Position | Name       | Type              | IsNullable | DefaultValue      | Extra |
+|----------|------------|-------------------|------------|-------------------|-------|
+| 1        | comment_id | char(36)          | False      |                   |       |
+| 2        | user_id    | int unsigned      | False      |                   |       |
+| 3        | vote_type  | smallint unsigned | False      |                   |       |
+| 4        | created_on | timestamp         | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
+Vote_Post
+
+| Position | Name       | Type              | IsNullable | DefaultValue      | Extra |
+|----------|------------|-------------------|------------|-------------------|-------|
+| 1        | post_id    | char(36)          | False      |                   |       |
+| 2        | user_id    | int unsigned      | False      |                   |       |
+| 3        | vote_type  | smallint unsigned | False      |                   |       |
+| 4        | created_on | timestamp         | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
+Vote_Type
+
+| Position | Name | Type              | IsNullable | DefaultValue | Extra |
+|----------|------|-------------------|------------|--------------|-------|
+| 1        | id   | smallint unsigned | False      |              |       |
+| 2        | name | char(20)          | False      |              |       |
 
 

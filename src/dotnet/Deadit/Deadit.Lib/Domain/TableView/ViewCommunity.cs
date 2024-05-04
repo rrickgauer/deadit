@@ -38,6 +38,6 @@ public class ViewCommunity : ITableView<ViewCommunity, Community>
     // ITableView
     public static explicit operator Community(ViewCommunity other)
     {
-        return ((ITableView<ViewCommunity, Community>)other).CastToModel();
+        return other.CastToModel();
     }
 }

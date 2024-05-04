@@ -1,11 +1,12 @@
-﻿using Deadit.Lib.Auth;
-using Deadit.Lib.Domain.Forms;
+﻿using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Microsoft.AspNetCore.Http;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Domain.Other;
 
 namespace Deadit.Lib.Service.Implementations;
 
@@ -34,10 +35,17 @@ public class AuthService(IUserService userService, IHttpContextAccessor httpCont
         // clear the current session data
         ClearSessionData(session);
 
-        ServiceDataResponse<ViewUser> result = new()
+        ServiceDataResponse<ViewUser> result = new();
+
+        try
         {
-            Data = await _userService.GetUserAsync(loginForm)
-        };
+            result.Data = await _userService.GetUserAsync(loginForm);
+        }
+        catch(RepositoryException ex)
+        {
+            return new(ex);
+        }
+
 
         if (result.Data != null)
         {
@@ -72,43 +80,59 @@ public class AuthService(IUserService userService, IHttpContextAccessor httpCont
 
     public async Task<ServiceDataResponse<ViewUser>> SignupUserAsync(SignupRequestForm signupForm)
     {
-        ServiceDataResponse<ViewUser> response = await ValidateNewUserAccountAsync(signupForm);
 
-        if (!response.Successful)
+        try
         {
+            ServiceDataResponse<ViewUser> response = await ValidateNewUserAccountAsync(signupForm);
+
+            if (!response.Successful)
+            {
+                return response;
+            }
+
+            var newUserId = await _userService.CreateUserAsync(signupForm);
+            response.Data = await _userService.GetUserAsync(newUserId.Value);
+
+            if (response.Data != null)
+            {
+                ArgumentNullException.ThrowIfNull(Session);
+                SetClientSessionId(Session, newUserId.Value);
+            }
+
             return response;
         }
-
-        var newUserId = await _userService.CreateUserAsync(signupForm);
-        response.Data = await _userService.GetUserAsync(newUserId.Value);
-
-        if (response.Data != null)
+        catch (RepositoryException ex)
         {
-            ArgumentNullException.ThrowIfNull(Session);
-            SetClientSessionId(Session, newUserId.Value);
+            return ex;
         }
-
-        return response;
     }
 
     private async Task<ServiceDataResponse<ViewUser>> ValidateNewUserAccountAsync(SignupRequestForm signupForm)
     {
-        ServiceDataResponse<ViewUser> response = new();
-
-        if (signupForm.Password.Length < MinPasswordLength)
+        try
         {
-            response.AddError(ErrorCode.SignupInvalidPassword);
+            ServiceDataResponse<ViewUser> response = new();
+
+            if (signupForm.Password.Length < MinPasswordLength)
+            {
+                response.AddError(ErrorCode.SignupInvalidPassword);
+            }
+
+            var existingUsers = await _userService.GetMatchingUsersAsync(signupForm.Email, signupForm.Username);
+
+            if (existingUsers.Any())
+            {
+                var errors = GetSignupErrors(existingUsers, signupForm);
+                response.AddError(errors);
+            }
+
+            return response;
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
         }
 
-        var existingUsers = await _userService.GetMatchingUsersAsync(signupForm.Email, signupForm.Username);
-
-        if (existingUsers.Any())
-        {
-            var errors = GetSignupErrors(existingUsers, signupForm);
-            response.AddError(errors);
-        }
-
-        return response;
     }
 
     private List<ErrorCode> GetSignupErrors(IEnumerable<ViewUser> existingUsers, SignupRequestForm signupForm)

@@ -1,5 +1,4 @@
-﻿using Deadit.Lib.Domain.Response;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Deadit.Lib.Filter;

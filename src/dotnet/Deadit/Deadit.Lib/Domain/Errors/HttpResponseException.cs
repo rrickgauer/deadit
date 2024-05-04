@@ -12,13 +12,5 @@ public class HttpResponseException : Exception
     public object? Value { get; }
 }
 
-public class NotFoundHttpResponseException : HttpResponseException
-{
-    public NotFoundHttpResponseException() : base(HttpStatusCode.NotFound, null)
-    {
-
-    }
-}
-
 
 

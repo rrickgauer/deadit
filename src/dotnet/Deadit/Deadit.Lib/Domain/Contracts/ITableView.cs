@@ -25,3 +25,16 @@ public interface ITableView<TView, TModel>
         return result;
     }
 }
+
+public static class TableViewExtensions
+{
+    public static TModel CastToModel<TView, TModel>(this ITableView<TView, TModel> tableView) 
+        where TModel : new()
+        where TView : ITableView<TView, TModel>
+    {
+        return tableView.CastToModel();
+    }
+
+
+
+}

@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using System.Text;
 
-namespace Deadit.Lib.Auth;
+namespace Deadit.Lib.Domain.Other;
 
-public class SessionManager
+public class SessionManager(ISession session)
 {
-    private ISession Session { get; }
+    private ISession Session { get; } = session;
 
     public uint? ClientId
     {
@@ -33,11 +33,6 @@ public class SessionManager
                 Session.SetString(GuiSessionKeys.AuthUserId, $"{value}");
             }
         }
-    }
-
-    public SessionManager(ISession session)
-    {
-        Session = session;
     }
 
     public bool IsClientAuthorized()

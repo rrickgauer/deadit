@@ -22,7 +22,7 @@ public class ApiCommunityController(ICommunityService communityService) : Intern
     [HttpPost]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
     [ActionName(nameof(PostCommunityAsync))]
-    public async Task<IActionResult> PostCommunityAsync([FromForm] CreateCommunityRequestForm newCommunityForm)
+    public async Task<IActionResult> PostCommunityAsync([FromBody] CreateCommunityRequestForm newCommunityForm)
     {
         var community = await _communityService.CreateCommunityAsync(newCommunityForm, ClientId!.Value);
         
