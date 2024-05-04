@@ -1,0 +1,38 @@
+﻿@model Deadit.Lib.Domain.ViewModel.JoinedCommunitiesPageViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http.Extensions;
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="~/Views/Includes/_Header.cshtml" />
+    <title>Joined Communities</title>
+</head>
+<body>
+    <partial name="~/Views/Includes/_Navbar.cshtml" />
+    <partial name="~/Views/Includes/_LoginModal.cshtml" />
+
+
+    <div class="container">
+
+        <h1 class="mt-5">Joined Communities</h1>
+
+        <ul class="list-group">
+
+            @foreach(var c in Model.Communities)
+            {
+                <li class="list-group-item">
+                    <a href="/@c.CommunityUrlGui">@c.CommunityName</a>
+                </li>
+            }
+        </ul>
+
+
+
+    </div>
+
+
+    <partial name="~/Views/Includes/_Footer.cshtml" />
+    @* <script src="~/js/dist/community-page.bundle.js"></script> *@
+</body>

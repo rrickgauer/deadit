@@ -55,5 +55,27 @@ public class ViewModelService(ICommunityService communityService, ICommunityMemb
 
         return isMember;
     }
+
+    /// <summary>
+    /// Get the view model for the joined communities page
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<ServiceDataResponse<JoinedCommunitiesPageViewModel>> GetJoinedCommunitiesPageViewModelAsync(uint userId)
+    {
+        var serviceResponse = await _memberService.GetJoinedCommunitiesAsync(userId);
+
+        if (!serviceResponse.Successful)
+        {
+            return new(serviceResponse);
+        }
+
+        JoinedCommunitiesPageViewModel viewModel = new()
+        {
+            Communities = serviceResponse.Data?.Select(m => (ViewCommunity)m)?.OrderBy(c => c.CommunityTitle?.ToLower()).ToList() ?? new(),
+        };
+
+        return new(viewModel);
+    }
 }
 

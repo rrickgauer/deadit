@@ -1,5 +1,4 @@
 ﻿using Deadit.Lib.Domain.Constants;
-using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
@@ -9,14 +8,12 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/communities")]
-public class CommunitiesController(ICommunityService communityService, ICommunityMemberService memberService) : GuiController, IControllerName
+public class CommunitiesController(IViewModelService viewModelService) : GuiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunitiesController));
 
-    private readonly ICommunityService _communityService = communityService;
-    private readonly ICommunityMemberService _memberService = memberService;
-
+    private readonly IViewModelService _viewModelService = viewModelService;
 
     /// <summary>
     /// GET: /communities
@@ -24,7 +21,7 @@ public class CommunitiesController(ICommunityService communityService, ICommunit
     /// <returns></returns>
     [HttpGet]
     [ActionName(nameof(CommunitiesPageAsync))]
-    public async Task<IActionResult> CommunitiesPageAsync()
+    public IActionResult CommunitiesPageAsync()
     {
         return View(GuiPageViewFiles.CommunitiesPage);
     }
@@ -36,7 +33,7 @@ public class CommunitiesController(ICommunityService communityService, ICommunit
     [HttpGet("create")]
     [ServiceFilter(typeof(LoginFirstRedirectFilter))]
     [ActionName(nameof(CreateCommunityPageAsync))]
-    public async Task<IActionResult> CreateCommunityPageAsync()
+    public IActionResult CreateCommunityPageAsync()
     {
         return View(GuiPageViewFiles.CreateCommunitiesPage);
     }
@@ -47,12 +44,14 @@ public class CommunitiesController(ICommunityService communityService, ICommunit
     [ActionName(nameof(JoinedCommunitiesPage))]
     public async Task<IActionResult> JoinedCommunitiesPage()
     {
-        var result = await _memberService.GetJoinedCommunitiesAsync(ClientId!.Value);
+        var getViewModelResponse = await _viewModelService.GetJoinedCommunitiesPageViewModelAsync(ClientId!.Value);
 
-        return Ok(result);
+        if (!getViewModelResponse.Successful)
+        {
+            return BadRequest(getViewModelResponse);
+        }
 
-        //var payload = result?.Data?.Select(m => (ViewCommunity)m);
-        //return Ok(payload);
+        return View(GuiPageViewFiles.JoinedCommunitiesPage, getViewModelResponse.Data);
     }
 
     
