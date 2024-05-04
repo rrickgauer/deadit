@@ -1,41 +1,29 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.Enum;
-using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Service.Contracts;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Deadit.Lib.Service.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(ICommunityMemberService))]
-public class CommunityMemberService : ICommunityMemberService
+[AutoInject<ICommunityMemberService>(AutoInjectionType.Scoped, InjectionProject.Always)]
+public class CommunityMemberService(ICommunityMembershipRepository repo, ITableMapperService tableMapperService) : ICommunityMemberService
 {
-    private readonly ICommunityMembershipRepository _repo;
-    private readonly ITableMapperService _tableMapperService;
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="repo"></param>
-    /// <param name="tableMapperService"></param>
-    public CommunityMemberService(ICommunityMembershipRepository repo, ITableMapperService tableMapperService)
-    {
-        _repo = repo;
-        _tableMapperService = tableMapperService;
-    }
+    private readonly ICommunityMembershipRepository _repo = repo;
+    private readonly ITableMapperService _tableMapperService = tableMapperService;
 
     /// <summary>
     /// Get the user's joined communities
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task<ServiceDataResponse<IEnumerable<ViewCommunityMembership>>> GetJoinedCommunitiesAsync(uint userId)
+    public async Task<ServiceDataResponse<List<ViewCommunityMembership>>> GetJoinedCommunitiesAsync(uint userId)
     {
         var datatable = await _repo.SelectUserJoinedCommunitiesAsync(userId);
         var models = _tableMapperService.ToModels<ViewCommunityMembership>(datatable);
+
         return new(models);   
     }
 
@@ -125,8 +113,7 @@ public class CommunityMemberService : ICommunityMemberService
 
         if (!insertResult.Successful)
         {
-            response.Errors = insertResult.Errors;
-            return response;
+            return new(insertResult.Errors);
         }
 
         var newMembershipResponse = await GetMembershipAsync(userId, communityName);

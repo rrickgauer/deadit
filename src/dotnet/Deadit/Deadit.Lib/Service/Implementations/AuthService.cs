@@ -9,26 +9,14 @@ using Deadit.Lib.Domain.Attributes;
 
 namespace Deadit.Lib.Service.Implementations;
 
-
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(IAuthService))]
-public class AuthService : IAuthService
+[AutoInject<IAuthService>(AutoInjectionType.Scoped, InjectionProject.Always)]
+public class AuthService(IUserService userService, IHttpContextAccessor httpContextAccessor) : IAuthService
 {
     private const int MinPasswordLength = 8;
 
-    private readonly IUserService _userService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IUserService _userService = userService;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
     private ISession? Session => _httpContextAccessor?.HttpContext?.Session;
-
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="userService"></param>
-    public AuthService(IUserService userService, IHttpContextAccessor httpContextAccessor)
-    {
-        _userService = userService;
-        _httpContextAccessor = httpContextAccessor;
-    }
 
     public bool IsClientLoggedIn()
     {
@@ -96,6 +84,7 @@ public class AuthService : IAuthService
 
         if (response.Data != null)
         {
+            ArgumentNullException.ThrowIfNull(Session);
             SetClientSessionId(Session, newUserId.Value);
         }
 
@@ -108,7 +97,7 @@ public class AuthService : IAuthService
 
         if (signupForm.Password.Length < MinPasswordLength)
         {
-            response.Add(ErrorCode.SignupInvalidPassword);
+            response.AddError(ErrorCode.SignupInvalidPassword);
         }
 
         var existingUsers = await _userService.GetMatchingUsersAsync(signupForm.Email, signupForm.Username);
@@ -116,7 +105,7 @@ public class AuthService : IAuthService
         if (existingUsers.Any())
         {
             var errors = GetSignupErrors(existingUsers, signupForm);
-            response.Add(errors);
+            response.AddError(errors);
         }
 
         return response;

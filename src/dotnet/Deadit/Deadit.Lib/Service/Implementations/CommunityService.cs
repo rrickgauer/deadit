@@ -1,44 +1,23 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
-using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
-using Deadit.Lib.Domain.ViewModel;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Service.Contracts;
-using System.Net;
 using System.Text.RegularExpressions;
 
 namespace Deadit.Lib.Service.Implementations;
 
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(ICommunityService))]
-public class CommunityService : ICommunityService
+[AutoInject<ICommunityService>(AutoInjectionType.Scoped, InjectionProject.Always)]
+public class CommunityService(ICommunityRepository repo, ITableMapperService tableMapper, IBannedCommunityNameService banned) : ICommunityService
 {
     private const string NewCommunityNameRegexPattern = @"^[a-zA-Z0-9_]*$";
 
-    private readonly ICommunityRepository _communityRepository;
-    private readonly ITableMapperService _tableMapperService;
-    private readonly IBannedCommunityNameService _bannedCommunityService;
-    private readonly ICommunityMemberService _memberService;
-
-    public CommunityService(ICommunityRepository communityRepository, ITableMapperService tableMapperService, IBannedCommunityNameService bannedCommunityService, ICommunityMemberService memberService)
-    {
-        _communityRepository = communityRepository;
-        _tableMapperService = tableMapperService;
-        _bannedCommunityService = bannedCommunityService;
-        _memberService = memberService;
-    }
-
-    
-
-
-
-
-
-
-
+    private readonly ICommunityRepository _communityRepository = repo;
+    private readonly ITableMapperService _tableMapperService = tableMapper;
+    private readonly IBannedCommunityNameService _bannedCommunityService = banned;
 
     /// <summary>
     /// Create a new community
@@ -79,7 +58,7 @@ public class CommunityService : ICommunityService
         // ensure no invalid characters
         if (DoesCommunityNameContainInvalidCharacters(form.Name))
         {
-            response.Add(ErrorCode.CreateCommunityInvalidNameCharacter);
+            response.AddError(ErrorCode.CreateCommunityInvalidNameCharacter);
         }
 
         // check if the name already exists
@@ -87,7 +66,7 @@ public class CommunityService : ICommunityService
 
         if (communityNameTaken)
         {
-            response.Add(ErrorCode.CreateCommunityNameTaken);
+            response.AddError(ErrorCode.CreateCommunityNameTaken);
         }
 
         // ensure the name isn't banned
@@ -95,7 +74,7 @@ public class CommunityService : ICommunityService
 
         if (communityNameIsBanned)
         {
-            response.Add(ErrorCode.CreateCommunityNameBanned);
+            response.AddError(ErrorCode.CreateCommunityNameBanned);
         }
 
         return response;

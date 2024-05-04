@@ -8,25 +8,13 @@ using Deadit.Lib.Service.Contracts;
 
 namespace Deadit.Lib.Service.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui, InterfaceType = typeof(IViewModelService))]
-public class ViewModelService : IViewModelService
-{
-    private readonly ICommunityService _communityService;
-    private readonly ICommunityMemberService _memberService;
-    private readonly IAuthService _authService;
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="communityService"></param>
-    /// <param name="memberService"></param>
-    /// <param name="authService"></param>
-    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService)
-    {
-        _communityService = communityService;
-        _memberService = memberService;
-        _authService = authService;
-    }
+[AutoInject<IViewModelService>(AutoInjectionType.Scoped, InjectionProject.WebGui)]
+public class ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService) : IViewModelService
+{
+    private readonly ICommunityService _communityService = communityService;
+    private readonly ICommunityMemberService _memberService = memberService;
+    private readonly IAuthService _authService = authService;
 
     /// <summary>
     /// Get the view model for the CommunityPage
@@ -66,6 +54,28 @@ public class ViewModelService : IViewModelService
         }
 
         return isMember;
+    }
+
+    /// <summary>
+    /// Get the view model for the joined communities page
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<ServiceDataResponse<JoinedCommunitiesPageViewModel>> GetJoinedCommunitiesPageViewModelAsync(uint userId)
+    {
+        var serviceResponse = await _memberService.GetJoinedCommunitiesAsync(userId);
+
+        if (!serviceResponse.Successful)
+        {
+            return new(serviceResponse);
+        }
+
+        JoinedCommunitiesPageViewModel viewModel = new()
+        {
+            Communities = serviceResponse.Data?.Select(m => (ViewCommunity)m)?.OrderBy(c => c.CommunityTitle?.ToLower()).ToList() ?? new(),
+        };
+
+        return new(viewModel);
     }
 }
 

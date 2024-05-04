@@ -9,15 +9,10 @@ using MySql.Data.MySqlClient;
 namespace Deadit.Lib.Repository.Implementations;
 
 
-[AutoInject(AutoInjectionType.Singleton, InjectionProject.Always, InterfaceType = typeof(IErrorMessageRepository))]
-public class ErrorMessageRepository : IErrorMessageRepository
+[AutoInject<IErrorMessageRepository>(AutoInjectionType.Singleton, InjectionProject.Always)]
+public class ErrorMessageRepository(DatabaseConnection dbConnection) : IErrorMessageRepository
 {
-    private readonly DatabaseConnection _dbConnection;
-
-    public ErrorMessageRepository(DatabaseConnection dbConnection)
-    {
-        _dbConnection = dbConnection;
-    }
+    private readonly DatabaseConnection _dbConnection = dbConnection;
 
     public async Task<DataTable> SelectErrorMessagesAsync()
     {

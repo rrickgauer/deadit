@@ -9,18 +9,12 @@ namespace Deadit.WebGui.Controllers.Gui;
 [Controller]
 [Route("/c/{communityName}")]
 [ServiceFilter(typeof(CommunityNameExistsFilter))]
-public class CommunityController : GuiController, IControllerName
+public class CommunityController(IViewModelService viewModelService) : GuiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunityController));
 
-    private readonly IViewModelService _viewModelService;
-
-
-    public CommunityController(IViewModelService viewModelService)
-    {
-        _viewModelService = viewModelService;
-    }
+    private readonly IViewModelService _viewModelService = viewModelService;
 
     /// <summary>
     /// /c/:communityName

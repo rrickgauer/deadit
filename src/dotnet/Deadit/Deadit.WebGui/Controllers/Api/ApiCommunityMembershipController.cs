@@ -12,20 +12,12 @@ namespace Deadit.WebGui.Controllers.Api;
 [ApiController]
 [Route("api/communities/{communityName}/members")]
 [ServiceFilter(typeof(CommunityNameExistsFilter))]
-public class ApiCommunityMembershipController : InternalApiController, IControllerName
+public class ApiCommunityMembershipController(ICommunityMemberService communityMemberService) : InternalApiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiCommunityMembershipController));
 
-    private readonly ICommunityMemberService _communityMemberService;
-    private readonly IResponseService _responseService;
-    
-
-    public ApiCommunityMembershipController(ICommunityMemberService communityMemberService, IResponseService responseService)
-    {
-        _communityMemberService = communityMemberService;
-        _responseService = responseService;
-    }
+    private readonly ICommunityMemberService _communityMemberService = communityMemberService;
 
     /// <summary>
     /// PUT: /api/communities/:communityName/members
@@ -36,18 +28,16 @@ public class ApiCommunityMembershipController : InternalApiController, IControll
     [ServiceFilter(typeof(InternalApiAuthFilter))]
     [ActionName(nameof(JoinCommunityAsync))]
     public async Task<ActionResult<ApiResponse<GetJoinedCommunity>>> JoinCommunityAsync([FromRoute] string communityName)
-    {
-        
-        var newCommunityMembership = await _communityMemberService.JoinCommunityAsync(ClientId.Value, communityName);
-        var apiResponse = await _responseService.ToApiResponseAsync(newCommunityMembership);
+    {        
+        var newCommunityMembership = await _communityMemberService.JoinCommunityAsync(ClientId!.Value, communityName);
 
         if (!newCommunityMembership.Successful)
         {
-            return BadRequest(apiResponse);
+            return BadRequest(newCommunityMembership);
         }
 
         string uri = $"{Request.GetEncodedUrl()}/{ClientId}";
-        return Created(uri, apiResponse);
+        return Created(uri, newCommunityMembership);
     }
 
     [HttpDelete]
@@ -55,12 +45,11 @@ public class ApiCommunityMembershipController : InternalApiController, IControll
     [ActionName(nameof(LeaveCommunityAsync))]
     public async Task<IActionResult> LeaveCommunityAsync([FromRoute] string communityName)
     { 
-        var serviceResponse = await _communityMemberService.LeaveCommunityAsync(ClientId.Value, communityName);
+        var serviceResponse = await _communityMemberService.LeaveCommunityAsync(ClientId!.Value, communityName);
 
         if (!serviceResponse.Successful)
         {
-            var apiResponse = await _responseService.ToApiResponseAsync(serviceResponse);
-            return BadRequest(apiResponse);
+            return BadRequest(serviceResponse);
         }
         
         return NoContent();

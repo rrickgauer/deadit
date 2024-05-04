@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
-using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Repository.Commands;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Repository.Other;
@@ -9,15 +8,10 @@ using MySql.Data.MySqlClient;
 
 namespace Deadit.Lib.Repository.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(ICommunityMembershipRepository))]
-public class CommunityMembershipRepository : ICommunityMembershipRepository
+[AutoInject<ICommunityMembershipRepository>(AutoInjectionType.Scoped, InjectionProject.Always)]
+public class CommunityMembershipRepository(DatabaseConnection connection) : ICommunityMembershipRepository
 {
-    private readonly DatabaseConnection _dbConnection;
-
-    public CommunityMembershipRepository(DatabaseConnection connection)
-    {
-        _dbConnection = connection;
-    }
+    private readonly DatabaseConnection _dbConnection = connection;
 
     public async Task<DataTable> SelectUserJoinedCommunitiesAsync(uint userId)
     {

@@ -17,7 +17,7 @@ public static class FilterUtiltities
     /// <returns></returns>
     public static T GetRequestRouteValue<T>(ActionExecutingContext context, string key)
     {
-        var value = (T)context.ActionArguments[key];
+        var value = (T)context.ActionArguments[key]!;
 
         return value;
     }

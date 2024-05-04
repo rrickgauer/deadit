@@ -8,23 +8,11 @@ namespace Deadit.WebGui.Controllers.Api;
 
 [ApiController]
 [Route("api/communities")]
-public class ApiCommunityController : InternalApiController, IControllerName
+public class ApiCommunityController(ICommunityService communityService) : InternalApiController, IControllerName
 {
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiCommunityController));
 
-    private readonly ICommunityService _communityService;
-    private readonly IResponseService _responseService;
-    
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="communityService"></param>
-    /// <param name="responseService"></param>
-    public ApiCommunityController(ICommunityService communityService, IResponseService responseService)
-    {
-        _communityService = communityService;
-        _responseService = responseService;
-    }
+    private readonly ICommunityService _communityService = communityService;
 
     /// <summary>
     /// POST: /communities
@@ -36,15 +24,14 @@ public class ApiCommunityController : InternalApiController, IControllerName
     [ActionName(nameof(PostCommunityAsync))]
     public async Task<IActionResult> PostCommunityAsync([FromForm] CreateCommunityRequestForm newCommunityForm)
     {
-        var community = await _communityService.CreateCommunityAsync(newCommunityForm, ClientId.Value);
-        var response = await _responseService.ToApiResponseAsync(community);
+        var community = await _communityService.CreateCommunityAsync(newCommunityForm, ClientId!.Value);
         
         if (community.Successful)
         {
-            return Created($"/communities/{community.Data?.CommunityId}", response);    
+            return Created($"/communities/{community.Data?.CommunityId}", community);    
         }
 
-        return BadRequest(response);
+        return BadRequest(community);
     }
 
 }

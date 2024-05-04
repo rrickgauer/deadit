@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.Response;
 
+
 public class ServiceResponse
 {
     public List<ErrorCode> Errors { get; set; } = new();
@@ -22,14 +23,18 @@ public class ServiceResponse
         Errors = errors.ToList();
     }
 
+    public ServiceResponse(ServiceResponse other)
+    {
+        Errors = other.Errors;
+    }
 
-    public void Add(ErrorCode errorCode)
+    public void AddError(ErrorCode errorCode)
     {
         Errors.Add(errorCode);
     }
 
 
-    public void Add(IEnumerable<ErrorCode> errors)
+    public void AddError(IEnumerable<ErrorCode> errors)
     {
         Errors.AddRange(errors);
     }

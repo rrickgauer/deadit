@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Deadit.Lib.Service.Implementations;
 
-[AutoInject(AutoInjectionType.Singleton, InjectionProject.Always, InterfaceType = typeof(ITableMapperService))]
+[AutoInject<ITableMapperService>(AutoInjectionType.Singleton, InjectionProject.Always)]
 public class TableMapperService : ITableMapperService
 {
     private static readonly List<object> ModelMappers = GetAllModelMappers().ToList();
@@ -22,7 +22,7 @@ public class TableMapperService : ITableMapperService
     {
         var subclassTypes = GetModelMapperSubclassTypes();
 
-        var modelMapperObjects = subclassTypes.Select(t => Activator.CreateInstance(t));
+        var modelMapperObjects = subclassTypes.Select(Activator.CreateInstance);
 
         return modelMapperObjects.ToList();
     }
@@ -55,7 +55,7 @@ public class TableMapperService : ITableMapperService
                 return true;
             }
         }
-        while ((current = current.BaseType) != null);
+        while ((current = current.BaseType!) != null);
 
         return false;
 
@@ -69,7 +69,7 @@ public class TableMapperService : ITableMapperService
         return GetMapper<T>().ToModel(dataRow);
     }
 
-    public IEnumerable<T> ToModels<T>(DataTable dataTable)
+    public List<T> ToModels<T>(DataTable dataTable)
     {
         return GetMapper<T>().ToModels(dataTable);
     }
@@ -80,9 +80,7 @@ public class TableMapperService : ITableMapperService
 
         foreach (var mapper in ModelMappers)
         {
-            var castAttempt = mapper as TableMapper<T>;
-
-            if (castAttempt != null)
+            if (mapper is TableMapper<T> castAttempt)
             {
                 correctMapper = castAttempt;
                 break;

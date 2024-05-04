@@ -6,5 +6,5 @@ namespace Deadit.Lib.Service.Contracts;
 public interface IBannedCommunityNameService
 {
     public Task<ServiceDataResponse<bool>> IsBannedCommunityNameAsync(string communityName);
-    public Task<ServiceDataResponse<IEnumerable<ViewBannedCommunityName>>> GetBannedCommunityNamesAsync();
+    public Task<ServiceDataResponse<List<ViewBannedCommunityName>>> GetBannedCommunityNamesAsync();
 }

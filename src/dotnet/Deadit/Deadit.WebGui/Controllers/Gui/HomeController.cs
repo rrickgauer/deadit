@@ -7,16 +7,11 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("")]
-public class HomeController : GuiController, IControllerName
+public class HomeController(IAuthService authService) : GuiController, IControllerName
 {
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(HomeController));
 
-    private readonly IAuthService _authService;
-
-    public HomeController(IAuthService authService)
-    {   
-        _authService = authService; 
-    }
+    private readonly IAuthService _authService = authService;
 
     /// <summary>
     /// deadit.com

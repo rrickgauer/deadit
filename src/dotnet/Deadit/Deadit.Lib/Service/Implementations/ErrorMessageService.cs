@@ -6,29 +6,35 @@ using Deadit.Lib.Service.Contracts;
 
 namespace Deadit.Lib.Service.Implementations;
 
-[AutoInject(AutoInjectionType.Singleton, InjectionProject.Always, InterfaceType = typeof(IErrorMessageService))]
-public class ErrorMessageService : IErrorMessageService
+[AutoInject<IErrorMessageService>(AutoInjectionType.Singleton, InjectionProject.Always)]
+public class ErrorMessageService(IErrorMessageRepository repo, ITableMapperService tableMapperService) : IErrorMessageService
 {
-    private static Dictionary<ErrorCode, ErrorMessage> _errorMessagesDict = new();
+    private readonly IErrorMessageRepository _repo = repo;
+    private readonly ITableMapperService _tableMapperService = tableMapperService;
+
     private static bool _messagesSet = false;
 
-    private readonly IErrorMessageRepository _repo;
-    private readonly ITableMapperService _tableMapperService;
+    private static readonly Dictionary<ErrorCode, ErrorMessage> _errorMessagesDict = new();
 
-    public ErrorMessageService(IErrorMessageRepository repo, ITableMapperService tableMapperService)
+    public static Dictionary<ErrorCode, ErrorMessage> ErrorMessagesDict
     {
-        _repo = repo;
-        _tableMapperService = tableMapperService;
+        get
+        {
+            if (!_messagesSet)
+            {
+                throw new Exception($"Error messages have not been loaded into memory yet!");
+            }
+
+            return _errorMessagesDict;
+        }
     }
 
-    public async Task<Dictionary<ErrorCode, ErrorMessage>> GetErrorMessagesAsync()
+    public async Task LoadStaticErrorMessagesAsync()
     {
         if (!_messagesSet)
         {
             await LoadStaticErrorMessagesDictAsync();
         }
-
-        return _errorMessagesDict;
     }
 
     private async Task LoadStaticErrorMessagesDictAsync()
@@ -38,10 +44,25 @@ public class ErrorMessageService : IErrorMessageService
 
         foreach (var message in messages)
         {
-            var id = (ErrorCode)message.Id.Value;
+            var id = (ErrorCode)message;
             _errorMessagesDict.TryAdd(id, message);
         }
 
         _messagesSet = true;
     }
+
+
+    public static List<ErrorMessage> ToErrorMessages(IEnumerable<ErrorCode> errorCodes)
+    {
+        List<ErrorMessage> messages = new();
+
+        foreach (var errorCode in errorCodes)
+        {
+            var message = ErrorMessagesDict[errorCode];
+            messages.Add(message);
+        }
+
+        return messages;
+    }
+
 }

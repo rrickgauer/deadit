@@ -9,15 +9,10 @@ using MySql.Data.MySqlClient;
 
 namespace Deadit.Lib.Repository.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(ICommunityRepository))]
-public class CommunityRepository : ICommunityRepository
+[AutoInject<ICommunityRepository>(AutoInjectionType.Scoped, InjectionProject.Always)]
+public class CommunityRepository(DatabaseConnection dbConnection) : ICommunityRepository
 {
-    private readonly DatabaseConnection _dbConnection;
-
-    public CommunityRepository(DatabaseConnection dbConnection)
-    {
-        _dbConnection = dbConnection;
-    }
+    private readonly DatabaseConnection _dbConnection = dbConnection;
 
     public async Task<DataRow?> SelectCommunityAsync(string communityName)
     {

@@ -10,18 +10,11 @@ namespace Deadit.WebGui.Controllers.Api;
 
 [Route("api/auth")]
 [ApiController]
-public class ApiAuthController : InternalApiController, IControllerName
+public class ApiAuthController(IAuthService authService) : InternalApiController, IControllerName
 {
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiAuthController));
 
-    private readonly IAuthService _authService;
-    private readonly IResponseService _responseService;
-
-    public ApiAuthController(IAuthService authService, IResponseService responseService)
-    {
-        _authService = authService;
-        _responseService = responseService;
-    }
+    private readonly IAuthService _authService = authService;
 
     /// <summary>
     /// POST: /api/auth/signup
@@ -32,14 +25,13 @@ public class ApiAuthController : InternalApiController, IControllerName
     public async Task<ActionResult<ApiResponse<ViewUser>>> PostSignupAsync([FromForm] SignupRequestForm signupForm)
     {
         ServiceDataResponse<ViewUser> newUserResponse = await _authService.SignupUserAsync(signupForm);
-        var apiResponse = await _responseService.ToApiResponseAsync(newUserResponse);
 
         if (!newUserResponse.Successful)
         {
-            return BadRequest(apiResponse);
+            return BadRequest(newUserResponse);
         }
 
-        return Created($"/users/{newUserResponse.Data?.UserId}", apiResponse);
+        return Created($"/users/{newUserResponse.Data?.UserId}", newUserResponse);
     }
 
     /// <summary>
@@ -51,7 +43,7 @@ public class ApiAuthController : InternalApiController, IControllerName
     public async Task<IActionResult> PostLoginAsync([FromForm] LoginRequestForm loginForm)
     {
         var result = await _authService.LoginUserAsync(loginForm, HttpContext.Session);
-        var apiResponse = _responseService.GetEmptyApiResponse();
+        var apiResponse = new EmptyApiResponse();
 
         if (!result.HasData)
         {

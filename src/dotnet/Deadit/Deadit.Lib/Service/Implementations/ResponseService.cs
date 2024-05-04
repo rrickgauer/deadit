@@ -6,64 +6,52 @@ using Deadit.Lib.Service.Contracts;
 
 namespace Deadit.Lib.Service.Implementations;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always, InterfaceType = typeof(IResponseService))]
-public class ResponseService : IResponseService
-{
-    private readonly IErrorMessageService _errorMessageService;
+//[AutoInject<IResponseService>(AutoInjectionType.Scoped, InjectionProject.Always)]
+//public class ResponseService(IErrorMessageService errorMessageService) : IResponseService
+//{
+//    private readonly IErrorMessageService _errorMessageService = errorMessageService;
 
-    private async Task<Dictionary<ErrorCode, ErrorMessage>> GetErrorsDictAsync() => await _errorMessageService.GetErrorMessagesAsync();
+//    private async Task<Dictionary<ErrorCode, ErrorMessage>> GetErrorsDictAsync() => await _errorMessageService.GetErrorMessagesDictAsync();
 
-    public ResponseService(IErrorMessageService errorMessageService)
-    {
-        _errorMessageService = errorMessageService;
-    }
+//    public async Task<ApiResponse<object>> ToApiResponseAsync(ServiceResponse response)
+//    {
+//        var messages = await GetErrorMessagesAsync(response.Errors);
 
-    public async Task<ApiResponse<object>> ToApiResponseAsync(ServiceResponse response)
-    {
-        var messages = await GetErrorMessagesAsync(response.Errors);
+//        ApiResponse<object> result = new()
+//        {
+//            Data = null,
+//            Errors = messages
+//        };
 
-        ApiResponse<object> result = new()
-        {
-            Data = null,
-            Errors = messages
-        };
+//        return result;
+//    }
 
-        return result;
-    }
+//    public async Task<ApiResponse<T>> ToApiResponseAsync<T>(ServiceDataResponse<T> response)
+//    {
+//        var messages = await GetErrorMessagesAsync(response.Errors);
 
-    public async Task<ApiResponse<T>> ToApiResponseAsync<T>(ServiceDataResponse<T> response)
-    {
-        var messages = await GetErrorMessagesAsync(response.Errors);
+//        ApiResponse<T> result = new()
+//        {
+//            Data = response.Data,
+//            Errors = messages
+//        };
 
-        ApiResponse<T> result = new()
-        {
-            Data = response.Data,
-            Errors = messages
-        };
-
-        return result;
-    }
+//        return result;
+//    }
 
 
-    private async Task<List<ErrorMessage>> GetErrorMessagesAsync(IEnumerable<ErrorCode> errorCodes)
-    {
-        var errorsReference = await GetErrorsDictAsync();
+//    private async Task<List<ErrorMessage>> GetErrorMessagesAsync(IEnumerable<ErrorCode> errorCodes)
+//    {
+//        var errorsReference = await GetErrorsDictAsync();
 
-        List<ErrorMessage> messages = new();
+//        List<ErrorMessage> messages = new();
 
-        foreach (var errorCode in errorCodes)
-        {
-            var message = errorsReference[errorCode];
-            messages.Add(message);
-        }
+//        foreach (var errorCode in errorCodes)
+//        {
+//            var message = errorsReference[errorCode];
+//            messages.Add(message);
+//        }
 
-        return messages;
-    }
-
-    public ApiResponse<object> GetEmptyApiResponse()
-    {
-        return new();
-    }
-
-
-}
+//        return messages;
+//    }
+//}

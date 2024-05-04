@@ -9,7 +9,7 @@ public class ViewBannedCommunityNameTableMapper : TableMapper<ViewBannedCommunit
     {
         ViewBannedCommunityName result = new()
         {
-            Id = uint.Parse(row.Field<int?>(GetColumnName(nameof(ViewBannedCommunityName.Id))).ToString()),
+            Id = uint.Parse(row.Field<int?>(GetColumnName(nameof(ViewBannedCommunityName.Id))).ToString()!),
             Name = row.Field<string?>(GetColumnName(nameof(ViewBannedCommunityName.Name)))
         };
 
