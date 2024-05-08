@@ -9,6 +9,7 @@ To get the typescript plugin going:
     npm install tslib --save-dev
     npm install typescript --save-dev
     npm install @rollup/plugin-typescript --save-dev
+    npm install @types/bootstrap --save-dev 
 
 ***************************************************************************/
 
@@ -19,6 +20,8 @@ class RollupConfig
     constructor(input, output) {
         this.input = input;
 
+        this.external = ['bootstrap',];
+
         this.output = {
             // format: 'es',
             compact: true,
@@ -27,6 +30,10 @@ class RollupConfig
             inlineDynamicImports: true,
             interop: "auto",
             format: 'iife',
+
+            globals: {
+                bootstrap: 'bootstrap',
+            },
         }
 
         this.plugins = [typescript()];
