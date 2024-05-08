@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Configurations;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Errors;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -13,7 +14,9 @@ namespace Deadit.Lib.Repository.Other;
 [AutoInject(AutoInjectionType.Transient, InjectionProject.Always)]
 public class DatabaseConnection(IConfigs configs)
 {
-    private readonly IConfigs _configs = configs;
+    protected readonly IConfigs _configs = configs;
+
+    protected const int USER_DEFINED_EXCEPTION_NUMBER = 1644;
 
     public string ConnectionString => $"server={_configs.DbServer};user={_configs.DbUser};database={_configs.DbDataBase};password={_configs.DbPassword}";
 
@@ -62,7 +65,12 @@ public class DatabaseConnection(IConfigs configs)
     }
 
 
-
+    /// <summary>
+    /// Execute all the commands under a single transaction
+    /// </summary>
+    /// <param name="commands">Commands to execute</param>
+    /// <returns></returns>
+    /// <exception cref="RepositoryException"></exception>
     public async Task<bool> ModifyWithTransactionAsync(params MySqlCommand[] commands)
     {
         // setup a new database connection object
@@ -85,9 +93,16 @@ public class DatabaseConnection(IConfigs configs)
             await CloseConnectionAsync(connection);
         }
 
-        catch (Exception)
+
+        catch (MySqlException ex)
         {
             await transaction.RollbackAsync();
+
+            if (ex.Number == USER_DEFINED_EXCEPTION_NUMBER)
+            {
+                throw new RepositoryException(ex);
+            }
+
             throw;
         }
 
@@ -118,34 +133,48 @@ public class DatabaseConnection(IConfigs configs)
     /// <summary>
     /// Exeucte the specified sql command that modifies (insert, update, delete) data.
     /// </summary>
-    /// <param name="command"></param>
-    /// <returns>Number of affected rows</returns>
+    /// <param name="command">The command to execute</param>
+    /// <returns></returns>
+    /// <exception cref="RepositoryException"></exception>
     public async Task<int> ModifyAsync(MySqlCommand command)
     {
-        // setup a new database connection object
-        using MySqlConnection connection = GetNewConnection();
-        await connection.OpenAsync();
-        command.Connection = connection;
+        try
+        {
+            // setup a new database connection object
+            using MySqlConnection connection = GetNewConnection();
+            await connection.OpenAsync();
+            command.Connection = connection;
 
-        // execute the non query command
-        int numRowsAffected = await command.ExecuteNonQueryAsync();
+            // execute the non query command
+            int numRowsAffected = await command.ExecuteNonQueryAsync();
 
-        // close the connection
-        await CloseConnectionAsync(connection);
+            // close the connection
+            await CloseConnectionAsync(connection);
 
-        return numRowsAffected;
+            return numRowsAffected;
+        }
+        catch(MySqlException ex)
+        {
+            if (ex.Number == USER_DEFINED_EXCEPTION_NUMBER)
+            {
+                throw new RepositoryException(ex);
+            }
+
+            throw;
+        }
+
     }
 
     /// <summary>
     /// Get a new connection using the connection string
     /// </summary>
     /// <returns></returns>
-    private MySqlConnection GetNewConnection()
+    protected MySqlConnection GetNewConnection()
     {
         return new MySqlConnection(ConnectionString);
     }
 
-    private static async Task CloseConnectionAsync(MySqlConnection connection)
+    protected static async Task CloseConnectionAsync(MySqlConnection connection)
     {
         // close the connection
         await connection.CloseAsync();

@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Errors;
 using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.Response;
@@ -16,6 +17,8 @@ public class ServiceDataResponse<T> : ServiceResponse
     public ServiceDataResponse(IEnumerable<ErrorCode> errors) : base(errors) { }
     public ServiceDataResponse(ErrorCode errorCode) : base(errorCode) { }
     public ServiceDataResponse(ServiceResponse other) : base(other) { }
+    public ServiceDataResponse(RepositoryException ex) : base(ex) { }
+
 
     public ServiceDataResponse(T? data) : base()
     {
@@ -26,5 +29,10 @@ public class ServiceDataResponse<T> : ServiceResponse
     public ServiceDataResponse(ServiceDataResponse<T> other) : base(other)
     {
         Data = other.Data;
+    }
+
+    public static implicit operator ServiceDataResponse<T>(RepositoryException ex)
+    {
+        return new(ex);
     }
 }

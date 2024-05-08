@@ -130,3 +130,8 @@ export class InputFeedback
     }
 }
 
+
+export class InputFeedbackText extends InputFeedback
+{
+    public inputElement: HTMLInputElement;
+}

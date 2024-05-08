@@ -66,3 +66,11 @@ export class ApiValidationException extends Error
     }
 }
 
+export class ApiNotFoundException extends Error
+{
+    constructor(message?: string)
+    {
+        super(message);
+    }
+}
+

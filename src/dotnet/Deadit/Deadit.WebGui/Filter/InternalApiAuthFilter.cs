@@ -1,7 +1,7 @@
-﻿using Deadit.Lib.Auth;
-using Deadit.Lib.Domain.Attributes;
+﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Domain.Other;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 

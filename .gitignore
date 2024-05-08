@@ -271,3 +271,5 @@ ConfigurationProduction.cs
 
 **/js/dist/
 **/js/ts/out/
+/src/dotnet/Deadit/Deadit.WebGui/wwwroot/css/dist
+

@@ -28,7 +28,7 @@
     "Profile 1": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:7013/communities/joined",
+      "launchUrl": "https://localhost:7013/c/rmr/submit",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

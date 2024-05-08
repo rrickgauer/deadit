@@ -15,15 +15,14 @@ export class CreateCommunityApiRequest
 }
 
 
-export class CommunityApiRequest
-{
-    public id?: number;
-    public name?: string;
-    public title?: string;
-    public ownerId?: number;
-    public description?: string;
-    public createdOn?: string;
-    public countMembers?: number;
-    public urlGui?: string;
+export type CommunityApiRequest = {
+    communityId?: number;
+    communityName?: string;
+    communityTitle?: string;
+    communityOwnerId?: number;
+    communityDescription?: string;
+    communityCreatedOn?: string;
+    communityCountMembers?: number;
+    communityUrlGui?: string;
 }
 

@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
@@ -21,10 +22,17 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
     /// <returns></returns>
     public async Task<ServiceDataResponse<List<ViewCommunityMembership>>> GetJoinedCommunitiesAsync(uint userId)
     {
-        var datatable = await _repo.SelectUserJoinedCommunitiesAsync(userId);
-        var models = _tableMapperService.ToModels<ViewCommunityMembership>(datatable);
+        try
+        {
+            var datatable = await _repo.SelectUserJoinedCommunitiesAsync(userId);
+            var models = _tableMapperService.ToModels<ViewCommunityMembership>(datatable);
 
-        return new(models);   
+            return new(models);
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
     }
 
     /// <summary>
@@ -35,14 +43,24 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
     /// <returns></returns>
     public async Task<ServiceDataResponse<bool>> IsMemberAsync(uint userId, uint communityId)
     {
-        var getMembershipResponse = (await GetMembershipAsync(userId, communityId)).Data;
 
-        if (getMembershipResponse == null)
+        try
         {
-            return new(false);
+            var getMembershipResponse = (await GetMembershipAsync(userId, communityId)).Data;
+
+            if (getMembershipResponse == null)
+            {
+                return new(false);
+            }
+
+            return new(true);
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
         }
 
-        return new(true);
+
     }
 
     /// <summary>
@@ -53,16 +71,23 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
     /// <returns></returns>
     public async Task<ServiceDataResponse<ViewCommunityMembership>> GetMembershipAsync(uint userId, uint communityId)
     {
-        ServiceDataResponse<ViewCommunityMembership> response = new();
-
-        var datarow = await _repo.SelectCommunityMembershipAsync(userId, communityId);
-        
-        if (datarow != null)
+        try
         {
-            response.Data = _tableMapperService.ToModel<ViewCommunityMembership>(datarow);
-        }
+            ServiceDataResponse<ViewCommunityMembership> response = new();
 
-        return response;
+            var datarow = await _repo.SelectCommunityMembershipAsync(userId, communityId);
+
+            if (datarow != null)
+            {
+                response.Data = _tableMapperService.ToModel<ViewCommunityMembership>(datarow);
+            }
+
+            return response;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
     }
 
     /// <summary>
@@ -73,16 +98,28 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
     /// <returns></returns>
     public async Task<ServiceDataResponse<ViewCommunityMembership>> GetMembershipAsync(uint userId, string communityName)
     {
-        ServiceDataResponse<ViewCommunityMembership> response = new();
 
-        var datarow = await _repo.SelectCommunityMembershipAsync(userId, communityName);
-
-        if (datarow != null)
+        try
         {
-            response.Data = _tableMapperService.ToModel<ViewCommunityMembership>(datarow);
+
+            ServiceDataResponse<ViewCommunityMembership> response = new();
+
+            var datarow = await _repo.SelectCommunityMembershipAsync(userId, communityName);
+
+            if (datarow != null)
+            {
+                response.Data = _tableMapperService.ToModel<ViewCommunityMembership>(datarow);
+            }
+
+            return response;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
         }
 
-        return response;
+
+
     }
 
 
@@ -94,9 +131,17 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
     /// <returns></returns>
     public async Task<ServiceDataResponse<int>> LeaveCommunityAsync(uint userId, string communityName)
     {
-        var numRecords = await _repo.DeleteMembershipAsync(userId, communityName);
+        try
+        {
+            var numRecords = await _repo.DeleteMembershipAsync(userId, communityName);
 
-        return new(numRecords);
+            return new(numRecords);
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+
     }
 
     /// <summary>
@@ -107,22 +152,32 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
     /// <returns></returns>
     public async Task<ServiceDataResponse<GetJoinedCommunity>> JoinCommunityAsync(uint userId, string communityName)
     {
-        ServiceDataResponse<GetJoinedCommunity> response = new();
 
-        var insertResult = await SaveCommunityMembershipAsync(userId, communityName);
-
-        if (!insertResult.Successful)
+        try
         {
-            return new(insertResult.Errors);
+            ServiceDataResponse<GetJoinedCommunity> response = new();
+
+            var insertResult = await SaveCommunityMembershipAsync(userId, communityName);
+
+            if (!insertResult.Successful)
+            {
+                return new(insertResult.Errors);
+            }
+
+            var newMembershipResponse = await GetMembershipAsync(userId, communityName);
+
+            if (newMembershipResponse.Data != null)
+            {
+                response.Data = (GetJoinedCommunity)newMembershipResponse.Data;
+            }
+            return response;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
         }
 
-        var newMembershipResponse = await GetMembershipAsync(userId, communityName);
 
-        if (newMembershipResponse.Data != null)
-        {
-            response.Data = (GetJoinedCommunity)newMembershipResponse.Data;
-        }
-        return response;
     }
 
 
@@ -135,19 +190,30 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
     /// <returns></returns>
     private async Task<ServiceDataResponse<int>> SaveCommunityMembershipAsync(uint userId, string communityName)
     {
-        ServiceDataResponse<int> response = new();
 
-        var canJoinCommunity = await CanJoinCommunityAsync(userId, communityName);
-
-        if (!canJoinCommunity.Successful)
+        try
         {
-            response.Errors = canJoinCommunity.Errors;
+            ServiceDataResponse<int> response = new();
+
+            var canJoinCommunity = await CanJoinCommunityAsync(userId, communityName);
+
+            if (!canJoinCommunity.Successful)
+            {
+                response.Errors = canJoinCommunity.Errors;
+                return response;
+            }
+
+            response.Data = await _repo.InsertMembershipAsync(userId, communityName);
+
             return response;
         }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
 
-        response.Data = await _repo.InsertMembershipAsync(userId, communityName);
 
-        return response;
+
     }
 
     /// <summary>

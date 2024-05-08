@@ -2,14 +2,22 @@
 
 export enum ApiErrorCode
 {
-    SignUpEmailTaken = 1,
-    SignupUsernameTaken = 2,
-    SignupInvalidPassword = 3,
 
-    CreateCommunityInvalidNameCharacter = 4,
-    CreateCommunityNameTaken = 5,
+    //#region - Signup -
 
-    ValidationError = 6,
+    SignUpEmailTaken = 200,
+    SignupUsernameTaken = 201,
+    SignupInvalidPassword = 202,
 
-    CreateCommunityNameBanned = 7,
+    //#endregion
+
+    
+    //#region - Create Community -
+
+    CreateCommunityInvalidNameCharacter = 300,
+    CreateCommunityNameTaken = 301,
+    CreateCommunityNameBanned = 302,
+
+    //#endregion
 }
+

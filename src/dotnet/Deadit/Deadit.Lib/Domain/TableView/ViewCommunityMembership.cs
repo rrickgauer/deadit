@@ -87,30 +87,15 @@ public class ViewCommunityMembership :
 
     #region - ITableView -
 
-    public static explicit operator Community(ViewCommunityMembership other)
-    {
-        return (Community)(ViewCommunity)other;
-    }
+    public static explicit operator Community(ViewCommunityMembership other) => (Community)(ViewCommunity)other;
 
-    public static explicit operator ViewCommunity(ViewCommunityMembership other)
-    {
-        return ((ITableView<ViewCommunityMembership, ViewCommunity>)other).CastToModel();
-    }
+    public static explicit operator ViewCommunity(ViewCommunityMembership other) => other.CastToModel<ViewCommunityMembership, ViewCommunity>();
 
-    public static explicit operator ViewUser(ViewCommunityMembership other)
-    {
-        return ((ITableView<ViewCommunityMembership, ViewUser>)other).CastToModel();
-    }
+    public static explicit operator ViewUser(ViewCommunityMembership other) => other.CastToModel<ViewCommunityMembership, ViewUser>();
 
-    public static explicit operator CommunityMembership(ViewCommunityMembership other)
-    {
-        return ((ITableView<ViewCommunityMembership, CommunityMembership>)other).CastToModel();
-    }
+    public static explicit operator CommunityMembership(ViewCommunityMembership other) => other.CastToModel<ViewCommunityMembership, CommunityMembership>();
 
-    public static explicit operator GetJoinedCommunity(ViewCommunityMembership other)
-    {
-        return ((ITableView<ViewCommunityMembership, GetJoinedCommunity>)other).CastToModel();
-    }
+    public static explicit operator GetJoinedCommunity(ViewCommunityMembership other) => other.CastToModel<ViewCommunityMembership, GetJoinedCommunity>();
 
     #endregion
 }
