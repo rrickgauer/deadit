@@ -1,0 +1,67 @@
+﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Deadit.Lib.Domain.Enum
+@using Deadit.Lib.Utility
+@using Microsoft.AspNetCore.Http.Extensions;
+
+
+@functions {
+
+    public void GetPostTypeIcon(PostType postType)
+    {
+        string icon = string.Empty;
+        switch(postType)
+        {
+            case PostType.Text:
+                icon = "detail"; break;
+            case PostType.Link:
+                icon = "link"; break;
+            default:
+                throw new NotImplementedException();
+        }
+
+        <i class="bx bx-@icon"></i>
+    }
+}
+
+
+
+
+
+<div class="community-posts-container">
+    
+    <ul class="list-group">
+
+        @foreach(var post in Model.Posts)
+        {
+            <li class="list-group-item post" data-post-id="@post.PostId">
+
+                <div class="d-flex">
+                    @* Votes *@
+                    <div class="me-3">
+                        <button class="btn btn-sm btn-post-vote btn-post-vote-up">&uarr;</button>
+                        <div class="d-flex justify-content-around">@post.PostVotesScore</div>
+                        <button class="btn btn-sm btn-post-vote btn-post-vote-down">&darr;</button>
+                    </div>
+
+                    @* Post metadata *@
+                    <div>
+                        <div class="post-title"><h5><a class="text-decoration-none" target="_blank" href="@post.UriWeb">@post.PostTitle</a></h5></div>
+                        <div class="post-created-on">@{GetPostTypeIcon(post.PostType!.Value);} Submitted @post.CreatedOnDifferenceDisplay ago</div>
+                        <div class="post-count-comments">@NumberUtilities.FormatNumberWithCommas(post.PostCountComments) comments</div>
+                    </div>
+                </div>
+
+
+
+
+            </li>
+        }
+    </ul>
+
+</div>
+
+
+
+
+
