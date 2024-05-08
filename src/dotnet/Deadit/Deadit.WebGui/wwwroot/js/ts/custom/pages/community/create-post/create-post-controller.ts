@@ -1,11 +1,14 @@
 import { IController } from "../../../domain/contracts/i-controller";
 import { CreatePostLinkForm, CreatePostTextForm } from "./create-post-text-form";
-import { UrlUtilities } from "../../../utilities/url-utilities";
+import { UrlUtility } from "../../../utilities/url-utility";
+import { LoginModal } from "../../../components/login-modal/login-modal";
 
 
 export class CreatePostController implements IController
 {
-    private readonly _communityName: string = UrlUtilities.getCurrentPathValue(1);
+    private readonly _modal = new LoginModal(true);
+
+    private readonly _communityName: string = UrlUtility.getCurrentPathValue(1);
 
     private readonly _textPostForm = new CreatePostTextForm({
         form: document.querySelector('.create-post-text-form'),

@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
@@ -18,6 +19,7 @@ public class ApiCommunityPostsController(IPostService postService) : InternalApi
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiCommunityPostsController));
 
     private readonly IPostService _postService = postService;
+
 
     /// <summary>
     /// POST: /api/communities/:communityName/posts/text
@@ -53,6 +55,7 @@ public class ApiCommunityPostsController(IPostService postService) : InternalApi
     [HttpPost("link")]
     [ActionName(nameof(CreateLinkPostAsync))]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(CommunityMemberFilter))]
     public async Task<IActionResult> CreateLinkPostAsync([FromRoute] string communityName, [FromBody] CreateLinkPostForm formData)
     {
         var newPostRecord = InitNewPostRecord<PostLink>(formData);

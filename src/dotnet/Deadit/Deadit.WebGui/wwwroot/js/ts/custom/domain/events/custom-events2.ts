@@ -52,13 +52,6 @@ export class CustomMessage<T>
 }
 
 
-export type ExampleMessageClass = {
-    username: string;
-    age: number;
-}
-
-export const TestingEvent = new CustomMessage<ExampleMessageClass>();
-
 
 
 

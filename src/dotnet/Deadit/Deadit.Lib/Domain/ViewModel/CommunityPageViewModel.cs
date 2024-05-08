@@ -1,9 +1,10 @@
 ﻿
 using Deadit.Lib.Domain.TableView;
+using static Deadit.Lib.Domain.ViewModel.ViewModelContracts;
 
 namespace Deadit.Lib.Domain.ViewModel;
 
-public class CommunityPageViewModel
+public class CommunityPageViewModel : ILoggedIn
 {
     public required ViewCommunity Community { get; set; }
     public bool IsMember { get; set; } = false;

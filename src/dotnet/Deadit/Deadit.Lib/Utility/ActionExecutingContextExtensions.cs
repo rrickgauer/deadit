@@ -1,4 +1,6 @@
 ﻿using Deadit.Lib.Domain.Other;
+using Deadit.Lib.Domain.Response;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Deadit.Lib.Utility;
@@ -12,6 +14,11 @@ public static class ActionExecutingContextExtensions
     public static string GetCommunityNameRouteValue(this ActionExecutingContext context)
     {
         return GetRequestRouteValue<string>(context, "communityName");
+    }
+
+    public static Guid GetPostIdRouteValue(this ActionExecutingContext context)
+    {
+        return GetRequestRouteValue<Guid>(context, "postId");
     }
 
 
@@ -49,5 +56,11 @@ public static class ActionExecutingContextExtensions
         }
 
         return clientId.Value;
+    }
+
+
+    public static void ReturnBadServiceResponse(this ActionExecutingContext context, ServiceResponse serviceResponse)
+    {
+        context.Result = new BadRequestObjectResult(serviceResponse);
     }
 }

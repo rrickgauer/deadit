@@ -1,0 +1,47 @@
+﻿@model Deadit.Lib.Domain.ViewModel.PostPageViewModel
+@using Microsoft.AspNetCore.Http.Extensions;
+
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="card-header">Share your thoughts</div>
+    
+        <div class="card-body">
+
+            <form class="form-post-comment">
+                <div class="form-feedback"></div>
+
+                <fieldset>
+
+                    @* Content *@
+                    <div class="input-feedback">
+                        <label class="form-label-container">
+                            <textarea class="form-control input-feedback-input" name="content" rows="3" ></textarea>
+                            <div class="valid-feedback"></div>
+                            <div class="invalid-feedback"></div>
+                        </label>
+                    </div>
+
+                    
+
+                    @* Action Buttons *@
+                    <div class="d-flex">
+                        <button class="btn btn-success btn-submit" type="submit">Save</button>
+                    </div>
+                </fieldset>
+
+            </form>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+

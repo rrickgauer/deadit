@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Response;
@@ -16,13 +17,15 @@ public class ViewModelService : IViewModelService
     private readonly ICommunityMemberService _memberService;
     private readonly IAuthService _authService;
     private readonly IPostService _postService;
+    private readonly ICommentService _commentService;
 
-    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService, IPostService postService)
+    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService, IPostService postService, ICommentService commentService)
     {
         _communityService = communityService;
         _memberService = memberService;
         _authService = authService;
         _postService = postService;
+        _commentService = commentService;
     }
 
     /// <summary>
@@ -110,5 +113,136 @@ public class ViewModelService : IViewModelService
 
         return new(viewModel);
     }
+
+
+    public async Task<ServiceDataResponse<PostPageViewModel>> GetPostPageViewModelAsync(Guid postId, PostType postType, uint? userId)
+    {
+        // get the post
+        ViewPost post;
+
+        try
+        {
+            post = postType switch
+            {
+                PostType.Text => await GetPostTextAsync(postId),
+                PostType.Link => await GetPostLinkAsync(postId),
+                _             => throw new NotImplementedException(),
+            };
+        }
+        catch(ServiceResponseException ex)
+        {
+            return new(ex.Response);
+        }
+
+
+        // get comments
+        var getComments = await _commentService.GetCommentsNestedAsync(postId);
+
+        if (!getComments.Successful)
+        {
+            return new(getComments);
+        }
+
+        PostPageViewModel viewModel = new()
+        {
+            Post = post,
+            IsAuthor = post.PostAuthorId == userId,
+            Comments = getComments.Data ?? new(),
+            ClientId = userId,
+            IsLoggedIn = userId != null,
+        };
+
+        return new(viewModel);
+    }
+
+
+    private async Task<ViewPostText> GetPostTextAsync(Guid postId)
+    {
+        // get the post
+        var getPost = await _postService.GetTextPostAsync(postId);
+
+        if (!getPost.Successful)
+        {
+            throw new ServiceResponseException(getPost);
+        }
+
+        if (getPost.Data is not ViewPostText post)
+        {
+            throw new NotFoundHttpResponseException();
+        }
+
+        return post; 
+    }
+
+    private async Task<ViewPostLink> GetPostLinkAsync(Guid postId)
+    {
+        // get the post
+        var getPost = await _postService.GetLinkPostAsync(postId);
+
+        if (!getPost.Successful)
+        {
+            throw new ServiceResponseException(getPost);
+        }
+
+        if (getPost.Data is not ViewPostLink post)
+        {
+            throw new NotFoundHttpResponseException();
+        }
+
+        return post;
+    }
+
+
+
+    public async Task<ServiceDataResponse<GetCommentsApiViewModel>> GetCommentsApiResponseAsync(Guid postId, uint? clientId)
+    {
+        var getComments = await _commentService.GetCommentsNestedAsync(postId);
+
+        if (!getComments.Successful)
+        {
+            return new(getComments);
+        }
+
+        var comments = getComments.Data ?? new();
+
+        var dtos = comments.Select(c =>
+        {
+            var dto = (GetCommentDto)c;
+
+            dto.SetIsAuthorRecursive(clientId);
+
+            return dto;
+        });
+
+
+        GetCommentsApiViewModel viewModel = new()
+        {
+            Comments = dtos.ToList(),
+            IsLoggedIn = clientId.HasValue,
+        };
+
+        return new(viewModel);
+    }
+
+    public async Task<ServiceDataResponse<GetCommentDto>> GetCommentApiResponseAsync(Guid commentId, uint? clientId)
+    {
+        var getComment = await _commentService.GetCommentAsync(commentId);
+
+        if (!getComment.Successful)
+        {
+            return new(getComment);
+        }
+
+        if (getComment.Data is not ViewComment comment)
+        {
+            throw new NotFoundHttpResponseException();
+        }
+
+        var result = (GetCommentDto)comment;
+        result.SetIsAuthorRecursive(clientId);
+
+        return new(result);
+    }
+
 }
 

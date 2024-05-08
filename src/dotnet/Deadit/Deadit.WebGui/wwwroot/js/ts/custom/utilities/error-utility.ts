@@ -7,7 +7,7 @@ export type OnExceptionCallbacks = {
     onOther?: (error: Error) => void;
 }
 
-export class ErrorUtilities
+export class ErrorUtility
 {
     public static onException = (error: Error, callbacks: OnExceptionCallbacks) =>
     {

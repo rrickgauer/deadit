@@ -1,0 +1,97 @@
+﻿@model Deadit.Lib.Domain.ViewModel.PostPageViewModel
+@using Deadit.Lib.Domain.TableView
+@using Deadit.Lib.Utility
+@using Microsoft.AspNetCore.Http.Extensions;
+
+
+@functions {
+
+    public void GetCommentHtml(ViewComment comment)
+    {
+        var isCommentAuthor = (Model.IsLoggedIn && Model.ClientId == comment.CommentAuthorId);
+
+        <hr />
+        <li class="comment-list-item editing" data-comment-id="@comment.CommentId">
+            <div class="comment-actions">
+                <small class="text-muted">
+                    <span>@comment.CommentAuthorUsername</span> &#183;
+                    <span>@comment.CreatedOnDifferenceDisplay ago</span> &#183;
+                    <a href="#" class="text-reset btn-comment-toggle">Hide</a>
+
+                    @if(isCommentAuthor)
+                    {
+                        @Html.Raw(" &#183; ")
+                        <a href="#" class="text-reset btn-comment-edit">Edit</a>
+                        @Html.Raw(" &#183; ")
+                        <a href="#" class="text-reset btn-comment-delete">Delete</a>
+                    }
+
+                </small>
+            </div>
+
+            @if (isCommentAuthor)
+            {
+                <div class="comment-content-form-container">
+
+                    @Html.Raw(@"<form class='comment-content-form'>")
+
+                    <fieldset>
+
+                        <textarea class="form-control" rows="3" name="comment-content">@comment.CommentContent</textarea>
+
+                        <div class="d-flex mt-2">
+                            <button type="button" class="btn btn-sm btn-success btn-submit me-1">Save changes</button>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-cancel">Cancel</button>
+                        </div>
+                    </fieldset>
+
+                    @Html.Raw(@"</form>")
+
+                </div>
+
+            }
+
+            <div class="comment-thread">
+
+                <div class="comment-content">
+                    <div class="md">
+                        @Html.Raw(MarkdownUtility.ToHtml(comment.CommentContent ?? string.Empty))
+                    </div>
+                </div>
+
+                @* Replies *@
+                <ul class="comment-list" data-parent-comment-id="@comment.CommentParentId">
+                    @foreach(var reply in comment.CommentReplies)
+                    {
+                        GetCommentHtml(reply);
+                    }
+                </ul>
+            </div>
+
+        </li>
+
+    }
+
+
+}
+
+
+<div class="container">
+
+    <div class="card">
+        <div class="card-header">
+            Comments
+        </div>
+        <div class="card-body">
+
+            <ul class="comment-list root">
+
+
+
+
+            </ul>
+
+
+        </div>
+    </div>
+</div>

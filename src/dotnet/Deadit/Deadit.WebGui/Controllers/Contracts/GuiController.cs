@@ -7,6 +7,8 @@ public class GuiController : Controller, IDeaditController
 {
     public SessionManager SessionManager => new(Request.HttpContext.Session);
     public uint? ClientId => SessionManager.ClientId;
+
+    public HttpRequestItems RequestItems => new(HttpContext.Items);
 }
 
 

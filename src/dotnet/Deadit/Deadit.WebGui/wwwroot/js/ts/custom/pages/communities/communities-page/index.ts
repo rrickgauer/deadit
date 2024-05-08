@@ -1,8 +1,8 @@
 import { LoginModal } from "../../../components/login-modal/login-modal";
-import { PageUtilities } from "../../../utilities/page-utilities";
+import { PageUtility } from "../../../utilities/page-utility";
 
 
-PageUtilities.pageReady(async () =>
+PageUtility.pageReady(async () =>
 {
     const loginModal = new LoginModal();    
 });

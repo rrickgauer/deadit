@@ -6,6 +6,8 @@ public interface IDeaditController
 {
     public SessionManager SessionManager { get; }
     public uint? ClientId { get; }
+
+    public HttpRequestItems RequestItems { get; }
 }
 
 

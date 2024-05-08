@@ -5,7 +5,7 @@ import { CommunityApiRequest, CreateCommunityApiRequest } from "../../../domain/
 import { ApiResponse, ApiValidationException, ErrorMessage } from "../../../domain/model/api-response";
 import { CommunityService } from "../../../services/community-service";
 import { ErrorService } from "../../../services/error-service";
-import { ServiceUtilities } from "../../../utilities/service-utilities";
+import { ServiceUtility } from "../../../utilities/service-utility";
 import { CreateCommunityElements } from "./create-community-elements";
 
 

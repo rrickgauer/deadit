@@ -3,7 +3,6 @@ using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Other;
-using Deadit.Lib.Utility;
 using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.TableView;
@@ -47,11 +46,16 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
     [CopyToProperty<PostLink>(nameof(PostLink.CreatedOn))]
     public DateTime? PostCreatedOn { get; set; }
 
-
     [SqlColumn("post_count_comments")]
-    public uint PostCountComments { get; set; } = (uint)Rand.Next(0, 5000);
+    public uint PostCountComments { get; set; } = 0;
+
 
     public int PostVotesScore { get; set; } = Rand.Next(-100, 100);
+
+
+    [JsonIgnore]
+    public virtual string PostBodyContent => string.Empty;
+
 
     #region - ICreatedUri -
 
@@ -73,7 +77,6 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
     public string CreatedOnDifferenceDisplay => DifferenceDisplayCalculator.FromNow(PostCreatedOn ?? DateTime.UtcNow);
 
     #endregion
-
 
     #region - ITableView -
 

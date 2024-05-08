@@ -1,0 +1,41 @@
+﻿@model Deadit.Lib.Domain.ViewModel.PostPageViewModel
+@using Microsoft.AspNetCore.Http.Extensions;
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="~/Views/Includes/_Header.cshtml" />
+    <title>@Model.Post.PostTitle</title>
+</head>
+
+<body>
+    <partial name="~/Views/Includes/_Navbar.cshtml" />
+    <partial name="~/Views/Includes/_LoginModal.cshtml" />
+    <partial name="~/Views/Components/MessageBoxes/_MessageBoxes.cshtml" />
+
+    <div class="container standard-spacing page-header">
+        <h1>@Model.Post.CommunityName</h1>
+        <hr />
+    </div>
+
+
+    <div class="standard-spacing">
+        <partial name="_PostContent.cshtml" />
+    </div>
+
+    <div class="standard-spacing">
+        <partial name="_TopComment.cshtml" />
+    </div>
+
+    <div class="standard-spacing">
+        <partial name="_PostComments.cshtml" />
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <partial name="~/Views/Includes/_PageBottom.cshtml" />
+    <partial name="~/Views/Includes/_Footer.cshtml" />
+    <script src="~/js/dist/post-page.bundle.js"></script>
+</body>
+</html>

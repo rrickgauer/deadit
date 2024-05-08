@@ -6,11 +6,11 @@ export interface AlertConstructor<T extends AlertBase>
     new(args: AlertParms): T;
 }
 
-export class AlertUtilities
+export class AlertUtility
 {
 
-    public static showSuccess = (args: AlertParms) => AlertUtilities.showAlert(args, AlertSuccess);
-    public static showDanger = (args: AlertParms) => AlertUtilities.showAlert(args, AlertDanger);
+    public static showSuccess = (args: AlertParms) => AlertUtility.showAlert(args, AlertSuccess);
+    public static showDanger = (args: AlertParms) => AlertUtility.showAlert(args, AlertDanger);
 
 
     private static showAlert = <TAlert extends AlertBase>(args: AlertParms, alertConstructor: AlertConstructor<TAlert>): TAlert =>

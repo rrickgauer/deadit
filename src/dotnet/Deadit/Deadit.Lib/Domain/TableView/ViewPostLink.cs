@@ -14,6 +14,8 @@ public class ViewPostLink : ViewPost, ITableView<ViewPostLink, PostLink>
     public string? PostUrl { get; set; }
 
 
+    public override string PostBodyContent => PostUrl ?? string.Empty;
+
     #region - ITableView -
 
     public static explicit operator PostLink(ViewPostLink other) => other.CastToModel<ViewPostLink, PostLink>();

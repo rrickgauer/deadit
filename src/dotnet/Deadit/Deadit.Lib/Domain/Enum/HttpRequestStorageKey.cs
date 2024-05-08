@@ -2,5 +2,6 @@
 
 public enum HttpRequestStorageKey
 {
-    CommunityId,
+    CommunityId = 0,
+    Post = 1,
 }

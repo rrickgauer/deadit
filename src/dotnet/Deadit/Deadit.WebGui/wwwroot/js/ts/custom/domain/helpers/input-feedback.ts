@@ -135,3 +135,8 @@ export class InputFeedbackText extends InputFeedback
 {
     public inputElement: HTMLInputElement;
 }
+
+export class InputFeedbackTextArea extends InputFeedback
+{
+    public inputElement: HTMLTextAreaElement;
+}

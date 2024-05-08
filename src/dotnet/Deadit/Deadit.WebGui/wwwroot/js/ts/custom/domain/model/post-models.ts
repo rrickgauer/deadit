@@ -40,5 +40,10 @@ export type LinkPostApiResponse = PostApiResponse & {
 
 
 
+export type PostPageParms = {
+    communityName: string;
+    postId: string;
+}
+
 
 

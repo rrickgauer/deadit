@@ -2,7 +2,7 @@ import { NativeEvents } from "../../../domain/constants/native-events";
 import { IController } from "../../../domain/contracts/i-controller";
 import { LinkPostApiRequest, TextPostApiRequest } from "../../../domain/model/post-models";
 import { PostService } from "../../../services/post-service";
-import { ErrorUtilities } from "../../../utilities/error-utilities";
+import { ErrorUtility } from "../../../utilities/error-utility";
 import { CreatePostFormElements } from "./create-post-form-elements";
 
 
@@ -111,7 +111,7 @@ export class CreatePostTextForm extends CreatePostFormBase
         }
         catch (error)
         {
-            ErrorUtilities.onException(error, {
+            ErrorUtility.onException(error, {
                 onApiNotFoundException: (e) =>
                 {
                     alert('not found');
@@ -162,7 +162,7 @@ export class CreatePostLinkForm extends CreatePostFormBase
         }
         catch (error)
         {
-            ErrorUtilities.onException(error, {
+            ErrorUtility.onException(error, {
                 onApiNotFoundException: (e) =>
                 {
                     alert('not found');

@@ -1,5 +1,5 @@
 ﻿
-export class PageUtilities {
+export class PageUtility {
 
     static pageReady = (fn) =>
     {
