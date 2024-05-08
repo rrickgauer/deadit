@@ -49,7 +49,7 @@ export class CreateCommunityController
 
             if (response.successful)
             {
-                window.location.href = `/communities/${response.response.data.id}`;
+                window.location.href = `/communities/${response.response.data.communityId}`;
             }
             else
             {

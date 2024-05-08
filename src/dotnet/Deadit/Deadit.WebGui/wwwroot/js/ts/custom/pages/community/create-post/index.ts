@@ -8,6 +8,7 @@ PageUtilities.pageReady(async () =>
 {
     const controller = new CreatePostController();
     controller.control();
-
 });
+
+
 
