@@ -10,7 +10,7 @@ public abstract class Post
     public uint? CommunityId { get; set; }
     public string? Title { get; set; }
     public uint? AuthorId { get; set; }
-    public DateTime CreatedOn { get; set; } = DateTime.Now;
+    public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
     public ushort PostTypeValue => (ushort)PostType;
 }

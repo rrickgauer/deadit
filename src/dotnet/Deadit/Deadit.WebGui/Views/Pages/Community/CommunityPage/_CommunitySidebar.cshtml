@@ -1,0 +1,39 @@
+﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http.Extensions;
+
+
+@{
+    var requestPath = HttpContextAccessor?.HttpContext?.Request.Path.ToString();
+    var absoluteUrl = HttpContextAccessor?.HttpContext?.Request.GetEncodedUrl();
+    var loginUrl = $"/auth/login?destination={absoluteUrl}";
+}
+
+<div class="card card-body">
+    @* Description *@
+    <h6>About community</h6>
+    <p>@Model.Community.CommunityDescription</p>
+
+    @* Community stats *@
+    <hr />
+    <p class="mb-0">@Model.Community.CommunityCountMembers members</p>
+
+    @* Action buttons *@
+    <hr />
+
+    @{
+        if (Model.IsLoggedIn)
+        {
+            string toggleMembershipButtonText = Model.IsMember ? "Leave" : "Join";
+            string membershipStatus = Model.IsMember ? "data-js-is-member" : string.Empty;
+
+            <button type="button" class="btn btn-sm btn-secondary mb-1 btn-toggle-membership" @membershipStatus>@toggleMembershipButtonText</button>
+        }
+        else
+        {
+            <a href="@loginUrl" class="btn btn-sm btn-secondary mb-1">Log in to join</a>
+        }
+    }
+
+    <a href="@requestPath/submit" class="btn btn-sm btn-secondary mb-1">Create Post</a>
+</div>

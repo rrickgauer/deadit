@@ -2,14 +2,23 @@
 using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.Other;
+using Deadit.Lib.Utility;
+using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.TableView;
 
 
-public class ViewPost : ViewCommunity, ICreatedUri,
+public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
     ITableView<ViewPost, PostText>,
     ITableView<ViewPost, PostLink>
 {
+
+    #region - Private Members -
+    private static readonly Random Rand = new();
+    #endregion
+
+
     [SqlColumn("post_id")]
     [CopyToProperty<PostText>(nameof(PostText.Id))]
     [CopyToProperty<PostLink>(nameof(PostLink.Id))]
@@ -39,15 +48,28 @@ public class ViewPost : ViewCommunity, ICreatedUri,
     public DateTime? PostCreatedOn { get; set; }
 
 
+    [SqlColumn("post_count_comments")]
+    public uint PostCountComments { get; set; } = (uint)Rand.Next(0, 5000);
+
+
     #region - ICreatedUri -
-    
+
+    [JsonPropertyName("postUriWeb")]
     public virtual string UriWeb => $"/c/{CommunityName}/posts/{PostId}";
+
+    [JsonPropertyName("postUriApi")]
     public virtual string UriApi => $"/communities/{CommunityName}/posts/{PostId}";
 
     public string GetCreatedUri(string uriPrefix)
     {
         return $"{uriPrefix}/communities/{CommunityName}/{PostId}";
     }
+
+    #endregion
+
+    #region - ICreatedOnDifference -
+
+    public string CreatedOnDifferenceDisplay => DifferenceDisplayCalculator.FromNow(PostCreatedOn ?? DateTime.UtcNow);
 
     #endregion
 

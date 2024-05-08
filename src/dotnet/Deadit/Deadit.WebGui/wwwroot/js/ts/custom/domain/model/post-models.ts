@@ -25,8 +25,9 @@ export type PostApiResponse = CommunityApiRequest & {
     postTitle?: string;
     postAuthorId?: number;
     postCreatedOn?: string;
-    uriWeb?: string;
-    uriApi?: string;
+    postUriWeb?: string;
+    postUriApi?: string;
+    postCountComments?: number;
 }
 
 export type TextPostApiResponse = PostApiResponse & {

@@ -1,0 +1,42 @@
+﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http.Extensions;
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="~/Views/Includes/_Header.cshtml" />
+    <title>c/@Model.Community.CommunityName</title>
+</head>
+<body>
+    <partial name="~/Views/Includes/_Navbar.cshtml" />
+    <partial name="~/Views/Includes/_LoginModal.cshtml" />
+    <partial name="~/Views/Components/MessageBoxes/_MessageBoxes.cshtml" />
+
+    <div class="container mt-3">
+        <h1>@Model.Community.CommunityName</h1>
+        <hr />
+    </div>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-9">
+                <partial name="_Posts.cshtml" />
+                <partial name="_Pagination.cshtml" />
+            </div>
+            
+            @* Sidebar *@
+            <div class="col-md-3">
+                <partial name="_CommunitySidebar.cshtml" />
+            </div>
+        </div>
+
+    </div>
+
+    <partial name="~/Views/Includes/_PageBottom.cshtml" />
+    <partial name="~/Views/Includes/_Footer.cshtml" />
+    <script src="~/js/dist/community-page.bundle.js"></script>
+</body>
+</html>
