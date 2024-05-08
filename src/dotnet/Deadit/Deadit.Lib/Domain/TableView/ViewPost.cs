@@ -51,6 +51,7 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
     [SqlColumn("post_count_comments")]
     public uint PostCountComments { get; set; } = (uint)Rand.Next(0, 5000);
 
+    public int PostVotesScore { get; set; } = Rand.Next(-100, 100);
 
     #region - ICreatedUri -
 
