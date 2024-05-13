@@ -1,90 +1,73 @@
-import { NativeEvents } from "../../../domain/constants/native-events";
-import { CommentFormSubmittedEvent } from "../../../domain/events/events";
 import { InputFeedbackTextArea } from "../../../domain/helpers/input-feedback";
-import { SpinnerButton } from "../../../domain/helpers/spinner-button";
 import { Guid } from "../../../domain/types/aliases";
 import { Nullable } from "../../../utilities/nullable";
+import { CommentListItem, CommentSelectors } from "./comment-list-item";
 
 
+
+export const CommentFormSelectors = {
+    formClass: 'form-post-comment',
+    newFormClass: 'form-post-comment-new',
+    submitButtonClass: 'btn-submit',
+    cancelButtonClass: 'btn-form-post-comment-cancel',
+    messagesContainerClass: 'form-feedback',
+    commentIdAttr: 'data-comment-id',
+    parentIdAttr: 'data-comment-parent-id',
+}
 
 
 export class CommentForm
 {
-    public form: HTMLFormElement;
-    public inputContent: InputFeedbackTextArea;
-    public btnSubmit: SpinnerButton;
-    public messagesContainer: HTMLDivElement;
-    public fieldSet: HTMLFieldSetElement;
-    
-    public get isRootComment(): boolean
-    {
-        return Nullable.hasValue(this.parentId);
-    } 
+    form: HTMLFormElement;
+    contentInput: InputFeedbackTextArea;
 
-    public get commentId(): Guid | null
+    public get commentId(): Guid
     {
-        return this.form.getAttribute('data-comment-id') ?? null;
+        return this.form.getAttribute(CommentFormSelectors.commentIdAttr);
     }
 
-    public set commentId(value: Guid | null)
+    public set commentId(value: Guid)
     {
-        this.form.setAttribute('data-comment-id', value);
+        this.form.setAttribute(CommentFormSelectors.commentIdAttr, value);
     }
 
-    public get parentId(): Guid | null
+    public get parentCommentId(): Guid
     {
-        return this.form.getAttribute('data-comment-parent-id') ?? null;
+        return this.form.getAttribute(CommentFormSelectors.parentIdAttr);
     }
 
-
-    constructor(formElement: HTMLFormElement)
+    public set parentCommentId(value: Guid)
     {
-        this.form = formElement;
-        this.inputContent = new InputFeedbackTextArea(this.form.querySelector('textarea[name="content"]'));
-        this.btnSubmit = new SpinnerButton(this.form.querySelector('.btn-submit'));
-        this.messagesContainer = this.form.querySelector('.form-feedback') as HTMLDivElement;
-
-        this.fieldSet = this.form.querySelector('fieldset') as HTMLFieldSetElement;
+        this.form.setAttribute(CommentFormSelectors.parentIdAttr, value);
     }
 
-    public clearFormInputs = () =>
+    public get isNew(): boolean
     {
-        this.inputContent.inputElement.value = '';
+        return this.form.classList.contains(CommentFormSelectors.newFormClass);
+    }
+
+    public get content(): string | null
+    {
+        const inputValue = this.contentInput.inputElement.value;
+        return Nullable.getValue(inputValue, null);
+    }
+
+    public set content(value: string | null)
+    {
+        this.contentInput.inputElement.value = Nullable.getValue(value, '');
     }
 
 
-    public show()
+    constructor(element: Element)
     {
-        this.form.classList.remove('d-none');
-    }
-
-    public hide()
-    {
-        this.form.classList.add('d-none');
+        this.form = element.closest(`.${CommentFormSelectors.formClass}`) as HTMLFormElement;
+        this.contentInput = new InputFeedbackTextArea(this.form.querySelector('textarea[name="content"]'));
     }
 
 
-
-    // #region
-    public static addSubmitListeners = () =>
+    public getParentListItem(): CommentListItem
     {
-        document.querySelector('body').addEventListener(NativeEvents.Submit, (e) =>
-        {
-            const target = e.target as HTMLFormElement;
-
-            if (target.classList.contains('form-post-comment'))
-            {
-                e.preventDefault();
-
-                CommentFormSubmittedEvent.invoke(this, {
-                    form: new CommentForm(target),
-                });
-            }
-        });
+        const element = this.form.closest(`.${CommentSelectors.listItemClass}`);
+        return new CommentListItem(element);
     }
-
-    // #endregion
-
 }
-
-
