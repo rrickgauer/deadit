@@ -1,4 +1,4 @@
-import { CommentForm } from "../../pages/community/post-page/comment-form";
+import { CommentApiResponse } from "../model/comment-models";
 import { Guid } from "../types/aliases";
 import { BaseEvent } from "./custom-events";
 import { CustomMessage } from "./custom-events2";
@@ -17,9 +17,16 @@ export const TestingEvent = new CustomMessage<ExampleMessageClass>();
 
 
 
-export type CommentFormSubmittedData = {
-    form: CommentForm;
+//export type CommentFormSubmittedData = {
+//    form: CommentForm;
+//}
+
+//export const CommentFormSubmittedEvent = new CustomMessage<CommentFormSubmittedData>();
+
+
+
+export type RootCommentFormSubmittedData = {
+    comment: CommentApiResponse;
 }
 
-export const CommentFormSubmittedEvent = new CustomMessage<CommentFormSubmittedData>();
-
+export const RootCommentFormSubmittedEvent = new CustomMessage<RootCommentFormSubmittedData>();

@@ -51,7 +51,7 @@ export class SaveCommentRequest
         this.form = form;
     }
 
-    public toJson = (): JsonObject =>
+    public toJson(): JsonObject
     {
         return JSON.stringify(this.form);
     }

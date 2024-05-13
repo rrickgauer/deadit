@@ -1,9 +1,9 @@
 import { CommentApiResponse } from "../domain/model/comment-models";
 import { HtmlString } from "../domain/types/aliases";
-import { GuidUtility } from "../utilities/guid-utility";
 import { MarkdownUtility } from "../utilities/markdown-utility";
-import { CommentFormTemplate } from "./comment-form-template";
 import { HtmlTemplate } from "./html-template";
+import { CommentFormTemplate } from "./comment-form-template";
+import { Nullable } from "../utilities/nullable";
 
 
 export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
@@ -13,7 +13,7 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
     {
         let replies = '';
 
-        if (model.commentReplies.length > 0)
+        if (Nullable.getValue(model.commentReplies?.length, 0) > 0)
         {
             replies = this.toHtmls(model.commentReplies);
         }
@@ -25,22 +25,14 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
             <a href="#" class="text-reset btn-comment-action btn-comment-action-delete">Delete</a>
         `;
 
-
         const formTemplate = new CommentFormTemplate();
-        const editCommentForm = formTemplate.toHtml(model);
 
-
-        const newCommentForm = formTemplate.toHtml({
-            commentId: GuidUtility.getRandomGuid(),
-            commentParentId: model.commentId,
-            commentIsAuthor: true,
-            
+        const editCommentForm = formTemplate.toHtml({
+            commentId: model.commentId,
+            isNew: false,
+            parentId: model.commentParentId,
+            content: model.commentContent,
         });
-
-
-
-
-
 
         let html = `
 
@@ -49,7 +41,7 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
 
                 <div class="comment-actions">
                     <small class="text-muted">
-                        <span>${model.commentAuthorUsername}</span> &#183;
+                        <span class="comment-author-username">${model.commentAuthorUsername}</span> &#183;
                         <span>${model.createdOnDifferenceDisplay} ago</span> &#183;
                         <a href="#" class="text-reset btn-comment-action btn-comment-action-toggle">Hide</a> &#183;
                         <a href="#" class="text-reset btn-comment-action btn-comment-action-reply">Reply</a>
@@ -58,7 +50,7 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
                 </div>
 
                 <div class="form-post-comment-edit-container">
-                    ${model.commentIsAuthor ? editCommentForm : ''}
+                    ${editCommentForm}
                 </div>
                 
                 <div class="comment-thread">
@@ -69,13 +61,13 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
                             </div>
                         </div>
 
-                        <div class="form-post-comment-new-container d-none">
-                            ${newCommentForm}
+                        <div class="form-post-comment-new-container">
+                            
                         </div>
                     </div>
 
 
-                    <ul class="comment-list" data-parent-comment-id="${model.commentParentId}">
+                    <ul class="comment-list" data-parent-comment-id="${model.commentId}">
                         ${replies}
                     </ul>
                 </div>
@@ -83,10 +75,6 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
             </li>
         `;
 
-
-
-
-
-        return html;
+        return html.replace('\n\n', '');
     }
 }

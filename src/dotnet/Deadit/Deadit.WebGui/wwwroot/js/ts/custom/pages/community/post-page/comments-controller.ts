@@ -1,226 +1,220 @@
-import { IController } from "../../../domain/contracts/i-controller";
-import { CommentFormSubmittedData, CommentFormSubmittedEvent } from "../../../domain/events/events";
+import { NativeEvents } from "../../../domain/constants/native-events";
+import { IControllerAsync } from "../../../domain/contracts/i-controller";
 import { CommentApiResponse, GetCommentsApiResponse, SaveCommentRequest } from "../../../domain/model/comment-models";
 import { PostPageParms } from "../../../domain/model/post-models";
 import { CommentsService } from "../../../services/comments-service";
 import { CommentTemplate } from "../../../templates/comment-template";
-import { ErrorUtility } from "../../../utilities/error-utility";
-import { GuidUtility } from "../../../utilities/guid-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
 import { Nullable } from "../../../utilities/nullable";
-import { CommentElement } from "./comment";
-import { AuthoredCommentElement } from "./comment-author";
 import { CommentForm } from "./comment-form";
+import { CommentListItem } from "./comment-list-item";
 
 
+export type CommentsControllerArgs = {
+    getCommentsResponse: GetCommentsApiResponse;
+    postPageArgs: PostPageParms;
+}
 
 
-export class CommentsController implements IController
+export enum CommentActionButtons
 {
-    private readonly _communityName: string;
-    private readonly _postId: string;
-    private readonly _commentsService: CommentsService;
+    EDIT = 'btn-comment-action-edit',
+    DELETE = 'btn-comment-action-delete',
+    TOGGLE = 'btn-comment-action-toggle',
+    REPLY = 'btn-comment-action-reply',
+}
 
-    constructor(args: PostPageParms)
+
+export class CommentsController implements IControllerAsync
+{
+    private readonly _args: PostPageParms;
+
+    private readonly _isLoggedIn: boolean;
+
+    private readonly _templateEngine: CommentTemplate;
+    private readonly _rootListElement: HTMLUListElement;
+
+    private _comments: CommentApiResponse[];
+
+    constructor(args: CommentsControllerArgs)
     {
-        this._communityName = args.communityName;
-        this._postId = args.postId;
-        this._commentsService = new CommentsService(args);
+        this._args = args.postPageArgs;
+        this._comments = args.getCommentsResponse.comments;
+        this._isLoggedIn = args.getCommentsResponse.isLoggedIn;
+        this._templateEngine = new CommentTemplate();
+        this._rootListElement = document.querySelector('.comment-list.root') as HTMLUListElement;
     }
 
 
-    public control = async () =>
+    public async control()
     {
-        await this.addListeners();
-        await this.fetchComments();
+        this.initCommentsListHtml();
+        this.addListeners();
     }
 
-    private addListeners = async () =>
+    private initCommentsListHtml()
     {
-        CommentForm.addSubmitListeners();
+        const html = this._templateEngine.toHtmls(this._comments);
+        this._rootListElement.innerHTML = html;
+    }
 
-        CommentFormSubmittedEvent.addListener(async (message) =>
+    private addListeners = () =>
+    {
+        // handle action buttons
+        this._rootListElement.addEventListener(NativeEvents.Click, (e) =>
         {
-            await this.onCommentFormSubmittedEvent(message.data);
+            let target = e.target as Element;
+
+            if (target.classList.contains('btn-comment-action'))
+            {
+                e.preventDefault();
+                this.onBtnCommentActionClick(target as HTMLAnchorElement);
+            }
+        });
+
+
+        this._rootListElement.addEventListener(NativeEvents.Click, (e) =>
+        {
+            let target = e.target as Element;
+
+            if (target.classList.contains('btn-form-post-comment-cancel'))
+            {
+                this.onFormPostCommentBtnCancelClick(target);
+            }
+
+        });
+
+        this._rootListElement.addEventListener(NativeEvents.Submit, async (e) =>
+        {
+            let target = e.target as Element;
+
+            if (target.classList.contains('form-post-comment'))
+            {
+                e.preventDefault();
+                await this.onCommentFormSubmitted(target);
+            }
         });
     }
 
-    //#region - Fetch All Comments -
-
-    private fetchComments = async () =>
+    private onBtnCommentActionClick = (button: HTMLAnchorElement) =>
     {
-        try
+        const listItem = new CommentListItem(button);
+
+        if (button.classList.contains(CommentActionButtons.EDIT))
         {
-            const serviceResult = await this._commentsService.getAllComments();
-
-            if (!serviceResult.successful)
+            if (this.isAuth())
             {
-                MessageBoxUtility.showError({
-                    title: 'Api Error - Bad Request',
-                    message: 'Could not fetch the post comments',
-                });
-
-                return;
+                listItem.showEditForm();
             }
-
-            this.displayComments(serviceResult.response.data);
-            
         }
-        catch (error)
-        {
-            ErrorUtility.onException(error, {
-                onApiNotFoundException: () =>
-                {
-                    MessageBoxUtility.showError({
-                        message: 'Not found api error',
-                    });
-                },
-                onApiValidationException: (e) =>
-                {
-                    MessageBoxUtility.showError({
-                        message: `Validation error`,
-                    });
-                },
-            });
 
-            console.error(error);
-            throw error;
+        else if (button.classList.contains(CommentActionButtons.DELETE))
+        {
+            alert('delete');
+        }
+
+        else if (button.classList.contains(CommentActionButtons.TOGGLE))
+        {
+            alert('toggle');
+        }
+
+        else if (button.classList.contains(CommentActionButtons.REPLY))
+        {
+            if (this.isAuth())
+            {
+                listItem.showReplyForm();
+            }
+        }
+        else
+        {
+            alert('unknown action button');
         }
     }
 
 
-    private displayComments = (comments: GetCommentsApiResponse) =>
+    private onFormPostCommentBtnCancelClick(cancelButton: Element)
     {
-        const templateEngine = new CommentTemplate();
-        const rootList = document.querySelector('.comment-list.root');
-        rootList.innerHTML = templateEngine.toHtmls(comments.comments);
+        const listItem = new CommentListItem(cancelButton);
 
-        const elements = rootList.querySelectorAll('.comment-list-item');
-        this.initCommentElements(elements);
-    }
+        const parentForm = cancelButton.closest('.form-post-comment') as HTMLFormElement;
 
-
-    private initCommentElements = (elements: NodeListOf<Element>) =>
-    {
-        elements.forEach(e =>
+        if (parentForm.classList.contains('form-post-comment-new'))
         {
-
-            if (!e.classList.contains('comment-list-item-authored'))
-            {
-                const comment = new CommentElement(e);
-                comment.control();
-            }
-            else
-            {
-                const comment = new AuthoredCommentElement(e);
-                comment.control();
-            }
-        });
+            listItem.cancelReply();
+        }
+        else
+        {
+            listItem.cancelEdit();
+        }
     }
 
 
-
-    //#endregion
-
-
-    private onCommentFormSubmittedEvent = async (message: CommentFormSubmittedData) =>
+    private async onCommentFormSubmitted(target)
     {
+        const form = new CommentForm(target);
+        const listItem = form.getParentListItem();
 
-        message.form.btnSubmit.spin();
+        const savedSuccessfully = await this.saveComment(form);
 
-        const commentId = GuidUtility.getRandomGuid();
-
-        const request = new SaveCommentRequest(commentId, {
-            content: message.form.inputContent.inputElement.value,
-            parentId: message.form.parentId,
-        });
-
-        const result = await this.saveComment(request);
-
-        message.form.btnSubmit.reset();
-
-        if (!result.successful)
+        if (!savedSuccessfully)
         {
             return;
         }
 
-        message.form.clearFormInputs();
+        if (form.isNew)
+        {
+            listItem.addReply(form.commentId, form.content);
+        }
+        else 
+        {
+            listItem.contentUpdated(form.content);
+        }
 
-        this.updateComment(result.response.data);
     }
 
-    private saveComment = async (request: SaveCommentRequest) =>
+
+    private async saveComment(form: CommentForm): Promise<boolean>
     {
+        const service = new CommentsService(this._args);
 
         try
         {
-            const response = await this._commentsService.saveComment(request);
+            const saveResult = await service.saveComment(new SaveCommentRequest(form.commentId, {
+                content: form.content,
+                parentId: form.parentCommentId,
+            }));
 
-            if (!response.successful)
-            {
-                MessageBoxUtility.showErrorList(response.response.errors);
-            }
 
-            return response;
-            
+            console.log({ d: saveResult.response.data });
+
+            return saveResult.successful;
+
         }
         catch (error)
         {
-            MessageBoxUtility.showError({
-                message: 'There was an unexpected error saving your comment.',
-            });
-
-            console.error(error);
-
-            throw error;
+            return false;
         }
+
+
+
+
+
     }
 
-    private updateComment = (comment: CommentApiResponse) =>
+
+    private isAuth(): boolean
     {
-        const templateEngine = new CommentTemplate();
-        const html = templateEngine.toHtml(comment);
-
-        const isTopLevelComment = !Nullable.hasValue(comment.commentParentId);
-
-        const existingCommentElement = document.querySelector(`.comment-list-item[data-comment-id="${comment.commentId}"]`);
-
-
-
-        // insert the comment
-        if (!Nullable.hasValue(existingCommentElement))
-        {
-            let rootListElement = document.querySelector('.comment-list.root') as HTMLUListElement;
-
-            if (!isTopLevelComment)
-            {
-                const parentElement = new CommentElement(document.querySelector(`.comment-list-item[data-comment-id="${comment.commentParentId}"]`));
-
-                rootListElement = parentElement.element.querySelector('.comment-list');
-                rootListElement.insertAdjacentHTML("afterbegin", html);
-
-
-                parentElement.closeReplyForm();
-            }
-            else
-            {
-                rootListElement.insertAdjacentHTML("afterbegin", html);    
-            }
-
-            
-
-            const insertedHtml = document.querySelector(`.comment-list-item[data-comment-id="${comment.commentId}"]`);
-
-            const commentElement = new AuthoredCommentElement(insertedHtml);
-            commentElement.control();
-        }
-        else
+        if (!this._isLoggedIn)
         {
             MessageBoxUtility.showStandard({
-                message: 'Updated a comment',
+                message: 'Please sign in or create an account to continue',
+                title: 'Log in required',
             });
+
+            return false;
         }
 
+        return true;
     }
 
 
