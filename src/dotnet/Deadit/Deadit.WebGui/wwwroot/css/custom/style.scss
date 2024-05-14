@@ -74,3 +74,10 @@
         }
     }
 }
+
+
+.comment-list-item.collapsed {
+    .comment-thread {
+        display: none;
+    }
+}

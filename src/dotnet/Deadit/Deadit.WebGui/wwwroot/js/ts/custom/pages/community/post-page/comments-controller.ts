@@ -131,7 +131,7 @@ export class CommentsController implements IControllerAsync
 
         else if (button.classList.contains(CommentActionButtons.TOGGLE))
         {
-            alert('toggle');
+            listItem.toggleCollapse();
         }
 
         else if (button.classList.contains(CommentActionButtons.REPLY))
@@ -237,7 +237,7 @@ export class CommentsController implements IControllerAsync
                 return;
             }
 
-            listItem.deleted();
+            listItem.markDeleted();
             return;
         }
         catch (error)
