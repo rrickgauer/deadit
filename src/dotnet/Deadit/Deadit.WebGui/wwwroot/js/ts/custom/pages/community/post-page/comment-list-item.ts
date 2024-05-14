@@ -18,6 +18,8 @@ export const CommentSelectors = {
     contentMdClass: 'comment-content-md',
     authorUsernameClass: 'comment-author-username',
     actionsContainerClass: 'comment-actions',
+    btnToggleClass: 'btn-comment-action-toggle',
+    collapsedClass: 'collapsed',
 }
 
 export class CommentListItem
@@ -28,6 +30,7 @@ export class CommentListItem
     private _contentMdDisplay: HTMLDivElement;
     private _repliesList: HTMLUListElement;
     private _actionsContainer: HTMLDivElement;
+    private _toggleBtn: HTMLAnchorElement;
 
     public get commentId(): Guid | null
     {
@@ -72,6 +75,31 @@ export class CommentListItem
         return (this._container.querySelector(`.${CommentSelectors.authorUsernameClass}`) as HTMLSpanElement).innerText;
     }
 
+    public get isCollapsed(): boolean
+    {
+        return this._container?.classList.contains(CommentSelectors.collapsedClass) ?? false;
+    }
+
+    public set isCollapsed(value: boolean)
+    {
+        if (!Nullable.hasValue(this._container))
+        {
+            return;
+        }
+
+        if (value)
+        {
+            this._container.classList.add(CommentSelectors.collapsedClass);
+            this._toggleBtn.innerText = 'Show';
+
+        }
+        else
+        {
+            this._container.classList.remove(CommentSelectors.collapsedClass);
+            this._toggleBtn.innerText = 'Hide';
+        }
+    }
+
 
 
     constructor(element: Element)
@@ -83,6 +111,7 @@ export class CommentListItem
         this._repliesList = this._container.querySelector(`.comment-list[data-parent-comment-id="${this.commentId}"]`) as HTMLUListElement;
 
         this._actionsContainer = this._container?.querySelector(`.${CommentSelectors.actionsContainerClass}`) as HTMLDivElement;
+        this._toggleBtn = this._container?.querySelector(`.${CommentSelectors.btnToggleClass}`) as HTMLAnchorElement;
     }
 
 
@@ -163,7 +192,7 @@ export class CommentListItem
 
 
 
-    public deleted()
+    public markDeleted()
     {
         const deletedText = '[deleted]';
 
@@ -184,6 +213,9 @@ export class CommentListItem
     }
 
 
-
+    public toggleCollapse()
+    {
+        this.isCollapsed = !this.isCollapsed;
+    }
 
 }
