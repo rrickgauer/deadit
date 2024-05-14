@@ -93,4 +93,19 @@ public class CommentService(ITableMapperService tableMapperService, ICommentRepo
     }
 
 
+    public async Task<ServiceResponse> DeleteCommentAsync(Guid commentId)
+    {
+        try
+        {
+            var numrecords = await _repo.DeleteCommentAsync(commentId);
+
+            return new();
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+
 }

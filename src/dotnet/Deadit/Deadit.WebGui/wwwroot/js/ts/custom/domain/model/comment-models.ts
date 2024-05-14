@@ -13,6 +13,7 @@ export type CommentApiResponse = {
     commentContent?: string;
     commentParentId?: Nullable<Guid>;
     commentCreatedOn?: DateTimeString;
+    commentDeletedOn?: DateTimeString | null;
     commentAuthorUsername?: string;
     communityId?: number;
     communityName?: string;

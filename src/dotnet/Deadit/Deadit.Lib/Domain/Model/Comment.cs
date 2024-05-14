@@ -10,5 +10,6 @@ public class Comment
     public string? Content { get; set; }
     public Guid? ParentId { get; set; }
     public DateTime? CreatedOn { get; set; }
+    public DateTime? DeletedOn { get; set; }    
 }
 
