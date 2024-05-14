@@ -4,6 +4,8 @@ import { MessageBoxStandard } from "../domain/helpers/message-box/MessageBoxStan
 import { MessageBoxSucccess } from "../domain/helpers/message-box/MessageBoxSucccess";
 import { MessageBoxType } from "../domain/helpers/message-box/MessageBoxType";
 import { ErrorMessage } from "../domain/model/api-response";
+import { ErrorMessageTemplate } from "../templates/error-message-template";
+import { ErrorUtility } from "./error-utility";
 
 
 export type ShowMessageBoxData = {
@@ -36,8 +38,7 @@ export class MessageBoxUtility
 
     public static showErrorList = (errors: ErrorMessage[]) =>
     {
-        const listItems = errors.map(e => `<li>${e.message}</li>`).join('');
-        const messageBody = `<ul>${listItems}</ul>`;
+        const messageBody = ErrorUtility.generateErrorList(errors);
 
         return MessageBoxUtility.show({
             message: messageBody,

@@ -1,5 +1,9 @@
 import { InputFeedbackTextArea } from "../../../domain/helpers/input-feedback";
+import { SpinnerButton } from "../../../domain/helpers/spinner-button";
+import { ErrorMessage } from "../../../domain/model/api-response";
 import { Guid } from "../../../domain/types/aliases";
+import { AlertUtility } from "../../../utilities/alert-utility";
+import { ErrorUtility } from "../../../utilities/error-utility";
 import { Nullable } from "../../../utilities/nullable";
 import { CommentListItem, CommentSelectors } from "./comment-list-item";
 
@@ -20,6 +24,8 @@ export class CommentForm
 {
     form: HTMLFormElement;
     contentInput: InputFeedbackTextArea;
+    submitBtn: SpinnerButton;
+    errorMessageContainer: any;
 
     public get commentId(): Guid
     {
@@ -46,15 +52,20 @@ export class CommentForm
         return this.form.classList.contains(CommentFormSelectors.newFormClass);
     }
 
-    public get content(): string | null
+    public get contentValue(): string | null
     {
         const inputValue = this.contentInput.inputElement.value;
         return Nullable.getValue(inputValue, null);
     }
 
-    public set content(value: string | null)
+    public set contentValue(value: string | null)
     {
         this.contentInput.inputElement.value = Nullable.getValue(value, '');
+    }
+
+    public get submitButtonElement(): HTMLButtonElement
+    {
+        return this.form.querySelector('.btn-submit') as HTMLButtonElement;
     }
 
 
@@ -62,6 +73,8 @@ export class CommentForm
     {
         this.form = element.closest(`.${CommentFormSelectors.formClass}`) as HTMLFormElement;
         this.contentInput = new InputFeedbackTextArea(this.form.querySelector('textarea[name="content"]'));
+        this.submitBtn = new SpinnerButton(this.submitButtonElement);
+        this.errorMessageContainer = this.form?.querySelector(`.${CommentFormSelectors.messagesContainerClass}`);
     }
 
 
@@ -69,5 +82,27 @@ export class CommentForm
     {
         const element = this.form.closest(`.${CommentSelectors.listItemClass}`);
         return new CommentListItem(element);
+    }
+
+    public showLoading()
+    {
+        this.submitBtn.spin();
+        this.contentInput.inputElement.disabled = true;
+    }
+
+    public showNormal()
+    {
+        this.submitBtn.reset();
+        this.contentInput.inputElement.disabled = false;
+    }
+
+    public showErrors(errors: ErrorMessage[])
+    {
+        const html = ErrorUtility.generateErrorList(errors);
+
+        AlertUtility.showDanger({
+            container: this.errorMessageContainer,
+            message: html,
+        });
     }
 }

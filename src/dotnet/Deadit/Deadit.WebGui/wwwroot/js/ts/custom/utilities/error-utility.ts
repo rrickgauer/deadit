@@ -1,4 +1,6 @@
-import { ApiNotFoundException, ApiValidationException } from "../domain/model/api-response";
+import { ApiNotFoundException, ApiValidationException, ErrorMessage } from "../domain/model/api-response";
+import { HtmlString } from "../domain/types/aliases";
+import { ErrorMessageTemplate } from "../templates/error-message-template";
 
 export type OnExceptionCallbacks = {
 
@@ -28,5 +30,16 @@ export class ErrorUtility
         }
 
         throw error;
+    }
+
+
+    public static generateErrorList(errors: ErrorMessage[]): HtmlString
+    {
+        const template = new ErrorMessageTemplate();
+        const listItems = template.toHtmls(errors);
+
+        const messageBody = `<ul class="error-message-list">${listItems}</ul>`;
+
+        return messageBody;
     }
 }

@@ -1,5 +1,6 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
 import { IControllerAsync } from "../../../domain/contracts/i-controller";
+import { RootCommentFormSubmittedEvent } from "../../../domain/events/events";
 import { CommentApiResponse, GetCommentsApiResponse, SaveCommentRequest } from "../../../domain/model/comment-models";
 import { PostPageParms } from "../../../domain/model/post-models";
 import { CommentsService } from "../../../services/comments-service";
@@ -94,6 +95,14 @@ export class CommentsController implements IControllerAsync
                 await this.onCommentFormSubmitted(target);
             }
         });
+
+
+        RootCommentFormSubmittedEvent.addListener((message) =>
+        {
+            const newComment = message.data.comment;
+            const html = this._templateEngine.toHtml(newComment);
+            this._rootListElement.insertAdjacentHTML("afterbegin", html);
+        });
     }
 
     private onBtnCommentActionClick = (button: HTMLAnchorElement) =>
@@ -163,11 +172,11 @@ export class CommentsController implements IControllerAsync
 
         if (form.isNew)
         {
-            listItem.addReply(form.commentId, form.content);
+            listItem.addReply(form.commentId, form.contentValue);
         }
         else 
         {
-            listItem.contentUpdated(form.content);
+            listItem.contentUpdated(form.contentValue);
         }
 
     }
@@ -180,7 +189,7 @@ export class CommentsController implements IControllerAsync
         try
         {
             const saveResult = await service.saveComment(new SaveCommentRequest(form.commentId, {
-                content: form.content,
+                content: form.contentValue,
                 parentId: form.parentCommentId,
             }));
 
