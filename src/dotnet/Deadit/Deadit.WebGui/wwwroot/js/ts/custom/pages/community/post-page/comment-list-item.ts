@@ -1,8 +1,10 @@
+import { CommentApiResponse } from "../../../domain/model/comment-models";
 import { Guid } from "../../../domain/types/aliases";
 import { CommentFormTemplate } from "../../../templates/comment-form-template";
 import { CommentTemplate } from "../../../templates/comment-template";
 import { GuidUtility } from "../../../utilities/guid-utility";
 import { MarkdownUtility } from "../../../utilities/markdown-utility";
+import { Nullable } from "../../../utilities/nullable";
 
 
 export const CommentSelectors = {
@@ -15,6 +17,7 @@ export const CommentSelectors = {
     newFormContainerClass: 'form-post-comment-new-container',
     contentMdClass: 'comment-content-md',
     authorUsernameClass: 'comment-author-username',
+    actionsContainerClass: 'comment-actions',
 }
 
 export class CommentListItem
@@ -24,6 +27,7 @@ export class CommentListItem
     private _newFormContainer: HTMLDivElement;
     private _contentMdDisplay: HTMLDivElement;
     private _repliesList: HTMLUListElement;
+    private _actionsContainer: HTMLDivElement;
 
     public get commentId(): Guid | null
     {
@@ -77,6 +81,8 @@ export class CommentListItem
         this._newFormContainer = this._container.querySelector(`.${CommentSelectors.newFormContainerClass}`) as HTMLDivElement;
         this._contentMdDisplay = this._container.querySelector(`.${CommentSelectors.contentMdClass}`) as HTMLDivElement;
         this._repliesList = this._container.querySelector(`.comment-list[data-parent-comment-id="${this.commentId}"]`) as HTMLUListElement;
+
+        this._actionsContainer = this._container?.querySelector(`.${CommentSelectors.actionsContainerClass}`) as HTMLDivElement;
     }
 
 
@@ -153,6 +159,28 @@ export class CommentListItem
             content: newContent,
             parentId: this.parentCommentId,
         });
+    }
+
+
+
+    public deleted()
+    {
+        const deletedText = '[deleted]';
+
+        const deletedComment: CommentApiResponse = {
+            commentAuthorUsername: deletedText,
+            commentContent: deletedText,
+            commentIsAuthor: false,
+            commentDeletedOn: deletedText,
+        };
+
+        const template = new CommentTemplate();
+        const buttonsHtml = template.getActionsSection(deletedComment);
+
+        if (Nullable.hasValue(this._actionsContainer))
+        {
+            this._actionsContainer.innerHTML = buttonsHtml;
+        }
     }
 
 

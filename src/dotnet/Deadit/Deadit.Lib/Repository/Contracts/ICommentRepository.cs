@@ -8,4 +8,5 @@ public interface ICommentRepository
     public Task<DataTable> SelectAllPostCommentsAsync(Guid postId);
     public Task<DataRow?> SelectCommentAsync(Guid commentId);
     public Task<int> SaveCommentAsync(Comment comment);
+    public Task<int> DeleteCommentAsync(Guid commentId);
 }

@@ -18,12 +18,7 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
             replies = this.toHtmls(model.commentReplies);
         }
 
-        const editActionButtons = `
-            &#183;
-            <a href="#" class="text-reset btn-comment-action btn-comment-action-edit">Edit</a>
-            &#183;
-            <a href="#" class="text-reset btn-comment-action btn-comment-action-delete">Delete</a>
-        `;
+        const actionButtons = this.getActionsSection(model);
 
         const formTemplate = new CommentFormTemplate();
 
@@ -40,13 +35,7 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
             <li class="comment-list-item ${model.commentIsAuthor ? 'comment-list-item-authored' : ''}" data-comment-id="${model.commentId}">
 
                 <div class="comment-actions">
-                    <small class="text-muted">
-                        <span class="comment-author-username">${model.commentAuthorUsername}</span> &#183;
-                        <span>${model.createdOnDifferenceDisplay} ago</span> &#183;
-                        <a href="#" class="text-reset btn-comment-action btn-comment-action-toggle">Hide</a> &#183;
-                        <a href="#" class="text-reset btn-comment-action btn-comment-action-reply">Reply</a>
-                        ${model.commentIsAuthor ? editActionButtons : ''}
-                    </small>
+                    ${actionButtons}
                 </div>
 
                 <div class="form-post-comment-edit-container">
@@ -76,5 +65,38 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
         `;
 
         return html.replace('\n\n', '');
+    }
+
+
+    public getActionsSection(model: CommentApiResponse): HtmlString
+    {
+
+        const editActionButtons = `
+            &#183;
+            <a href="#" class="text-reset btn-comment-action btn-comment-action-edit">Edit</a>
+            &#183;
+            <a href="#" class="text-reset btn-comment-action btn-comment-action-delete">Delete</a>
+        `;
+
+
+        let replyButton = `&#183; <a href="#" class="text-reset btn-comment-action btn-comment-action-reply">Reply</a>`;
+
+        if (Nullable.hasValue(model.commentDeletedOn))
+        {
+            replyButton = '';
+        }
+
+
+        let html = `
+            <small class="text-muted">
+                <span class="comment-author-username">${model.commentAuthorUsername}</span> &#183;
+                <span>${model.createdOnDifferenceDisplay ?? 'seconds'} ago</span> &#183;
+                <a href="#" class="text-reset btn-comment-action btn-comment-action-toggle">Hide</a> 
+                ${replyButton}
+                ${model.commentIsAuthor ? editActionButtons : ''}
+            </small>
+        `;
+
+        return html;
     }
 }

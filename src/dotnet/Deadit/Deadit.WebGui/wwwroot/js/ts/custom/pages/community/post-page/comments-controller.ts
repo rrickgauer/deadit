@@ -1,12 +1,13 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
 import { IControllerAsync } from "../../../domain/contracts/i-controller";
 import { RootCommentFormSubmittedEvent } from "../../../domain/events/events";
+import { MessageBoxConfirm } from "../../../domain/helpers/message-box/MessageBoxConfirm";
 import { CommentApiResponse, GetCommentsApiResponse, SaveCommentRequest } from "../../../domain/model/comment-models";
 import { PostPageParms } from "../../../domain/model/post-models";
 import { CommentsService } from "../../../services/comments-service";
 import { CommentTemplate } from "../../../templates/comment-template";
+import { ErrorUtility } from "../../../utilities/error-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
-import { Nullable } from "../../../utilities/nullable";
 import { CommentForm } from "./comment-form";
 import { CommentListItem } from "./comment-list-item";
 
@@ -35,6 +36,8 @@ export class CommentsController implements IControllerAsync
     private readonly _templateEngine: CommentTemplate;
     private readonly _rootListElement: HTMLUListElement;
 
+    private readonly _commentService: CommentsService;
+
     private _comments: CommentApiResponse[];
 
     constructor(args: CommentsControllerArgs)
@@ -42,6 +45,7 @@ export class CommentsController implements IControllerAsync
         this._args = args.postPageArgs;
         this._comments = args.getCommentsResponse.comments;
         this._isLoggedIn = args.getCommentsResponse.isLoggedIn;
+        this._commentService = new CommentsService(this._args);
         this._templateEngine = new CommentTemplate();
         this._rootListElement = document.querySelector('.comment-list.root') as HTMLUListElement;
     }
@@ -62,14 +66,14 @@ export class CommentsController implements IControllerAsync
     private addListeners = () =>
     {
         // handle action buttons
-        this._rootListElement.addEventListener(NativeEvents.Click, (e) =>
+        this._rootListElement.addEventListener(NativeEvents.Click, async (e) =>
         {
             let target = e.target as Element;
 
             if (target.classList.contains('btn-comment-action'))
             {
                 e.preventDefault();
-                this.onBtnCommentActionClick(target as HTMLAnchorElement);
+                await this.onBtnCommentActionClick(target as HTMLAnchorElement);
             }
         });
 
@@ -105,7 +109,7 @@ export class CommentsController implements IControllerAsync
         });
     }
 
-    private onBtnCommentActionClick = (button: HTMLAnchorElement) =>
+    private onBtnCommentActionClick = async (button: HTMLAnchorElement) =>
     {
         const listItem = new CommentListItem(button);
 
@@ -119,7 +123,10 @@ export class CommentsController implements IControllerAsync
 
         else if (button.classList.contains(CommentActionButtons.DELETE))
         {
-            alert('delete');
+            if (this.isAuth())
+            {
+                await this.confirmDeleteComment(listItem);
+            }
         }
 
         else if (button.classList.contains(CommentActionButtons.TOGGLE))
@@ -184,11 +191,9 @@ export class CommentsController implements IControllerAsync
 
     private async saveComment(form: CommentForm): Promise<boolean>
     {
-        const service = new CommentsService(this._args);
-
         try
         {
-            const saveResult = await service.saveComment(new SaveCommentRequest(form.commentId, {
+            const saveResult = await this._commentService.saveComment(new SaveCommentRequest(form.commentId, {
                 content: form.contentValue,
                 parentId: form.parentCommentId,
             }));
@@ -203,12 +208,60 @@ export class CommentsController implements IControllerAsync
         {
             return false;
         }
+    }
 
 
+    private confirmDeleteComment = async (listItem: CommentListItem) =>
+    {
+        const confirmMessageBox = new MessageBoxConfirm('Are you sure you want to permanently delete this comment?', 'Delete Comment');
 
+        confirmMessageBox.confirm({
+            onSuccess: async () =>
+            {
+                await this.deleteComment(listItem);
+            },
+        });
+    }
 
+    private async deleteComment(listItem: CommentListItem)
+    {
+        const commentId = listItem.commentId;
+
+        try
+        {
+            const response = await this._commentService.deleteComment(commentId);
+
+            if (!response.successful)
+            {
+                MessageBoxUtility.showErrorList(response.response.errors);
+                return;
+            }
+
+            listItem.deleted();
+            return;
+        }
+        catch (error)
+        {
+            ErrorUtility.onException(error, {
+                onApiNotFoundException: () =>
+                {
+                    MessageBoxUtility.showError({
+                        message: 'Comment does not exist',
+                    });
+                },
+                onOther: (e) =>
+                {
+                    console.error(e);
+                    MessageBoxUtility.showError({
+                        message: 'Unexpected error deleting your comment.',
+                    });
+                },
+            });
+        }
 
     }
+
+
 
 
     private isAuth(): boolean

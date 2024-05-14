@@ -1,5 +1,6 @@
 ﻿using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Other;
+using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.Dto;
 
@@ -15,12 +16,15 @@ public class GetCommentDto : ICreatedOnDifference
     public uint? CommunityId { get; set; }
     public string? CommunityName { get; set; }
 
+    
+
     public bool CommentIsAuthor { get; set; } = false;
     
     public string CreatedOnDifferenceDisplay => DifferenceDisplayCalculator.FromNow(CommentCreatedOn ?? DateTime.UtcNow);
 
     public List<GetCommentDto> CommentReplies { get; set; } = new();
 
+    public DateTime? CommentDeletedOn { get; set; }
 
 
     public void SetIsAuthorRecursive(uint? clientId)
@@ -30,7 +34,15 @@ public class GetCommentDto : ICreatedOnDifference
             reply.SetIsAuthorRecursive(clientId);
         }
 
-        CommentIsAuthor = CommentAuthorId == clientId;
+
+        if (CommentDeletedOn.HasValue)
+        {
+            CommentIsAuthor = false;
+        }
+        else
+        {
+            CommentIsAuthor = CommentAuthorId == clientId;
+        }
     }
 }
 

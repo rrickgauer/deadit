@@ -18,6 +18,7 @@ public class ViewCommentMapper : TableMapper<ViewComment>
             CommentAuthorUsername = row.Field<string?>(GetColumnName(nameof(result.CommentAuthorUsername))),
             CommunityId           = row.Field<uint?>(GetColumnName(nameof(result.CommunityId))),
             CommunityName         = row.Field<string?>(GetColumnName(nameof(result.CommunityName))),
+            CommentDeletedOn      = row.Field<DateTime?>(GetColumnName(nameof(result.CommentDeletedOn))),
         };
 
 

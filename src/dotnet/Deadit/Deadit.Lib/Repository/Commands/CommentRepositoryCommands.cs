@@ -45,4 +45,12 @@ public sealed class CommentRepositoryCommands
             content = new_values.content;";
 
 
+    public const string SetDeleted = @"
+        UPDATE
+            Comment
+        SET
+            deleted_on = UTC_TIMESTAMP()
+        WHERE
+            id = @comment_id;";
+
 }

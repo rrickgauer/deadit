@@ -205,6 +205,8 @@ public class ViewModelService : IViewModelService
 
         var comments = getComments.Data ?? new();
 
+        comments.ForEach(c => c.MaskDeletedInfo());
+
         var dtos = comments.Select(c =>
         {
             var dto = (GetCommentDto)c;

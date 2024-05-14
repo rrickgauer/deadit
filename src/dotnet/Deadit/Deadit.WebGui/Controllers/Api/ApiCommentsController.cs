@@ -1,5 +1,7 @@
-﻿using Deadit.Lib.Domain.Forms;
+﻿using Deadit.Lib.Domain.Dto;
+using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
@@ -52,7 +54,7 @@ public class ApiCommentsController(IViewModelService viewModelService, ICommentS
     [ActionName(nameof(PutCommentAsync))]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
     [ServiceFilter(typeof(CommunityMemberFilter))]
-    public async Task<IActionResult> PutCommentAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId, [FromBody] CommentForm commentForm)
+    public async Task<ActionResult<ServiceDataResponse<GetCommentDto>>> PutCommentAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId, [FromBody] CommentForm commentForm)
     {
         Comment comment = new()
         {
@@ -73,6 +75,22 @@ public class ApiCommentsController(IViewModelService viewModelService, ICommentS
 
         var getComment = await _viewModelService.GetCommentApiResponseAsync(commentId, ClientId);
 
-        return ReturnStandardDataResponse(getComment);
+        return Ok(getComment);
+    }
+
+    [HttpDelete("{commentId:guid}")]
+    [ActionName(nameof(DeleteCommentAsync))]
+    [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(CommunityMemberFilter))]
+    public async Task<ActionResult<ServiceResponse>> DeleteCommentAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId)
+    {
+        var deleteComment = await _commentService.DeleteCommentAsync(commentId);
+
+        if (!deleteComment.Successful)
+        {
+            return BadRequest(deleteComment);
+        }
+
+        return NoContent();
     }
 }

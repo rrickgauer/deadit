@@ -91,11 +91,6 @@ export class RootCommentFormController implements IControllerAsync
             form.showNormal();
             return;
         }
-
-
-
-
-
     }
 
 

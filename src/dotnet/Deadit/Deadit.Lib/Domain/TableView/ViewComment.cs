@@ -43,6 +43,12 @@ public class ViewComment : ICreatedOnDifference,
     public DateTime? CommentCreatedOn { get; set; }
 
 
+    [SqlColumn("comment_deleted_on")]
+    [CopyToProperty<Comment>(nameof(Comment.DeletedOn))]
+    [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.CommentDeletedOn))]
+    public DateTime? CommentDeletedOn { get; set; }
+
+
     [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.CommentAuthorUsername))]
     [SqlColumn("comment_author_username")]
     public string? CommentAuthorUsername { get; set; }
@@ -64,6 +70,10 @@ public class ViewComment : ICreatedOnDifference,
     [JsonIgnore]
     public bool IsTopLevel => CommentParentId == null;
 
+    [JsonIgnore]
+    public bool IsDeleted => CommentDeletedOn.HasValue;
+
+
 
 
     public void GenerateContentHtml()
@@ -71,6 +81,24 @@ public class ViewComment : ICreatedOnDifference,
         if (!string.IsNullOrWhiteSpace(CommentContent))
         {
             CommentContent = MarkdownUtility.ToHtml(CommentContent);
+        }
+    }
+
+
+    public void MaskDeletedInfo()
+    {
+        foreach (var reply in CommentReplies)
+        {
+            reply.MaskDeletedInfo();
+        }
+
+
+        if (IsDeleted)
+        {
+            string deletedText = "[deleted]";
+            CommentAuthorUsername = deletedText;
+            CommentContent = deletedText;
+            CommentAuthorId = null;
         }
     }
 
