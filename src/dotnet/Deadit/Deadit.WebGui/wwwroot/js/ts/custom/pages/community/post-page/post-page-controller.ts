@@ -1,14 +1,16 @@
 import { LoginModal } from "../../../components/login-modal/login-modal";
 import { IController } from "../../../domain/contracts/i-controller";
+import { ILoginModalPage } from "../../../domain/contracts/ilogin-modal";
 import { PostPageParms } from "../../../domain/model/post-models";
 import { CommentsService } from "../../../services/comments-service";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
 import { CommentsController } from "./comments-controller";
 import { RootCommentFormController } from "./root-comment-form-controller";
 
-export class PostPageController implements IController
+export class PostPageController implements IController, ILoginModalPage
 {
-    private readonly _modal = new LoginModal(true);
+    public readonly _modal = new LoginModal(true);
+
     private _args: PostPageParms;
     private _isLoggedIn = false;
     private _commentsController: CommentsController | null;
@@ -23,8 +25,6 @@ export class PostPageController implements IController
     {
         await this.initCommentsController();
         this._commentsController.control();
-
-
 
         this._rootCommentController = new RootCommentFormController({
             isLoggedIn: this._isLoggedIn,

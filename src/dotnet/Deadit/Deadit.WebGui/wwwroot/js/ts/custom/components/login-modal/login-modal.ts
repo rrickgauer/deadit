@@ -1,5 +1,6 @@
 import { BaseEventDetail } from "../../domain/events/custom-events";
 import { SuccessfulLoginEvent, SuccessfulSignupEvent } from "../../domain/events/events";
+import { BootstrapUtility } from "../../utilities/bootstrap-utility";
 import { LoginForm } from "../login-form/login-form";
 import { SignupForm } from "../signup-form/signup-form";
 import { LoginModalElements } from "./login-modal-elements";
@@ -46,5 +47,13 @@ export class LoginModal
         {
             window.location.href = destinationUrlParm;
         }
+    }
+
+
+    public static ShowModal()
+    {
+        const elements = new LoginModalElements();
+
+        BootstrapUtility.showModal(elements.modalContainer);
     }
 }

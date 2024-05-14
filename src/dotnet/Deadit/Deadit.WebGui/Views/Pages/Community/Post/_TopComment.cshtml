@@ -10,29 +10,41 @@
     
         <div class="card-body">
 
-            <form class="form-post-comment">
-                <div class="form-feedback"></div>
 
-                <fieldset>
+            @if(Model.IsLoggedIn)
+            {
+                <form class="form-post-comment">
+                    <div class="form-feedback"></div>
 
-                    @* Content *@
-                    <div class="input-feedback">
-                        <label class="form-label-container">
-                            <textarea class="form-control input-feedback-input" name="content" rows="3" ></textarea>
-                            <div class="valid-feedback"></div>
-                            <div class="invalid-feedback"></div>
-                        </label>
-                    </div>
+                    <fieldset>
 
-                    
+                        @* Content *@
+                        <div class="input-feedback">
+                            <label class="form-label-container">
+                                <textarea class="form-control input-feedback-input" name="content" rows="3"></textarea>
+                                <div class="valid-feedback"></div>
+                                <div class="invalid-feedback"></div>
+                            </label>
+                        </div>
 
-                    @* Action Buttons *@
-                    <div class="d-flex">
-                        <button class="btn btn-success btn-submit" type="submit">Save</button>
-                    </div>
-                </fieldset>
 
-            </form>
+
+                        @* Action Buttons *@
+                        <div class="d-flex">
+                            <button class="btn btn-success btn-submit" type="submit">Save</button>
+                        </div>
+                    </fieldset>
+
+                </form>
+            }
+            else
+            {
+                <button class="btn btn-primary btn-root-form-login" type="button">Log in to comment</button>
+            }
+
+
+
+
 
 
         </div>
