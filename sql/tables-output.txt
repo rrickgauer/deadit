@@ -132,18 +132,35 @@ User
 
 View_Comment
 
-| Position | Name                    | Type         | IsNullable | DefaultValue      | Extra |
-|----------|-------------------------|--------------|------------|-------------------|-------|
-| 1        | comment_id              | char(36)     | False      |                   |       |
-| 2        | comment_author_id       | int unsigned | False      |                   |       |
-| 3        | comment_post_id         | char(36)     | False      |                   |       |
-| 4        | comment_content         | text         | False      |                   |       |
-| 5        | comment_parent_id       | char(36)     | True       |                   |       |
-| 6        | comment_created_on      | timestamp    | False      | CURRENT_TIMESTAMP |       |
-| 7        | comment_deleted_on      | timestamp    | True       |                   |       |
-| 8        | comment_author_username | char(30)     | False      |                   |       |
-| 9        | community_id            | int unsigned | False      |                   |       |
-| 10       | community_name          | char(50)     | False      |                   |       |
+| Position | Name                      | Type         | IsNullable | DefaultValue      | Extra |
+|----------|---------------------------|--------------|------------|-------------------|-------|
+| 1        | comment_id                | char(36)     | False      |                   |       |
+| 2        | comment_author_id         | int unsigned | False      |                   |       |
+| 3        | comment_post_id           | char(36)     | False      |                   |       |
+| 4        | comment_content           | text         | False      |                   |       |
+| 5        | comment_parent_id         | char(36)     | True       |                   |       |
+| 6        | comment_created_on        | timestamp    | False      | CURRENT_TIMESTAMP |       |
+| 7        | comment_deleted_on        | timestamp    | True       |                   |       |
+| 8        | comment_count_votes_up    | bigint       | False      | 0                 |       |
+| 9        | comment_count_votes_down  | bigint       | False      | 0                 |       |
+| 10       | comment_count_votes_none  | bigint       | False      | 0                 |       |
+| 11       | comment_count_votes_score | bigint       | False      | 0                 |       |
+| 12       | comment_author_username   | char(30)     | False      |                   |       |
+| 13       | community_id              | int unsigned | False      |                   |       |
+| 14       | community_name            | char(50)     | False      |                   |       |
+
+
+
+
+View_Comment_Vote_Totals
+
+| Position | Name            | Type     | IsNullable | DefaultValue | Extra |
+|----------|-----------------|----------|------------|--------------|-------|
+| 1        | comment_id      | char(36) | False      |              |       |
+| 2        | count_novotes   | bigint   | False      | 0            |       |
+| 3        | count_downvotes | bigint   | False      | 0            |       |
+| 4        | count_upvotes   | bigint   | False      | 0            |       |
+| 5        | score           | bigint   | False      | 0            |       |
 
 
 
@@ -290,6 +307,24 @@ View_User
 | 3        | user_username   | char(30)     | False      |                   |       |
 | 4        | user_password   | char(250)    | False      |                   |       |
 | 5        | user_created_on | timestamp    | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
+View_Vote_Comment
+
+| Position | Name                      | Type              | IsNullable | DefaultValue      | Extra |
+|----------|---------------------------|-------------------|------------|-------------------|-------|
+| 1        | vote_comment_comment_id   | char(36)          | False      |                   |       |
+| 2        | vote_comment_user_id      | int unsigned      | False      |                   |       |
+| 3        | vote_comment_vote_type    | smallint unsigned | False      |                   |       |
+| 4        | vote_comment_created_on   | timestamp         | False      | CURRENT_TIMESTAMP |       |
+| 5        | vote_comment_username     | char(30)          | False      |                   |       |
+| 6        | post_id                   | char(36)          | True       |                   |       |
+| 7        | comment_count_votes_up    | bigint            | True       | 0                 |       |
+| 8        | comment_count_votes_down  | bigint            | True       | 0                 |       |
+| 9        | comment_count_votes_none  | bigint            | True       | 0                 |       |
+| 10       | comment_count_votes_score | bigint            | True       | 0                 |       |
 
 
 

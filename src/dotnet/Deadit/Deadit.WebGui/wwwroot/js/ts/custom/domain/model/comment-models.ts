@@ -1,11 +1,11 @@
 import { DateTimeString, Guid, JsonObject, Nullable } from "../types/aliases";
+import { UserVoteScores, UserVoteSelection, VoteScores } from "./common-api-response-types";
 
 
 
 
 
-
-export type CommentApiResponse = {
+export type CommentApiResponse = UserVoteScores & {
 
     commentId?: Guid;
     commentAuthorId?: number;

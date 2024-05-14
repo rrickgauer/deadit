@@ -4,6 +4,7 @@ import { RootCommentFormSubmittedEvent } from "../../../domain/events/events";
 import { MessageBoxConfirm } from "../../../domain/helpers/message-box/MessageBoxConfirm";
 import { CommentApiResponse, GetCommentsApiResponse, SaveCommentRequest } from "../../../domain/model/comment-models";
 import { PostPageParms } from "../../../domain/model/post-models";
+import { CommentVotesService } from "../../../services/comment-votes-service";
 import { CommentsService } from "../../../services/comments-service";
 import { CommentTemplate } from "../../../templates/comment-template";
 import { ErrorUtility } from "../../../utilities/error-utility";
@@ -107,6 +108,26 @@ export class CommentsController implements IControllerAsync
             const html = this._templateEngine.toHtml(newComment);
             this._rootListElement.insertAdjacentHTML("afterbegin", html);
         });
+
+
+        this._rootListElement.addEventListener(NativeEvents.Click, async (e) =>
+        {
+            let target = e.target as Element;
+            let buttonElement = target.closest('.btn-vote') as HTMLButtonElement;
+
+            if (!buttonElement)
+            {
+                return;
+            }
+
+
+            if (this.isAuth())
+            {
+                this.onVoteButtonClick(buttonElement);
+            }
+        });
+
+
     }
 
     private onBtnCommentActionClick = async (button: HTMLAnchorElement) =>
@@ -263,6 +284,40 @@ export class CommentsController implements IControllerAsync
 
 
 
+    private async onVoteButtonClick(clickedVoteButton: HTMLButtonElement)
+    {
+        const wasUpvoted = clickedVoteButton.classList.contains('btn-vote-up');
+        const listItem = new CommentListItem(clickedVoteButton);
+
+        await this.saveVote(listItem, wasUpvoted);
+    }
+
+    private async saveVote(listItem: CommentListItem, wasUpvoted: boolean)
+    {
+        const newVoteType = wasUpvoted ? listItem.upvoted() : listItem.downvoted();
+        const service = new CommentVotesService({ ...this._args, commentId: listItem.commentId });
+
+        try
+        {
+            const response = await service.vote(newVoteType);
+
+            if (!response.successful)
+            {
+                MessageBoxUtility.showErrorList(response.response.errors);
+                return;
+            }
+        }
+        catch (error)
+        {
+            console.error({ error });
+
+            MessageBoxUtility.showError({
+                message: `There was an unexpected error saving your vote.`,
+            });
+            return;
+        }
+    }
+
 
     private isAuth(): boolean
     {
@@ -278,11 +333,5 @@ export class CommentsController implements IControllerAsync
 
         return true;
     }
-
-
-
-
-
-
 
 }

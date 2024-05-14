@@ -2,13 +2,8 @@
 
 namespace Deadit.Lib.Domain.Attributes;
 
-[AttributeUsage(AttributeTargets.Property)]
-public class SqlColumnAttribute : Attribute
+[AttributeUsage(AttributeTargets.Property, Inherited = true)]
+public class SqlColumnAttribute([CallerMemberName] string columnName = "") : Attribute
 {
-    public string ColumnName { get; }
-
-    public SqlColumnAttribute([CallerMemberName] string columnName = "")
-    {
-        ColumnName = columnName;
-    }
+    public string ColumnName { get; } = columnName;
 }

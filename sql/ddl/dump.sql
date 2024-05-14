@@ -247,9 +247,29 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `comment_parent_id`,
  1 AS `comment_created_on`,
  1 AS `comment_deleted_on`,
+ 1 AS `comment_count_votes_up`,
+ 1 AS `comment_count_votes_down`,
+ 1 AS `comment_count_votes_none`,
+ 1 AS `comment_count_votes_score`,
  1 AS `comment_author_username`,
  1 AS `community_id`,
  1 AS `community_name`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `View_Comment_Vote_Totals`
+--
+
+DROP TABLE IF EXISTS `View_Comment_Vote_Totals`;
+/*!50001 DROP VIEW IF EXISTS `View_Comment_Vote_Totals`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `View_Comment_Vote_Totals` AS SELECT 
+ 1 AS `comment_id`,
+ 1 AS `count_novotes`,
+ 1 AS `count_downvotes`,
+ 1 AS `count_upvotes`,
+ 1 AS `score`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -420,6 +440,27 @@ SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Temporary view structure for view `View_Vote_Comment`
+--
+
+DROP TABLE IF EXISTS `View_Vote_Comment`;
+/*!50001 DROP VIEW IF EXISTS `View_Vote_Comment`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `View_Vote_Comment` AS SELECT 
+ 1 AS `vote_comment_comment_id`,
+ 1 AS `vote_comment_user_id`,
+ 1 AS `vote_comment_vote_type`,
+ 1 AS `vote_comment_created_on`,
+ 1 AS `vote_comment_username`,
+ 1 AS `post_id`,
+ 1 AS `comment_count_votes_up`,
+ 1 AS `comment_count_votes_down`,
+ 1 AS `comment_count_votes_none`,
+ 1 AS `comment_count_votes_score`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `Vote_Comment`
 --
 
@@ -473,7 +514,7 @@ CREATE TABLE `Vote_Type` (
   `name` char(20) NOT NULL,
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -483,6 +524,48 @@ CREATE TABLE `Vote_Type` (
 --
 -- Dumping routines for database 'Deadit_Dev'
 --
+/*!50003 DROP FUNCTION IF EXISTS `Get_Comment_Vote_Score` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`main`@`%` FUNCTION `Get_Comment_Vote_Score`(
+    in_comment_id char(36)
+) RETURNS bigint
+    READS SQL DATA
+BEGIN
+
+    declare result bigint;
+    
+    select 
+        v.score
+    into 
+        result
+    from View_Comment_Vote_Totals v
+    where
+        v.comment_id = in_comment_id;
+    
+    
+    if result is null then
+    set result = 0;
+    
+    END IF;
+    
+
+	-- return the customer level
+	RETURN (result);
+    
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Current Database: `Deadit_Dev`
@@ -503,7 +586,25 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `View_Comment` AS select `c`.`id` AS `comment_id`,`c`.`author_id` AS `comment_author_id`,`c`.`post_id` AS `comment_post_id`,`c`.`content` AS `comment_content`,`c`.`parent_id` AS `comment_parent_id`,`c`.`created_on` AS `comment_created_on`,`c`.`deleted_on` AS `comment_deleted_on`,`u`.`username` AS `comment_author_username`,`p`.`community_id` AS `community_id`,`com`.`name` AS `community_name` from (((`Comment` `c` join `User` `u` on((`u`.`id` = `c`.`author_id`))) join `Post` `p` on((`p`.`id` = `c`.`post_id`))) join `Community` `com` on((`com`.`id` = `p`.`community_id`))) */;
+/*!50001 VIEW `View_Comment` AS select `c`.`id` AS `comment_id`,`c`.`author_id` AS `comment_author_id`,`c`.`post_id` AS `comment_post_id`,`c`.`content` AS `comment_content`,`c`.`parent_id` AS `comment_parent_id`,`c`.`created_on` AS `comment_created_on`,`c`.`deleted_on` AS `comment_deleted_on`,ifnull(`votes`.`count_upvotes`,0) AS `comment_count_votes_up`,ifnull(`votes`.`count_downvotes`,0) AS `comment_count_votes_down`,ifnull(`votes`.`count_novotes`,0) AS `comment_count_votes_none`,ifnull(`votes`.`score`,0) AS `comment_count_votes_score`,`u`.`username` AS `comment_author_username`,`p`.`community_id` AS `community_id`,`com`.`name` AS `community_name` from ((((`Comment` `c` join `User` `u` on((`u`.`id` = `c`.`author_id`))) left join `View_Comment_Vote_Totals` `votes` on((`votes`.`comment_id` = `c`.`id`))) join `Post` `p` on((`p`.`id` = `c`.`post_id`))) join `Community` `com` on((`com`.`id` = `p`.`community_id`))) group by `c`.`id` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `View_Comment_Vote_Totals`
+--
+
+/*!50001 DROP VIEW IF EXISTS `View_Comment_Vote_Totals`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `View_Comment_Vote_Totals` AS select `v`.`comment_id` AS `comment_id`,count((case when (`v`.`vote_type` = 1) then 1 end)) AS `count_novotes`,count((case when (`v`.`vote_type` = 2) then 1 end)) AS `count_downvotes`,count((case when (`v`.`vote_type` = 3) then 1 end)) AS `count_upvotes`,(count((case when (`v`.`vote_type` = 3) then 1 end)) - count((case when (`v`.`vote_type` = 2) then 1 end))) AS `score` from `Vote_Comment` `v` group by `v`.`comment_id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -633,6 +734,24 @@ USE `Deadit_Dev`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `View_Vote_Comment`
+--
+
+/*!50001 DROP VIEW IF EXISTS `View_Vote_Comment`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `View_Vote_Comment` AS select `v`.`comment_id` AS `vote_comment_comment_id`,`v`.`user_id` AS `vote_comment_user_id`,`v`.`vote_type` AS `vote_comment_vote_type`,`v`.`created_on` AS `vote_comment_created_on`,`u`.`username` AS `vote_comment_username`,`c`.`comment_post_id` AS `post_id`,`c`.`comment_count_votes_up` AS `comment_count_votes_up`,`c`.`comment_count_votes_down` AS `comment_count_votes_down`,`c`.`comment_count_votes_none` AS `comment_count_votes_none`,`c`.`comment_count_votes_score` AS `comment_count_votes_score` from ((`Vote_Comment` `v` join `User` `u` on((`u`.`id` = `v`.`user_id`))) left join `View_Comment` `c` on((`c`.`comment_id` = `v`.`comment_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -643,7 +762,7 @@ USE `Deadit_Dev`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-13 22:54:17
+-- Dump completed on 2024-05-14 21:14:07
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
@@ -668,7 +787,7 @@ USE `Deadit_Dev`;
 
 LOCK TABLES `Vote_Type` WRITE;
 /*!40000 ALTER TABLE `Vote_Type` DISABLE KEYS */;
-REPLACE INTO `Vote_Type` VALUES (1,'Upvote'),(2,'Downvote');
+REPLACE INTO `Vote_Type` VALUES (1,'Novote'),(2,'Downvote'),(3,'Upvote');
 /*!40000 ALTER TABLE `Vote_Type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -725,4 +844,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-13 22:54:21
+-- Dump completed on 2024-05-14 21:14:12

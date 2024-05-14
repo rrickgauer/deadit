@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.TableView;
 
-public class ViewComment : ICreatedOnDifference,
+public class ViewComment : ICreatedOnDifference, IVoteScore,
     ITableView<ViewComment, GetCommentDto>,
     ITableView<ViewComment, Comment>
 {
@@ -61,7 +61,26 @@ public class ViewComment : ICreatedOnDifference,
     [SqlColumn("community_name")]
     public string? CommunityName { get; set; }
 
-    
+    #region - IVoteScore -
+
+    [SqlColumn("comment_count_votes_up")]
+    [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.VotesCountUp))]
+    public long VotesCountUp { get; set; } = 0;
+
+    [SqlColumn("comment_count_votes_down")]
+    [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.VotesCountDown))]
+    public long VotesCountDown { get; set; } = 0;
+
+    [SqlColumn("comment_count_votes_none")]
+    [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.VotesCountNone))]
+    public long VotesCountNone { get; set; } = 0;
+
+    [SqlColumn("comment_count_votes_score")]
+    [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.VotesScore))]
+    public long VotesScore { get; set; } = 0;
+
+    #endregion
+
     public List<ViewComment> CommentReplies { get; set; } = new();
 
     [JsonIgnore]
@@ -72,8 +91,6 @@ public class ViewComment : ICreatedOnDifference,
 
     [JsonIgnore]
     public bool IsDeleted => CommentDeletedOn.HasValue;
-
-
 
 
     public void GenerateContentHtml()
