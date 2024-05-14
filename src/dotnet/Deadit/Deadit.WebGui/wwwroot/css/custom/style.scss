@@ -81,3 +81,40 @@
         display: none;
     }
 }
+
+
+//#post-page {
+//    #post-page-spinner {
+//        display: none;
+//    }
+
+//    #post-page-content {
+//        display: block;
+//    }
+
+//    &.loading {
+//        #post-page-spinner {
+//            display: block;
+//        }
+
+//        #post-page-content {
+//            display: none;
+//        }
+//    }
+//}
+
+.loading-screen {
+    position: absolute; /* Stay in place */
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    z-index: 50; /* Sit on top */
+    /* Center the loading content */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
