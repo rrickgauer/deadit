@@ -83,25 +83,38 @@
 }
 
 
-//#post-page {
-//    #post-page-spinner {
-//        display: none;
-//    }
+.item-voting {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
 
-//    #post-page-content {
-//        display: block;
-//    }
+    .btn-vote {
+        padding: 0;
+        outline: none;
 
-//    &.loading {
-//        #post-page-spinner {
-//            display: block;
-//        }
+        i.bxs-upvote,
+        i.bxs-downvote {
+            color: red;
+        }
 
-//        #post-page-content {
-//            display: none;
-//        }
-//    }
-//}
+        i.bx-upvote,
+        i.bx-downvote {
+            color: lightgray;
+        }
+    }
+}
+
+
+.btn-reset {
+    --bs-btn-active-border-color: transparent;
+}
+
+
+
+
+
+
 
 .loading-screen {
     position: absolute; /* Stay in place */

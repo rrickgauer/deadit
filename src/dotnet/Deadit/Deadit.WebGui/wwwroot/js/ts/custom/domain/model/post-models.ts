@@ -1,4 +1,5 @@
 import { PostType } from "../enum/post-type";
+import { Guid } from "../types/aliases";
 import { CommunityApiRequest } from "./api-community-models";
 
 
@@ -42,8 +43,10 @@ export type LinkPostApiResponse = PostApiResponse & {
 
 export type PostPageParms = {
     communityName: string;
-    postId: string;
+    postId: Guid;
 }
+
+
 
 
 

@@ -2,10 +2,12 @@
 using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Domain.ViewModel;
 using Deadit.Lib.Service.Contracts;
+using System.Collections.Generic;
 
 namespace Deadit.Lib.Service.Implementations;
 
@@ -18,14 +20,16 @@ public class ViewModelService : IViewModelService
     private readonly IAuthService _authService;
     private readonly IPostService _postService;
     private readonly ICommentService _commentService;
+    private readonly ICommentVotesService _commentVotesService;
 
-    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService, IPostService postService, ICommentService commentService)
+    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService, IPostService postService, ICommentService commentService, ICommentVotesService commentVotesService)
     {
         _communityService = communityService;
         _memberService = memberService;
         _authService = authService;
         _postService = postService;
         _commentService = commentService;
+        _commentVotesService = commentVotesService;
     }
 
     /// <summary>
@@ -196,35 +200,54 @@ public class ViewModelService : IViewModelService
 
     public async Task<ServiceDataResponse<GetCommentsApiViewModel>> GetCommentsApiResponseAsync(Guid postId, uint? clientId)
     {
-        var getComments = await _commentService.GetCommentsNestedAsync(postId);
-
-        if (!getComments.Successful)
+        try
         {
-            return new(getComments);
+            var getComments = await _commentService.GetCommentsNestedAsync(postId);
+
+            if (!getComments.Successful)
+            {
+                return new(getComments);
+            }
+
+            var comments = getComments.Data ?? new();
+            var votes = await GetUserCommentVotesAsync(postId, clientId);
+            var dtos = comments.BuildGetCommentDtos(clientId, votes);
+
+            GetCommentsApiViewModel viewModel = new()
+            {
+                Comments = dtos.ToList(),
+                IsLoggedIn = clientId.HasValue,
+            };
+
+            return new(viewModel);
+        }
+        catch(ServiceResponseException ex)
+        {
+            return new(ex.Response);
+        }
+    }
+
+
+    private async Task<List<ViewVoteComment>> GetUserCommentVotesAsync(Guid postId, uint? clientId)
+    {
+
+        if (!clientId.HasValue)
+        {
+            return new();
         }
 
-        var comments = getComments.Data ?? new();
+        var getVotes = await _commentVotesService.GetUserCommentVotesInPost(postId, clientId.Value);
 
-        comments.ForEach(c => c.MaskDeletedInfo());
-
-        var dtos = comments.Select(c =>
+        if (!getVotes.Successful)
         {
-            var dto = (GetCommentDto)c;
+            throw new ServiceResponseException(getVotes);
+        }
 
-            dto.SetIsAuthorRecursive(clientId);
-
-            return dto;
-        });
-
-
-        GetCommentsApiViewModel viewModel = new()
-        {
-            Comments = dtos.ToList(),
-            IsLoggedIn = clientId.HasValue,
-        };
-
-        return new(viewModel);
+        return getVotes.Data ?? new();
     }
+
+
+
 
     public async Task<ServiceDataResponse<GetCommentDto>> GetCommentApiResponseAsync(Guid commentId, uint? clientId)
     {

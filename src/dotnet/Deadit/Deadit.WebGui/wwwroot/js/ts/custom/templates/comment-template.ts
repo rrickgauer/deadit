@@ -4,6 +4,8 @@ import { MarkdownUtility } from "../utilities/markdown-utility";
 import { HtmlTemplate } from "./html-template";
 import { CommentFormTemplate } from "./comment-form-template";
 import { Nullable } from "../utilities/nullable";
+import { VoteButtonIcons, VoteButtonIconsSolid } from "../domain/constants/vote-button-icons";
+import { VoteScoreTemplate } from "./votes-score-template";
 
 
 export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
@@ -29,37 +31,51 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
             content: model.commentContent,
         });
 
+        const votingTemplate = new VoteScoreTemplate();
+        const voting = votingTemplate.toHtml(model);
+
         let html = `
 
             <hr />
             <li class="comment-list-item ${model.commentIsAuthor ? 'comment-list-item-authored' : ''}" data-comment-id="${model.commentId}">
-
-                <div class="comment-actions">
-                    ${actionButtons}
-                </div>
-
-                <div class="form-post-comment-edit-container">
-                    ${editCommentForm}
-                </div>
                 
-                <div class="comment-thread">
-                    <div class="comment-content">
-                        <div class="comment-content-md">
-                            <div class="md">
-                                ${MarkdownUtility.toHtml(model.commentContent)}
+            <div class="d-flex justify-content-start">                
+                ${voting}
+                <div>
+                    <div class="comment-actions">
+                        ${actionButtons}
+                    </div>
+
+                    <div class="form-post-comment-edit-container">
+                        ${editCommentForm}
+                    </div>
+                
+                    <div class="comment-thread">
+                        <div class="comment-content">
+                            <div class="comment-content-md">
+                                <div class="md">
+                                    ${MarkdownUtility.toHtml(model.commentContent)}
+                                </div>
+                            </div>
+
+                            <div class="form-post-comment-new-container">
+                            
                             </div>
                         </div>
 
-                        <div class="form-post-comment-new-container">
-                            
-                        </div>
+
+                        <ul class="comment-list" data-parent-comment-id="${model.commentId}">
+                            ${replies}
+                        </ul>
                     </div>
-
-
-                    <ul class="comment-list" data-parent-comment-id="${model.commentId}">
-                        ${replies}
-                    </ul>
                 </div>
+
+
+            </div>
+
+
+
+
 
             </li>
         `;

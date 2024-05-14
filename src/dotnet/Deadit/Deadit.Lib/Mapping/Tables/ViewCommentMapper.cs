@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.TableView;
+using Deadit.Lib.Utility;
 using System.Data;
 
 namespace Deadit.Lib.Mapping.Tables;
@@ -21,7 +22,7 @@ public class ViewCommentMapper : TableMapper<ViewComment>
             CommentDeletedOn      = row.Field<DateTime?>(GetColumnName(nameof(result.CommentDeletedOn))),
         };
 
-
+        row.SetVotingValues(result);
 
         return result;
     }

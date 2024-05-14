@@ -1,3 +1,5 @@
+import { VoteType } from "../../../domain/enum/vote-type";
+import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
 import { CommentApiResponse } from "../../../domain/model/comment-models";
 import { Guid } from "../../../domain/types/aliases";
 import { CommentFormTemplate } from "../../../templates/comment-form-template";
@@ -31,6 +33,7 @@ export class CommentListItem
     private _repliesList: HTMLUListElement;
     private _actionsContainer: HTMLDivElement;
     private _toggleBtn: HTMLAnchorElement;
+    private _voting: VoteScore;
 
     public get commentId(): Guid | null
     {
@@ -109,9 +112,11 @@ export class CommentListItem
         this._newFormContainer = this._container.querySelector(`.${CommentSelectors.newFormContainerClass}`) as HTMLDivElement;
         this._contentMdDisplay = this._container.querySelector(`.${CommentSelectors.contentMdClass}`) as HTMLDivElement;
         this._repliesList = this._container.querySelector(`.comment-list[data-parent-comment-id="${this.commentId}"]`) as HTMLUListElement;
-
         this._actionsContainer = this._container?.querySelector(`.${CommentSelectors.actionsContainerClass}`) as HTMLDivElement;
         this._toggleBtn = this._container?.querySelector(`.${CommentSelectors.btnToggleClass}`) as HTMLAnchorElement;
+
+        this._voting = new VoteScore(this._container.querySelector(`.item-voting`));
+
     }
 
 
@@ -216,6 +221,20 @@ export class CommentListItem
     public toggleCollapse()
     {
         this.isCollapsed = !this.isCollapsed;
+    }
+
+
+    public upvoted(): VoteType
+    {
+        this._voting.upvoted();
+        return this._voting.currentVote;
+
+    }
+
+    public downvoted(): VoteType
+    {
+        this._voting.downvoted();
+        return this._voting.currentVote;
     }
 
 }
