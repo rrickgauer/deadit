@@ -4,6 +4,7 @@ import { ILoginModalPage } from "../../../domain/contracts/ilogin-modal";
 import { PostPageParms } from "../../../domain/model/post-models";
 import { CommentsService } from "../../../services/comments-service";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
+import { PageLoadingUtility } from "../../../utilities/page-loading-utility";
 import { CommentsController } from "./comments-controller";
 import { RootCommentFormController } from "./root-comment-form-controller";
 
@@ -35,6 +36,8 @@ export class PostPageController implements IController, ILoginModalPage
 
 
         this.addListeners();
+
+        this.showPageContent();
     }
 
     private addListeners = () =>
@@ -78,6 +81,11 @@ export class PostPageController implements IController, ILoginModalPage
         MessageBoxUtility.showError({
             message: 'There was an unexpected error fetching post comments',
         });
+    }
+
+    private showPageContent()
+    {
+        PageLoadingUtility.hideLoader();   
     }
 
 }
