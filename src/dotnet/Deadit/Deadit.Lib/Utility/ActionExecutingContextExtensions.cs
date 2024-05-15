@@ -21,6 +21,11 @@ public static class ActionExecutingContextExtensions
         return GetRequestRouteValue<Guid>(context, "postId");
     }
 
+    public static Guid GetCommentIdRouteValue(this ActionExecutingContext context)
+    {
+        return GetRequestRouteValue<Guid>(context, "commentId");
+    }
+
 
 
     /// <summary>
