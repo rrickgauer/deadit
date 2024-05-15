@@ -1,4 +1,6 @@
-﻿namespace Deadit.Lib.Domain.ViewModel;
+﻿using Deadit.Lib.Domain.Enum;
+
+namespace Deadit.Lib.Domain.ViewModel;
 
 public class ViewModelContracts
 {
@@ -16,6 +18,11 @@ public class ViewModelContracts
     public interface IClientId
     {
         public uint? ClientId { get; set; }
+    }
+
+    public interface ISortOption
+    {
+        public SortOption SortOption { get; set; }
     }
 
 }

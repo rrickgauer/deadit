@@ -2,12 +2,11 @@
 using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
-using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.Parms;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Domain.ViewModel;
 using Deadit.Lib.Service.Contracts;
-using System.Collections.Generic;
 
 namespace Deadit.Lib.Service.Implementations;
 
@@ -119,7 +118,7 @@ public class ViewModelService : IViewModelService
     }
 
 
-    public async Task<ServiceDataResponse<PostPageViewModel>> GetPostPageViewModelAsync(Guid postId, PostType postType, uint? userId)
+    public async Task<ServiceDataResponse<PostPageViewModel>> GetPostPageViewModelAsync(Guid postId, PostType postType, uint? userId, SortOption sortBy)
     {
         // get the post
         ViewPost post;
@@ -140,7 +139,11 @@ public class ViewModelService : IViewModelService
 
 
         // get comments
-        var getComments = await _commentService.GetCommentsNestedAsync(postId);
+        var getComments = await _commentService.GetCommentsNestedAsync(new GetCommentsParms
+        {
+            PostId = postId,
+            Sort = sortBy,
+        });
 
         if (!getComments.Successful)
         {
@@ -154,6 +157,7 @@ public class ViewModelService : IViewModelService
             Comments = getComments.Data ?? new(),
             ClientId = userId,
             IsLoggedIn = userId != null,
+            SortOption = sortBy,
         };
 
         return new(viewModel);
@@ -198,11 +202,16 @@ public class ViewModelService : IViewModelService
 
 
 
-    public async Task<ServiceDataResponse<GetCommentsApiViewModel>> GetCommentsApiResponseAsync(Guid postId, uint? clientId)
+    public async Task<ServiceDataResponse<GetCommentsApiViewModel>> GetCommentsApiResponseAsync(Guid postId, uint? clientId, SortOption sort)
     {
         try
         {
-            var getComments = await _commentService.GetCommentsNestedAsync(postId);
+            var getComments = await _commentService.GetCommentsNestedAsync(new GetCommentsParms()
+            {
+                PostId = postId,
+                Sort = sort,
+            });
+
 
             if (!getComments.Successful)
             {

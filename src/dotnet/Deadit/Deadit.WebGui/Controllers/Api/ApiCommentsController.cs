@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Dto;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Response;
@@ -31,9 +32,11 @@ public class ApiCommentsController(IViewModelService viewModelService, ICommentS
     /// <returns></returns>
     [HttpGet]
     [ActionName(nameof(GetCommentsAsync))]
-    public async Task<IActionResult> GetCommentsAsync([FromRoute] string communityName, [FromRoute] Guid postId)
+    public async Task<IActionResult> GetCommentsAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromQuery] SortOption? sort)
     {
-        var getComments = await _viewModelService.GetCommentsApiResponseAsync(postId, ClientId);
+        SortOption sortOption = sort ?? SortOption.New;
+
+        var getComments = await _viewModelService.GetCommentsApiResponseAsync(postId, ClientId, sortOption);
 
         if (!getComments.Successful)
         {

@@ -1,6 +1,8 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
 import { IControllerAsync } from "../../../domain/contracts/i-controller";
-import { RootCommentFormSubmittedEvent } from "../../../domain/events/events";
+import { SortOption } from "../../../domain/enum/sort-option";
+import { ItemsSortInputChangedEvent, RootCommentFormSubmittedEvent } from "../../../domain/events/events";
+import { ItemsSortInput } from "../../../domain/helpers/items-sort/items-sort";
 import { MessageBoxConfirm } from "../../../domain/helpers/message-box/MessageBoxConfirm";
 import { CommentApiResponse, GetCommentsApiResponse, SaveCommentRequest } from "../../../domain/model/comment-models";
 import { PostPageParms } from "../../../domain/model/post-models";
@@ -40,6 +42,7 @@ export class CommentsController implements IControllerAsync
     private readonly _commentService: CommentsService;
 
     private _comments: CommentApiResponse[];
+/*    private readonly _sortInput: ItemsSortInput;*/
 
     constructor(args: CommentsControllerArgs)
     {
@@ -49,6 +52,8 @@ export class CommentsController implements IControllerAsync
         this._commentService = new CommentsService(this._args);
         this._templateEngine = new CommentTemplate();
         this._rootListElement = document.querySelector('.comment-list.root') as HTMLUListElement;
+
+        
     }
 
 
@@ -125,6 +130,12 @@ export class CommentsController implements IControllerAsync
             {
                 this.onVoteButtonClick(buttonElement);
             }
+        });
+
+
+        ItemsSortInputChangedEvent.addListener((message) =>
+        {
+            this.sortComments(message.data.selectedValue);
         });
 
 
@@ -279,9 +290,7 @@ export class CommentsController implements IControllerAsync
                 },
             });
         }
-
     }
-
 
 
     private async onVoteButtonClick(clickedVoteButton: HTMLButtonElement)
@@ -316,6 +325,14 @@ export class CommentsController implements IControllerAsync
             });
             return;
         }
+    }
+
+
+    private sortComments(sortType: SortOption)
+    {
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort', sortType.toLowerCase());
+        window.location.href = url.toString();
     }
 
 

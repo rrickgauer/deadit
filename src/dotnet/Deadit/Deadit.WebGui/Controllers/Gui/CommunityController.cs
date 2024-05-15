@@ -57,11 +57,13 @@ public class CommunityController(IViewModelService viewModelService, IPostServic
     [HttpGet("posts/{postId}")]
     [ActionName(nameof(GetPostPageAsync))]
     [ServiceFilter(typeof(GetPostFilter))]
-    public async Task<IActionResult> GetPostPageAsync([FromRoute] string communityName, [FromRoute] Guid postId)
+    public async Task<IActionResult> GetPostPageAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromQuery] SortOption? sort)
     {
+        SortOption sortOption = sort ?? SortOption.New;
+
         PostType postType = RequestItems.Post?.PostType ?? throw new ArgumentNullException();
 
-        var getViewModel = await _viewModelService.GetPostPageViewModelAsync(postId, postType, ClientId);
+        var getViewModel = await _viewModelService.GetPostPageViewModelAsync(postId, postType, ClientId, sortOption);
 
         if (!getViewModel.Successful)
         {
