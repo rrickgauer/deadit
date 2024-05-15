@@ -17,6 +17,7 @@ public class ViewPostTableMapper : TableMapper<ViewPost>
         result.PostType        = (PostType?)row.Field<ushort?>(GetColumnName(nameof(result.PostType)));
         result.PostAuthorId    = row.Field<uint?>(GetColumnName(nameof(result.PostAuthorId)));
         result.PostCreatedOn   = row.Field<DateTime?>(GetColumnName(nameof(result.PostCreatedOn)));
+        result.PostCountComments = Convert.ToUInt32(row.Field<object?>(GetColumnName(nameof(result.PostCountComments))));
 
         return result;
     }

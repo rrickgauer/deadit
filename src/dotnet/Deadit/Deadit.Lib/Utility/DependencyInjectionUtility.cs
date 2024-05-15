@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Deadit.Lib.Utility;
 
-public class DependencyInjectionUtilities
+public class DependencyInjectionUtility
 {
 
     public static void InjectConfigs(IServiceCollection services, bool isProduction)

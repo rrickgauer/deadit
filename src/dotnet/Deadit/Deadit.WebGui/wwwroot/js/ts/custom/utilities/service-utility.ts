@@ -3,7 +3,7 @@ import { ApiNotFoundException, ApiResponse, ApiResponseNoContent, ApiValidationE
 
 
 
-export class ServiceUtilities
+export class ServiceUtility
 {
     public static async toServiceResponseNoContent(response: Response): Promise<ServiceResponse<any>>
     {
@@ -14,11 +14,11 @@ export class ServiceUtilities
         }
         else if (response.status === HttpStatusCode.UnprocessableEntity)
         {
-            await ServiceUtilities.handleUnprocessableEntityApiResponse(response);
+            await ServiceUtility.handleUnprocessableEntityApiResponse(response);
         }
         else if (response.status === HttpStatusCode.NotFound)
         {
-            ServiceUtilities.handleNotFoundApiResponse(response);
+            ServiceUtility.handleNotFoundApiResponse(response);
         }
 
         const responseText = await response.text();
@@ -37,11 +37,11 @@ export class ServiceUtilities
         }
         else if (response.status === HttpStatusCode.UnprocessableEntity)
         {
-            await ServiceUtilities.handleUnprocessableEntityApiResponse(response);
+            await ServiceUtility.handleUnprocessableEntityApiResponse(response);
         }
         else if (response.status === HttpStatusCode.NotFound)
         {
-            ServiceUtilities.handleNotFoundApiResponse(response);
+            ServiceUtility.handleNotFoundApiResponse(response);
         }
 
         const responseText = await response.text();

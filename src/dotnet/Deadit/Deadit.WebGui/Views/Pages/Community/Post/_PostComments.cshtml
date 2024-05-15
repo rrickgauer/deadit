@@ -1,0 +1,33 @@
+﻿@model Deadit.Lib.Domain.ViewModel.PostPageViewModel
+@using Deadit.Lib.Domain.TableView
+@using Deadit.Lib.Utility
+@using Microsoft.AspNetCore.Http.Extensions;
+@using Deadit.Lib.Domain.Enum;
+
+
+
+
+<div class="container">
+
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between">
+                <h4>Comments</h4>
+
+                <div class="d-flex align-items-center">
+                    <p class="m-0">Sort:</p>
+
+                    <select class="form-select items-sort ms-2" data-items-sort-id="post-comments">
+                        @Html.Raw(@Model.SortOption.GetSortOptionHtml());
+                    </select>
+                </div>
+
+            </div>
+            
+
+        </div>
+        <div class="card-body">
+            <ul class="comment-list root"></ul>
+        </div>
+    </div>
+</div>

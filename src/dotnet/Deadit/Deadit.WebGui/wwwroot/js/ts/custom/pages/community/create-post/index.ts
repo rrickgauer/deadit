@@ -1,10 +1,10 @@
-import { PageUtilities } from "../../../utilities/page-utilities";
+import { PageUtility } from "../../../utilities/page-utility";
 import { CreatePostController } from "./create-post-controller";
 
 /**
  * Main logic
  */
-PageUtilities.pageReady(async () =>
+PageUtility.pageReady(async () =>
 {
     const controller = new CreatePostController();
     controller.control();

@@ -1,9 +1,9 @@
 
-import { PageUtilities } from "../../utilities/page-utilities";
+import { PageUtility } from "../../utilities/page-utility";
 import { LoginController } from "./login-controller";
 
 
-PageUtilities.pageReady(() =>
+PageUtility.pageReady(() =>
 {
     const controller = new LoginController();
     controller.control();

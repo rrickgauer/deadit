@@ -1,9 +1,9 @@
 
-import { PageUtilities } from "../../../utilities/page-utilities";
+import { PageUtility } from "../../../utilities/page-utility";
 import { CommunityPageController } from "./community-page-controller";
 
 
-PageUtilities.pageReady(async () =>
+PageUtility.pageReady(async () =>
 {
 
     const controller = new CommunityPageController();

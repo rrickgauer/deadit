@@ -1,7 +1,7 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
 import { IController } from "../../../domain/contracts/i-controller";
 import { CommunityMembershipService } from "../../../services/community-membership-service";
-import { UrlUtilities } from "../../../utilities/url-utilities";
+import { UrlUtility } from "../../../utilities/url-utility";
 import { CommunityPageElements } from "./community-page-elements";
 
 
@@ -11,7 +11,7 @@ export class ToggleMembershipController implements IController
 
     private readonly _elements = new CommunityPageElements();
     private readonly _communityMembershipService = new CommunityMembershipService();
-    private readonly _communityName = UrlUtilities.getCurrentPathValue(1) as string;
+    private readonly _communityName = UrlUtility.getCurrentPathValue(1) as string;
 
     public control = () =>
     {

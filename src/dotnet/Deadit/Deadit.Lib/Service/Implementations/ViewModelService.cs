@@ -1,6 +1,8 @@
 ﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Domain.Parms;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Domain.ViewModel;
@@ -16,13 +18,17 @@ public class ViewModelService : IViewModelService
     private readonly ICommunityMemberService _memberService;
     private readonly IAuthService _authService;
     private readonly IPostService _postService;
+    private readonly ICommentService _commentService;
+    private readonly ICommentVotesService _commentVotesService;
 
-    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService, IPostService postService)
+    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService, IPostService postService, ICommentService commentService, ICommentVotesService commentVotesService)
     {
         _communityService = communityService;
         _memberService = memberService;
         _authService = authService;
         _postService = postService;
+        _commentService = commentService;
+        _commentVotesService = commentVotesService;
     }
 
     /// <summary>
@@ -110,5 +116,167 @@ public class ViewModelService : IViewModelService
 
         return new(viewModel);
     }
+
+
+    public async Task<ServiceDataResponse<PostPageViewModel>> GetPostPageViewModelAsync(Guid postId, PostType postType, uint? userId, SortOption sortBy)
+    {
+        // get the post
+        ViewPost post;
+
+        try
+        {
+            post = postType switch
+            {
+                PostType.Text => await GetPostTextAsync(postId),
+                PostType.Link => await GetPostLinkAsync(postId),
+                _             => throw new NotImplementedException(),
+            };
+        }
+        catch(ServiceResponseException ex)
+        {
+            return new(ex.Response);
+        }
+
+
+        // get comments
+        var getComments = await _commentService.GetCommentsNestedAsync(new GetCommentsParms
+        {
+            PostId = postId,
+            Sort = sortBy,
+        });
+
+        if (!getComments.Successful)
+        {
+            return new(getComments);
+        }
+
+        PostPageViewModel viewModel = new()
+        {
+            Post = post,
+            IsAuthor = post.PostAuthorId == userId,
+            Comments = getComments.Data ?? new(),
+            ClientId = userId,
+            IsLoggedIn = userId != null,
+            SortOption = sortBy,
+        };
+
+        return new(viewModel);
+    }
+
+
+    private async Task<ViewPostText> GetPostTextAsync(Guid postId)
+    {
+        // get the post
+        var getPost = await _postService.GetTextPostAsync(postId);
+
+        if (!getPost.Successful)
+        {
+            throw new ServiceResponseException(getPost);
+        }
+
+        if (getPost.Data is not ViewPostText post)
+        {
+            throw new NotFoundHttpResponseException();
+        }
+
+        return post; 
+    }
+
+    private async Task<ViewPostLink> GetPostLinkAsync(Guid postId)
+    {
+        // get the post
+        var getPost = await _postService.GetLinkPostAsync(postId);
+
+        if (!getPost.Successful)
+        {
+            throw new ServiceResponseException(getPost);
+        }
+
+        if (getPost.Data is not ViewPostLink post)
+        {
+            throw new NotFoundHttpResponseException();
+        }
+
+        return post;
+    }
+
+
+
+    public async Task<ServiceDataResponse<GetCommentsApiViewModel>> GetCommentsApiResponseAsync(Guid postId, uint? clientId, SortOption sort)
+    {
+        try
+        {
+            var getComments = await _commentService.GetCommentsNestedAsync(new GetCommentsParms()
+            {
+                PostId = postId,
+                Sort = sort,
+            });
+
+
+            if (!getComments.Successful)
+            {
+                return new(getComments);
+            }
+
+            var comments = getComments.Data ?? new();
+            var votes = await GetUserCommentVotesAsync(postId, clientId);
+            var dtos = comments.BuildGetCommentDtos(clientId, votes);
+
+            GetCommentsApiViewModel viewModel = new()
+            {
+                Comments = dtos.ToList(),
+                IsLoggedIn = clientId.HasValue,
+            };
+
+            return new(viewModel);
+        }
+        catch(ServiceResponseException ex)
+        {
+            return new(ex.Response);
+        }
+    }
+
+
+    private async Task<List<ViewVoteComment>> GetUserCommentVotesAsync(Guid postId, uint? clientId)
+    {
+
+        if (!clientId.HasValue)
+        {
+            return new();
+        }
+
+        var getVotes = await _commentVotesService.GetUserCommentVotesInPost(postId, clientId.Value);
+
+        if (!getVotes.Successful)
+        {
+            throw new ServiceResponseException(getVotes);
+        }
+
+        return getVotes.Data ?? new();
+    }
+
+
+
+
+    public async Task<ServiceDataResponse<GetCommentDto>> GetCommentApiResponseAsync(Guid commentId, uint? clientId)
+    {
+        var getComment = await _commentService.GetCommentAsync(commentId);
+
+        if (!getComment.Successful)
+        {
+            return new(getComment);
+        }
+
+        if (getComment.Data is not ViewComment comment)
+        {
+            throw new NotFoundHttpResponseException();
+        }
+
+        var result = (GetCommentDto)comment;
+        result.SetIsAuthorRecursive(clientId);
+
+        return new(result);
+    }
+
 }
 

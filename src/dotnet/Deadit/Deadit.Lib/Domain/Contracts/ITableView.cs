@@ -24,6 +24,29 @@ public interface ITableView<TView, TModel>
 
         return result;
     }
+
+    public TModel CastToModelTry()
+    {
+        TModel result = new();
+
+        foreach (var property in ViewProperties)
+        {
+            try
+            {
+                var value = property.GetPropertyValueRaw(this);
+                var modelPropertyName = property.Attribute.Name;
+                result.GetType()?.GetProperty(modelPropertyName)?.SetValue(result, value);
+            }
+            catch(Exception ex)
+            {
+                string message = ex.Message;
+
+                throw;
+            }
+        }
+
+        return result;
+    }
 }
 
 public static class TableViewExtensions
@@ -33,6 +56,14 @@ public static class TableViewExtensions
         where TView : ITableView<TView, TModel>
     {
         return tableView.CastToModel();
+    }
+
+
+    public static TModel CastToModelTry<TView, TModel>(this ITableView<TView, TModel> tableView)
+    where TModel : new()
+    where TView : ITableView<TView, TModel>
+    {
+        return tableView.CastToModelTry();
     }
 
 

@@ -1,11 +1,11 @@
 
 
-export class UrlUtilities
+export class UrlUtility
 {
     public static getCurrentPathValue = (index: number): string =>
     {
         const url = new URL(window.location.href);
-        return UrlUtilities.getPathValue(index, url);
+        return UrlUtility.getPathValue(index, url);
     }
 
     public static getPathValue = (index: number, url: URL): string =>

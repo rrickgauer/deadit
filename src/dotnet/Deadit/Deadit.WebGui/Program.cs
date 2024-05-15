@@ -1,3 +1,4 @@
+
 using Deadit.Lib.Domain.Configurations;
 using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
@@ -58,7 +59,7 @@ builder.Services.AddSession(options =>
 #region - Dependency Injection -
 
 // inject the appropriate IConfigs instance
-DependencyInjectionUtilities.InjectConfigs(builder.Services, isProduction);
+DependencyInjectionUtility.InjectConfigs(builder.Services, isProduction);
 
 // inject the services into the web application
 List<Assembly?> assemblies = new()
@@ -73,7 +74,7 @@ foreach (var assembly in assemblies)
 {
     if (assembly != null)
     {
-        DependencyInjectionUtilities.InjectServicesIntoAssembly(builder.Services, projectTypes, assembly);
+        DependencyInjectionUtility.InjectServicesIntoAssembly(builder.Services, projectTypes, assembly);
     }
 }
 

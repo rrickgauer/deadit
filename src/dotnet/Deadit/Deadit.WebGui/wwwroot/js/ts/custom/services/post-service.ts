@@ -1,6 +1,6 @@
 import { ApiPostsLink, ApiPostsText } from "../api/api-posts";
 import { LinkPostApiRequest, LinkPostApiResponse, TextPostApiRequest, TextPostApiResponse } from "../domain/model/post-models";
-import { ServiceUtilities } from "../utilities/service-utilities";
+import { ServiceUtility } from "../utilities/service-utility";
 
 export class PostService
 {
@@ -17,7 +17,7 @@ export class PostService
 
         const apiResponse = await api.post(textPost);
 
-        return await ServiceUtilities.toServiceResponse<TextPostApiResponse>(apiResponse);
+        return await ServiceUtility.toServiceResponse<TextPostApiResponse>(apiResponse);
     }
 
 
@@ -31,6 +31,6 @@ export class PostService
 
         const apiResponse = await api.post(linkPost);
 
-        return await ServiceUtilities.toServiceResponse<LinkPostApiResponse>(apiResponse);
+        return await ServiceUtility.toServiceResponse<LinkPostApiResponse>(apiResponse);
     }
 }

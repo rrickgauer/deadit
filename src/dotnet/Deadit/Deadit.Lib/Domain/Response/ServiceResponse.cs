@@ -60,4 +60,9 @@ public class ServiceResponse
     {
         return new ServiceResponse(ex);
     }
+
+    public static implicit operator ServiceResponse(ServiceResponseException ex)
+    {
+        return new ServiceResponse(ex.Response);
+    }
 }

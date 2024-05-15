@@ -1,5 +1,5 @@
 import { LoginModal } from "../../../components/login-modal/login-modal";
-import { PageUtilities } from "../../../utilities/page-utilities";
+import { PageUtility } from "../../../utilities/page-utility";
 import { CreateCommunityController } from "./create-community-controller";
 
 
@@ -7,7 +7,7 @@ import { CreateCommunityController } from "./create-community-controller";
 /**
  * Main page logic
  */
-PageUtilities.pageReady(async () =>
+PageUtility.pageReady(async () =>
 {
     const loginModal = new LoginModal();
     run();

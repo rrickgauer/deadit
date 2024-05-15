@@ -2,6 +2,7 @@
 using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Utility;
 
 namespace Deadit.Lib.Domain.TableView;
 
@@ -14,6 +15,8 @@ public class ViewPostText : ViewPost,
     [CopyToProperty<PostText>(nameof(PostText.Content))]
     public string? PostContent { get; set; }
 
+
+    public override string PostBodyContent => MarkdownUtility.ToHtml(PostContent ?? string.Empty);
 
     #region - ITableView -
 

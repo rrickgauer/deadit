@@ -1,7 +1,7 @@
 import { ApiCommunityMembership } from "../api/api-community-membership"
 import { GetJoinedCommunityApiRequest } from "../domain/model/api-community-membership-models";
 import { ServiceResponse } from "../domain/model/api-response";
-import { ServiceUtilities } from "../utilities/service-utilities";
+import { ServiceUtility } from "../utilities/service-utility";
 
 
 export class CommunityMembershipService
@@ -12,7 +12,7 @@ export class CommunityMembershipService
         const api = new ApiCommunityMembership(communityName);
         const response = await api.put();
 
-        return await ServiceUtilities.toServiceResponse<GetJoinedCommunityApiRequest>(response);
+        return await ServiceUtility.toServiceResponse<GetJoinedCommunityApiRequest>(response);
     }
 
     leaveCommunity = async (communityName: string): Promise<ServiceResponse<any>> =>
@@ -20,6 +20,6 @@ export class CommunityMembershipService
         const api = new ApiCommunityMembership(communityName);
         const response = await api.delete();
 
-        return await ServiceUtilities.toServiceResponseNoContent(response);
+        return await ServiceUtility.toServiceResponseNoContent(response);
     }
 }

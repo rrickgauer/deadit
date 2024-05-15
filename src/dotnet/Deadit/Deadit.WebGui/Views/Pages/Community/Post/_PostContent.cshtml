@@ -1,0 +1,22 @@
+﻿@model Deadit.Lib.Domain.ViewModel.PostPageViewModel
+@using Microsoft.AspNetCore.Http.Extensions;
+
+<div class="container">
+
+    <div class="card">
+        <div class="card-header">@Model.Post.PostTitle</div>
+        
+        <div class="card-body">
+
+            <div class="md">
+                @Html.Raw(Model.Post.PostBodyContent)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

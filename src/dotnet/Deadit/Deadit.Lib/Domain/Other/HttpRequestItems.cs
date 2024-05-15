@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.TableView;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,10 +19,16 @@ public class HttpRequestItems(IDictionary<object, object?> requestDict)
         set => SetValue(HttpRequestStorageKey.CommunityId, value);
     }
 
+    public ViewPost? Post
+    {
+        get => GetValue<ViewPost>(HttpRequestStorageKey.Post);
+        set => SetValue(HttpRequestStorageKey.Post, value);
+    }
+
 
     private T? GetValue<T>(HttpRequestStorageKey key)
     {
-        if (!_requestDict.TryGetValue(HttpRequestStorageKey.CommunityId, out var value))
+        if (!_requestDict.TryGetValue(key, out var value))
         {
             return default;
         }

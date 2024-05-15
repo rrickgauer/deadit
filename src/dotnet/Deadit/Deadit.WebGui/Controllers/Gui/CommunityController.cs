@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Constants;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
@@ -10,13 +11,14 @@ namespace Deadit.WebGui.Controllers.Gui;
 [Controller]
 [Route("/c/{communityName}")]
 [ServiceFilter(typeof(CommunityNameExistsFilter))]
-public class CommunityController(IViewModelService viewModelService, IPostService postService) : GuiController, IControllerName
+public class CommunityController(IViewModelService viewModelService, IPostService postService, ICommentService commentService) : GuiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunityController));
 
     private readonly IViewModelService _viewModelService = viewModelService;
     private readonly IPostService _postService = postService;
+    private readonly ICommentService _commentService = commentService;
 
 
     /// <summary>
@@ -49,6 +51,26 @@ public class CommunityController(IViewModelService viewModelService, IPostServic
     public async Task<IActionResult> GetNewPostCommunityPage([FromRoute] string communityName)
     {
         return View(GuiPageViewFiles.CreatePostPage);
+    }
+
+
+    [HttpGet("posts/{postId}")]
+    [ActionName(nameof(GetPostPageAsync))]
+    [ServiceFilter(typeof(GetPostFilter))]
+    public async Task<IActionResult> GetPostPageAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromQuery] SortOption? sort)
+    {
+        SortOption sortOption = sort ?? SortOption.New;
+
+        PostType postType = RequestItems.Post?.PostType ?? throw new ArgumentNullException();
+
+        var getViewModel = await _viewModelService.GetPostPageViewModelAsync(postId, postType, ClientId, sortOption);
+
+        if (!getViewModel.Successful)
+        {
+            return BadRequest(getViewModel);
+        }
+
+        return View(GuiPageViewFiles.PostPage, getViewModel.Data);
     }
 
 
