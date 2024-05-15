@@ -72,7 +72,7 @@ export class CommentForm
     constructor(element: Element)
     {
         this.form = element.closest(`.${CommentFormSelectors.formClass}`) as HTMLFormElement;
-        this.contentInput = new InputFeedbackTextArea(this.form.querySelector('textarea[name="content"]'));
+        this.contentInput = new InputFeedbackTextArea(this.form.querySelector('textarea[name="content"]'), true);
         this.submitBtn = new SpinnerButton(this.submitButtonElement);
         this.errorMessageContainer = this.form?.querySelector(`.${CommentFormSelectors.messagesContainerClass}`);
     }
@@ -103,6 +103,25 @@ export class CommentForm
         AlertUtility.showDanger({
             container: this.errorMessageContainer,
             message: html,
+        });
+    }
+
+    public isInvalid(): boolean
+    {
+        if (!Nullable.hasValue(this.contentValue))
+        {
+            this.contentInput.showInvalid('Please provide some text');
+            return true;
+        }
+
+        return false;
+    }
+
+    public displaySuccessfulAlert(message: string)
+    {
+        AlertUtility.showSuccess({
+            container: this.errorMessageContainer,
+            message: message,
         });
     }
 }

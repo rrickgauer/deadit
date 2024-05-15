@@ -34,8 +34,8 @@ export class CommentFormTemplate extends HtmlTemplate<CreateCommentFormArgs>
                     </div>
 
                     <div class="d-flex">
-                        <button class="btn btn-success btn-submit" type="submit">Save</button>
-                        <button class="btn btn-outline-danger btn-form-post-comment-cancel" type="button">Cancel</button>
+                        <button class="btn btn-sm btn-success btn-submit me-1" type="submit">Save</button>
+                        <button class="btn btn-sm btn-outline-danger btn-form-post-comment-cancel" type="button">Cancel</button>
                     </div>
                 </fieldset>
 

@@ -58,10 +58,17 @@ export class RootCommentFormController implements IControllerAsync
 
     private onFormSubmitted = async (form: CommentForm) =>
     {
+        if (form.isInvalid())
+        {
+            return;
+        }
+
+
         form.showLoading();
 
         try
         {
+
             const response = await this._commentService.saveComment(new SaveCommentRequest(form.commentId, {
                 content: form.contentValue,
                 parentId: null,
@@ -81,6 +88,8 @@ export class RootCommentFormController implements IControllerAsync
 
             form.showNormal();
             form.contentInput.inputElement.value = '';
+
+            form.displaySuccessfulAlert('Your comment was created!');
         }
         catch (error)
         {

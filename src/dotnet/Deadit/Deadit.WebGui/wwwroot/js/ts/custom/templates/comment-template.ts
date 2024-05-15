@@ -38,7 +38,6 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
             <hr />
             <li class="comment-list-item ${model.commentIsAuthor ? 'comment-list-item-authored' : ''}" data-comment-id="${model.commentId}">
                 
-                <div class="d-flex justify-content-start">                
                     ${voting}
                 
                     <div class="w-100">
@@ -66,7 +65,6 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
                             </ul>
                         </div>
                     </div>
-                </div>
             </li>
         `;
 
