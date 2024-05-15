@@ -1,5 +1,5 @@
 import { ApiEndpoints, HttpMethods } from "../domain/constants/api-constants";
-import { SaveCommentRequest } from "../domain/model/comment-models";
+import { GetCommentsApiRequest, SaveCommentRequest } from "../domain/model/comment-models";
 import { PostPageParms } from "../domain/model/post-models";
 import { Guid } from "../domain/types/aliases";
 import { ApiUtility } from "./api-base";
@@ -21,9 +21,12 @@ export class ApiComments
     }
 
 
-    public getAll = async (): Promise<Response> =>
+    public getAll = async (request: GetCommentsApiRequest): Promise<Response> =>
     {
-        const url = this._url;
+        const urlParms = new URLSearchParams();
+        urlParms.set('sort', request.sort);
+
+        const url = `${this._url}?${urlParms.toString()}`;
 
         return await fetch(url);
     }

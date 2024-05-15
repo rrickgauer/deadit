@@ -1,8 +1,8 @@
 ﻿using System.Data;
-using System.Runtime.InteropServices;
 using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Commands;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Repository.Other;
@@ -16,14 +16,17 @@ public class CommentRepository(DatabaseConnection connection) : ICommentReposito
 {
     private readonly DatabaseConnection _connection = connection;
 
-    public async Task<DataTable> SelectAllPostCommentsAsync(Guid postId)
+    public async Task<DataTable> SelectAllPostCommentsAsync(Guid postId, SortOption sortBy)
     {
-        MySqlCommand command = new(CommentRepositoryCommands.SelectAllPostComments);
+        string sql = string.Format(CommentRepositoryCommands.SelectAllPostCommentsSortedTemplate, sortBy.GetOrderByClause<ViewComment>());
+
+        MySqlCommand command = new(sql);
 
         command.Parameters.AddWithValue(@"post_id", postId);
 
         return await _connection.FetchAllAsync(command);
     }
+
 
     public async Task<int> SaveCommentAsync(Comment comment)
     {

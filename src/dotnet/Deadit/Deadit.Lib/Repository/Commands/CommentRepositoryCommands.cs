@@ -2,13 +2,15 @@
 
 public sealed class CommentRepositoryCommands
 {
-    public const string SelectAllPostComments = @"
+    public const string SelectAllPostCommentsSortedTemplate = @"
         SELECT
             c.*
         FROM
             View_Comment c
         WHERE
-            c.comment_post_id = @post_id;";
+            c.comment_post_id = @post_id
+        ORDER BY
+            {0};";
 
 
     public const string SelectComment = @"

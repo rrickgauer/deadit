@@ -2,12 +2,12 @@
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.Parms;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Service.Contracts;
 using Deadit.Lib.Utility;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Deadit.Lib.Service.Implementations;
 
@@ -17,10 +17,10 @@ public class CommentService(ITableMapperService tableMapperService, ICommentRepo
     private readonly ITableMapperService _tableMapperService = tableMapperService;
     private readonly ICommentRepository _repo = repo;
 
-    public async Task<ServiceDataResponse<List<ViewComment>>> GetCommentsNestedAsync(Guid postId)
+    public async Task<ServiceDataResponse<List<ViewComment>>> GetCommentsNestedAsync(GetCommentsParms args)
     {
         // gather a flat list of comments
-        var getComments = await GetCommentsAsync(postId);
+        var getComments = await GetCommentsAsync(args);
 
         if (!getComments.Successful)
         {
@@ -35,11 +35,11 @@ public class CommentService(ITableMapperService tableMapperService, ICommentRepo
         return new(commentsTree);
     }
 
-    public async Task<ServiceDataResponse<List<ViewComment>>> GetCommentsAsync(Guid postId)
+    public async Task<ServiceDataResponse<List<ViewComment>>> GetCommentsAsync(GetCommentsParms args)
     {
         try
         {
-            var selectResult = await _repo.SelectAllPostCommentsAsync(postId);
+            var selectResult = await _repo.SelectAllPostCommentsAsync(args.PostId, args.Sort);
 
             var models = _tableMapperService.ToModels<ViewComment>(selectResult);
 

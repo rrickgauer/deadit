@@ -1,6 +1,7 @@
 import { LoginModal } from "../../../components/login-modal/login-modal";
 import { IController } from "../../../domain/contracts/i-controller";
 import { ILoginModalPage } from "../../../domain/contracts/ilogin-modal";
+import { ItemsSortInput } from "../../../domain/helpers/items-sort/items-sort";
 import { PostPageParms } from "../../../domain/model/post-models";
 import { CommentsService } from "../../../services/comments-service";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
@@ -16,10 +17,12 @@ export class PostPageController implements IController, ILoginModalPage
     private _isLoggedIn = false;
     private _commentsController: CommentsController | null;
     private _rootCommentController: RootCommentFormController;
+    private readonly _sortInput: ItemsSortInput;
 
     constructor(args: PostPageParms)
     {
         this._args = args;
+        this._sortInput = new ItemsSortInput(document.querySelector('.items-sort'));
     }
 
     public control = async () =>
@@ -51,7 +54,9 @@ export class PostPageController implements IController, ILoginModalPage
         try
         {
             const service = new CommentsService(this._args);
-            const response = await service.getAllComments();
+            const response = await service.getAllComments({
+                sort: this._sortInput.selectedOption,
+            });
 
             if (!response.successful)
             {

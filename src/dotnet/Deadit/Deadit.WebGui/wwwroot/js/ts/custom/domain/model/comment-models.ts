@@ -1,3 +1,4 @@
+import { SortOption } from "../enum/sort-option";
 import { DateTimeString, Guid, JsonObject, Nullable } from "../types/aliases";
 import { UserVoteScores, UserVoteSelection, VoteScores } from "./common-api-response-types";
 
@@ -56,4 +57,11 @@ export class SaveCommentRequest
     {
         return JSON.stringify(this.form);
     }
+}
+
+
+
+
+export type GetCommentsApiRequest = {
+    sort?: SortOption;
 }
