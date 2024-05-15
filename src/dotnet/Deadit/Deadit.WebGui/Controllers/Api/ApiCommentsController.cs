@@ -8,6 +8,7 @@ using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
+using static Deadit.Lib.Filter.CommentFilters;
 
 namespace Deadit.WebGui.Controllers.Api;
 
@@ -57,6 +58,7 @@ public class ApiCommentsController(IViewModelService viewModelService, ICommentS
     [ActionName(nameof(PutCommentAsync))]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
     [ServiceFilter(typeof(CommunityMemberFilter))]
+    [ServiceFilter(typeof(CommentSaveFilter))]
     public async Task<ActionResult<ServiceDataResponse<GetCommentDto>>> PutCommentAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId, [FromBody] CommentForm commentForm)
     {
         Comment comment = new()
@@ -85,6 +87,7 @@ public class ApiCommentsController(IViewModelService viewModelService, ICommentS
     [ActionName(nameof(DeleteCommentAsync))]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
     [ServiceFilter(typeof(CommunityMemberFilter))]
+    [ServiceFilter(typeof(CommentDeleteFilter))]
     public async Task<ActionResult<ServiceResponse>> DeleteCommentAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId)
     {
         var deleteComment = await _commentService.DeleteCommentAsync(commentId);
