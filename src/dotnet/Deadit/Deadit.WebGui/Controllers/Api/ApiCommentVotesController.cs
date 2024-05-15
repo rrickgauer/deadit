@@ -23,7 +23,6 @@ public class ApiCommentVotesController(ICommentVotesService voteService) : Inter
     public async Task<IActionResult> GetCommentVotesAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId)
     {
         var getVotes = await _voteService.GetVoteCommentsAsync(commentId);
-        //var getVotes = await _voteService.GetUserCommentVotesInPost(postId, ClientId!.Value);
 
         if (!getVotes.Successful)
         {

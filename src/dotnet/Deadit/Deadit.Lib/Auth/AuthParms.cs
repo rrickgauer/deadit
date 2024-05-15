@@ -11,7 +11,6 @@ public class AuthParms
     public class GetPostAuthData
     {
         public required Guid PostId { get; set; }
-        public required string CommunityName { get; set; }
     }
 
     public class CommentAuthData

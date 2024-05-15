@@ -8,14 +8,28 @@ using System.Text.Json.Serialization;
 namespace Deadit.Lib.Domain.TableView;
 
 
-public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
+public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteScore,
     ITableView<ViewPost, PostText>,
     ITableView<ViewPost, PostLink>
 {
 
-    #region - Private Members -
+
+    /*************************************************
+     * DELETE THIS SHIT!!!!!
+     * DELETE THIS SHIT!!!!!
+     */
+
+    [SqlColumn("post_count_comments")]
+    public uint PostCountComments { get; set; } = 0;
+    
     private static readonly Random Rand = new();
-    #endregion
+
+     /*************************************************
+     * DELETE THIS SHIT!!!!!
+     * DELETE THIS SHIT!!!!!
+     */
+
+
 
 
     [SqlColumn("post_id")]
@@ -46,11 +60,29 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
     [CopyToProperty<PostLink>(nameof(PostLink.CreatedOn))]
     public DateTime? PostCreatedOn { get; set; }
 
-    [SqlColumn("post_count_comments")]
-    public uint PostCountComments { get; set; } = 0;
+
+
+
+    #region - IVoteScore -
+
+    [SqlColumn("post_count_votes_upvotes")]
+    public long VotesCountUp { get; set; } = 0;
+
+    [SqlColumn("post_count_votes_downvotes")]
+    public long VotesCountDown { get; set; } = 0;
+
+    [SqlColumn("post_count_votes_novotes")]
+    public long VotesCountNone { get; set; } = 0;
+
+    [SqlColumn("post_count_votes_score")]
+    public long VotesScore { get; set; } = 0;
+
+    #endregion
+
 
 
     public int PostVotesScore { get; set; } = Rand.Next(-100, 100);
+
 
 
     [JsonIgnore]

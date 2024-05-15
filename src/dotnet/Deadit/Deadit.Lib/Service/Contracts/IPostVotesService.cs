@@ -1,0 +1,12 @@
+﻿using Deadit.Lib.Domain.Response;
+using Deadit.Lib.Domain.TableView;
+using static Deadit.Lib.Domain.Model.Votes;
+
+namespace Deadit.Lib.Service.Contracts;
+
+public interface IPostVotesService
+{
+    public Task<ServiceDataResponse<ViewVotePost>> SaveVoteAsync(VotePost vote);
+    public Task<ServiceDataResponse<List<ViewVotePost>>> GetPostVotesAsync(Guid postId);
+    public Task<ServiceDataResponse<ViewVotePost>> GetVoteAsync(Guid postId, uint userId);
+}

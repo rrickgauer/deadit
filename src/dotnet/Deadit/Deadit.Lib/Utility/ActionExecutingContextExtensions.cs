@@ -1,4 +1,5 @@
-﻿using Deadit.Lib.Domain.Other;
+﻿using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Domain.Other;
 using Deadit.Lib.Domain.Response;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -24,6 +25,11 @@ public static class ActionExecutingContextExtensions
     public static Guid GetCommentIdRouteValue(this ActionExecutingContext context)
     {
         return GetRequestRouteValue<Guid>(context, "commentId");
+    }
+
+    public static CreateVoteForm GetRequestCreateVoteForm(this ActionExecutingContext context)
+    {
+        return (CreateVoteForm)context.ActionArguments.Values.First(a => a is CreateVoteForm)!;
     }
 
 

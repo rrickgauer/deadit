@@ -217,83 +217,108 @@ View_Error_Message
 
 View_Post
 
-| Position | Name                    | Type              | IsNullable | DefaultValue        | Extra |
-|----------|-------------------------|-------------------|------------|---------------------|-------|
-| 1        | post_id                 | char(36)          | True       |                     |       |
-| 2        | post_community_id       | int unsigned      | True       |                     |       |
-| 3        | post_title              | char(250)         | True       |                     |       |
-| 4        | post_post_type          | smallint unsigned | True       |                     |       |
-| 5        | post_author_id          | int unsigned      | True       |                     |       |
-| 6        | post_created_on         | timestamp         | True       | CURRENT_TIMESTAMP   |       |
-| 7        | post_count_comments     | bigint            | True       |                     |       |
-| 8        | community_id            | int unsigned      | True       | 0                   |       |
-| 9        | community_name          | char(50)          | True       |                     |       |
-| 10       | community_title         | char(100)         | True       |                     |       |
-| 11       | community_owner_id      | int unsigned      | True       |                     |       |
-| 12       | community_description   | char(200)         | True       |                     |       |
-| 13       | community_created_on    | timestamp         | True       | 0000-00-00 00:00:00 |       |
-| 14       | community_count_members | bigint            | True       |                     |       |
-| 15       | user_id                 | int unsigned      | False      | 0                   |       |
-| 16       | user_email              | char(200)         | False      |                     |       |
-| 17       | user_username           | char(30)          | False      |                     |       |
-| 18       | user_password           | char(250)         | False      |                     |       |
-| 19       | user_created_on         | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| Position | Name                       | Type              | IsNullable | DefaultValue        | Extra |
+|----------|----------------------------|-------------------|------------|---------------------|-------|
+| 1        | post_id                    | char(36)          | True       |                     |       |
+| 2        | post_community_id          | int unsigned      | True       |                     |       |
+| 3        | post_title                 | char(250)         | True       |                     |       |
+| 4        | post_post_type             | smallint unsigned | True       |                     |       |
+| 5        | post_author_id             | int unsigned      | True       |                     |       |
+| 6        | post_created_on            | timestamp         | True       | CURRENT_TIMESTAMP   |       |
+| 7        | post_count_comments        | bigint            | True       |                     |       |
+| 8        | community_id               | int unsigned      | True       | 0                   |       |
+| 9        | community_name             | char(50)          | True       |                     |       |
+| 10       | community_title            | char(100)         | True       |                     |       |
+| 11       | community_owner_id         | int unsigned      | True       |                     |       |
+| 12       | community_description      | char(200)         | True       |                     |       |
+| 13       | community_created_on       | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 14       | community_count_members    | bigint            | True       |                     |       |
+| 15       | user_id                    | int unsigned      | False      | 0                   |       |
+| 16       | user_email                 | char(200)         | False      |                     |       |
+| 17       | user_username              | char(30)          | False      |                     |       |
+| 18       | user_password              | char(250)         | False      |                     |       |
+| 19       | user_created_on            | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| 20       | post_count_votes_upvotes   | bigint            | False      | 0                   |       |
+| 21       | post_count_votes_downvotes | bigint            | False      | 0                   |       |
+| 22       | post_count_votes_novotes   | bigint            | False      | 0                   |       |
+| 23       | post_count_votes_score     | bigint            | False      | 0                   |       |
 
 
 
 
 View_Post_Link
 
-| Position | Name                    | Type              | IsNullable | DefaultValue        | Extra |
-|----------|-------------------------|-------------------|------------|---------------------|-------|
-| 1        | post_url                | text              | False      |                     |       |
-| 2        | post_id                 | char(36)          | True       |                     |       |
-| 3        | post_community_id       | int unsigned      | True       |                     |       |
-| 4        | post_title              | char(250)         | True       |                     |       |
-| 5        | post_post_type          | smallint unsigned | True       |                     |       |
-| 6        | post_author_id          | int unsigned      | True       |                     |       |
-| 7        | post_created_on         | timestamp         | True       | 0000-00-00 00:00:00 |       |
-| 8        | post_count_comments     | bigint            | True       |                     |       |
-| 9        | community_id            | int unsigned      | True       | 0                   |       |
-| 10       | community_name          | char(50)          | True       |                     |       |
-| 11       | community_title         | char(100)         | True       |                     |       |
-| 12       | community_owner_id      | int unsigned      | True       |                     |       |
-| 13       | community_description   | char(200)         | True       |                     |       |
-| 14       | community_created_on    | timestamp         | True       | 0000-00-00 00:00:00 |       |
-| 15       | community_count_members | bigint            | True       |                     |       |
-| 16       | user_id                 | int unsigned      | False      | 0                   |       |
-| 17       | user_email              | char(200)         | False      |                     |       |
-| 18       | user_username           | char(30)          | False      |                     |       |
-| 19       | user_password           | char(250)         | False      |                     |       |
-| 20       | user_created_on         | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| Position | Name                       | Type              | IsNullable | DefaultValue        | Extra |
+|----------|----------------------------|-------------------|------------|---------------------|-------|
+| 1        | post_url                   | text              | False      |                     |       |
+| 2        | post_id                    | char(36)          | True       |                     |       |
+| 3        | post_community_id          | int unsigned      | True       |                     |       |
+| 4        | post_title                 | char(250)         | True       |                     |       |
+| 5        | post_post_type             | smallint unsigned | True       |                     |       |
+| 6        | post_author_id             | int unsigned      | True       |                     |       |
+| 7        | post_created_on            | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 8        | post_count_comments        | bigint            | True       |                     |       |
+| 9        | community_id               | int unsigned      | True       | 0                   |       |
+| 10       | community_name             | char(50)          | True       |                     |       |
+| 11       | community_title            | char(100)         | True       |                     |       |
+| 12       | community_owner_id         | int unsigned      | True       |                     |       |
+| 13       | community_description      | char(200)         | True       |                     |       |
+| 14       | community_created_on       | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 15       | community_count_members    | bigint            | True       |                     |       |
+| 16       | user_id                    | int unsigned      | False      | 0                   |       |
+| 17       | user_email                 | char(200)         | False      |                     |       |
+| 18       | user_username              | char(30)          | False      |                     |       |
+| 19       | user_password              | char(250)         | False      |                     |       |
+| 20       | user_created_on            | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| 21       | post_count_votes_upvotes   | bigint            | False      | 0                   |       |
+| 22       | post_count_votes_downvotes | bigint            | False      | 0                   |       |
+| 23       | post_count_votes_novotes   | bigint            | False      | 0                   |       |
+| 24       | post_count_votes_score     | bigint            | False      | 0                   |       |
 
 
 
 
 View_Post_Text
 
-| Position | Name                    | Type              | IsNullable | DefaultValue        | Extra |
-|----------|-------------------------|-------------------|------------|---------------------|-------|
-| 1        | post_content            | text              | True       |                     |       |
-| 2        | post_id                 | char(36)          | True       |                     |       |
-| 3        | post_community_id       | int unsigned      | True       |                     |       |
-| 4        | post_title              | char(250)         | True       |                     |       |
-| 5        | post_post_type          | smallint unsigned | True       |                     |       |
-| 6        | post_author_id          | int unsigned      | True       |                     |       |
-| 7        | post_created_on         | timestamp         | True       | 0000-00-00 00:00:00 |       |
-| 8        | post_count_comments     | bigint            | True       |                     |       |
-| 9        | community_id            | int unsigned      | True       | 0                   |       |
-| 10       | community_name          | char(50)          | True       |                     |       |
-| 11       | community_title         | char(100)         | True       |                     |       |
-| 12       | community_owner_id      | int unsigned      | True       |                     |       |
-| 13       | community_description   | char(200)         | True       |                     |       |
-| 14       | community_created_on    | timestamp         | True       | 0000-00-00 00:00:00 |       |
-| 15       | community_count_members | bigint            | True       |                     |       |
-| 16       | user_id                 | int unsigned      | False      | 0                   |       |
-| 17       | user_email              | char(200)         | False      |                     |       |
-| 18       | user_username           | char(30)          | False      |                     |       |
-| 19       | user_password           | char(250)         | False      |                     |       |
-| 20       | user_created_on         | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| Position | Name                       | Type              | IsNullable | DefaultValue        | Extra |
+|----------|----------------------------|-------------------|------------|---------------------|-------|
+| 1        | post_content               | text              | True       |                     |       |
+| 2        | post_id                    | char(36)          | True       |                     |       |
+| 3        | post_community_id          | int unsigned      | True       |                     |       |
+| 4        | post_title                 | char(250)         | True       |                     |       |
+| 5        | post_post_type             | smallint unsigned | True       |                     |       |
+| 6        | post_author_id             | int unsigned      | True       |                     |       |
+| 7        | post_created_on            | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 8        | post_count_comments        | bigint            | True       |                     |       |
+| 9        | community_id               | int unsigned      | True       | 0                   |       |
+| 10       | community_name             | char(50)          | True       |                     |       |
+| 11       | community_title            | char(100)         | True       |                     |       |
+| 12       | community_owner_id         | int unsigned      | True       |                     |       |
+| 13       | community_description      | char(200)         | True       |                     |       |
+| 14       | community_created_on       | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 15       | community_count_members    | bigint            | True       |                     |       |
+| 16       | user_id                    | int unsigned      | False      | 0                   |       |
+| 17       | user_email                 | char(200)         | False      |                     |       |
+| 18       | user_username              | char(30)          | False      |                     |       |
+| 19       | user_password              | char(250)         | False      |                     |       |
+| 20       | user_created_on            | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| 21       | post_count_votes_upvotes   | bigint            | False      | 0                   |       |
+| 22       | post_count_votes_downvotes | bigint            | False      | 0                   |       |
+| 23       | post_count_votes_novotes   | bigint            | False      | 0                   |       |
+| 24       | post_count_votes_score     | bigint            | False      | 0                   |       |
+
+
+
+
+View_Post_Vote_Totals
+
+| Position | Name            | Type     | IsNullable | DefaultValue | Extra |
+|----------|-----------------|----------|------------|--------------|-------|
+| 1        | post_id         | char(36) | False      |              |       |
+| 2        | count_novotes   | bigint   | False      | 0            |       |
+| 3        | count_downvotes | bigint   | False      | 0            |       |
+| 4        | count_upvotes   | bigint   | False      | 0            |       |
+| 5        | score           | bigint   | False      | 0            |       |
 
 
 
@@ -325,6 +350,26 @@ View_Vote_Comment
 | 8        | comment_count_votes_down  | bigint            | True       | 0                 |       |
 | 9        | comment_count_votes_none  | bigint            | True       | 0                 |       |
 | 10       | comment_count_votes_score | bigint            | True       | 0                 |       |
+
+
+
+
+View_Vote_Post
+
+| Position | Name                       | Type              | IsNullable | DefaultValue      | Extra |
+|----------|----------------------------|-------------------|------------|-------------------|-------|
+| 1        | vote_post_post_id          | char(36)          | False      |                   |       |
+| 2        | vote_post_user_id          | int unsigned      | False      |                   |       |
+| 3        | vote_post_vote_type        | smallint unsigned | False      |                   |       |
+| 4        | vote_post_created_on       | timestamp         | False      | CURRENT_TIMESTAMP |       |
+| 5        | vote_post_user_username    | char(30)          | False      |                   |       |
+| 6        | post_community_id          | int unsigned      | True       |                   |       |
+| 7        | post_community_name        | char(50)          | True       |                   |       |
+| 8        | post_post_type             | smallint unsigned | True       |                   |       |
+| 9        | post_count_votes_upvotes   | bigint            | False      | 0                 |       |
+| 10       | post_count_votes_downvotes | bigint            | False      | 0                 |       |
+| 11       | post_count_votes_novotes   | bigint            | False      | 0                 |       |
+| 12       | post_count_votes_score     | bigint            | False      | 0                 |       |
 
 
 

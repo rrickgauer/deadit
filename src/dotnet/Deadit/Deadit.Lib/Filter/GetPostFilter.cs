@@ -17,7 +17,7 @@ public class GetPostFilter(GetPostAuth auth) : IAsyncActionFilter
         var authResponse = await _auth.HasPermissionAsync(new()
         {
             PostId = context.GetPostIdRouteValue(),
-            CommunityName = context.GetCommunityNameRouteValue(),
+            //CommunityName = context.GetCommunityNameRouteValue(),
         });
 
         if (!authResponse.Successful)
