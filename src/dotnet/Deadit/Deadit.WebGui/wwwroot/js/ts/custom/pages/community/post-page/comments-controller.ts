@@ -83,7 +83,7 @@ export class CommentsController implements IControllerAsync
             }
         });
 
-
+        // comment form cancel button click
         this._rootListElement.addEventListener(NativeEvents.Click, (e) =>
         {
             let target = e.target as Element;
@@ -95,6 +95,7 @@ export class CommentsController implements IControllerAsync
 
         });
 
+        // comment form submit
         this._rootListElement.addEventListener(NativeEvents.Submit, async (e) =>
         {
             let target = e.target as Element;
@@ -107,6 +108,7 @@ export class CommentsController implements IControllerAsync
         });
 
 
+        // root comment form submitted
         RootCommentFormSubmittedEvent.addListener((message) =>
         {
             const newComment = message.data.comment;
@@ -115,6 +117,7 @@ export class CommentsController implements IControllerAsync
         });
 
 
+        // comment vote button clicked
         this._rootListElement.addEventListener(NativeEvents.Click, async (e) =>
         {
             let target = e.target as Element;
@@ -133,12 +136,11 @@ export class CommentsController implements IControllerAsync
         });
 
 
+        // selected comment sort option changed
         ItemsSortInputChangedEvent.addListener((message) =>
         {
             this.sortComments(message.data.selectedValue);
         });
-
-
     }
 
     private onBtnCommentActionClick = async (button: HTMLAnchorElement) =>
@@ -200,6 +202,12 @@ export class CommentsController implements IControllerAsync
     private async onCommentFormSubmitted(target)
     {
         const form = new CommentForm(target);
+
+        if (form.isInvalid())
+        {
+            return;
+        }
+
         const listItem = form.getParentListItem();
 
         const savedSuccessfully = await this.saveComment(form);

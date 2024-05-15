@@ -1,3 +1,4 @@
+import { NativeEvents } from "../constants/native-events";
 import { InputFeebackState } from "../enum/input-feedback-state";
 
 
@@ -17,13 +18,22 @@ export class InputFeedback
      * Helper class for interfacing with an input's valid feedback text/display
      * @param container
      */
-    constructor(container: HTMLElement)
+    constructor(container: HTMLElement, autoClear: boolean=false)
     {
         this._container = container.closest('.input-feedback');
 
         this._validFeedbackElement = this._container.querySelector('.valid-feedback');
         this._invalidFeedbackElement = this._container.querySelector('.invalid-feedback');
         this.inputElement = this._container.querySelector('.input-feedback-input');
+
+        if (autoClear)
+        {
+            this.inputElement.addEventListener(NativeEvents.KeyPress, (e) =>
+            {
+                this.clearInputFeedbackClasses();
+            });
+        }
+
     }
 
 
@@ -139,4 +149,9 @@ export class InputFeedbackText extends InputFeedback
 export class InputFeedbackTextArea extends InputFeedback
 {
     public inputElement: HTMLTextAreaElement;
+
+    constructor(container: HTMLElement, autoClear: boolean = false)
+    {
+        super(container, autoClear);
+    }
 }

@@ -179,11 +179,9 @@ export class CommentListItem
 
     public contentUpdated(newContent: string)
     {
-        const html = `<div class="md">${MarkdownUtility.toHtml(newContent)}</div>`;
-        this._contentMdDisplay.innerHTML = html;
+        this.setContentText(newContent);
 
         this.cancelEdit();
-
 
         const formTemplate = new CommentFormTemplate();
 
@@ -215,6 +213,9 @@ export class CommentListItem
         {
             this._actionsContainer.innerHTML = buttonsHtml;
         }
+
+        this.setContentText(deletedText);
+
     }
 
 
@@ -237,4 +238,10 @@ export class CommentListItem
         return this._voting.currentVote;
     }
 
+
+    private setContentText(newContent)
+    {
+        const html = `<div class="md">${MarkdownUtility.toHtml(newContent)}</div>`;
+        this._contentMdDisplay.innerHTML = html;
+    }
 }

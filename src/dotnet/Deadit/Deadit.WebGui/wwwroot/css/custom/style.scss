@@ -51,6 +51,11 @@
 
 
 .comment-list-item {
+
+    display: flex;
+    justify-content: start;
+
+
     .comment-content,
     .comment-actions {
         display: block; // By default, these elements are visible
@@ -58,26 +63,28 @@
 
     .form-post-comment-edit-container {
         display: none; // By default, the form container is hidden
+        margin-left: .5em;
     }
 
     &.editing {
-        > .comment-thread > .comment-content:first-child {
+        > * > .comment-thread > .comment-content:first-child {
             display: none;
         }
 
-        > .comment-actions {
+        > * > .comment-actions {
             display: none; // Hide all .comment-actions
         }
 
-        > .form-post-comment-edit-container {
-            display: block; // Show the form container
+        > * > .form-post-comment-edit-container {
+            display: block !important; // Show the form container
         }
     }
 }
 
 
 .comment-list-item.collapsed {
-    .comment-thread {
+    .comment-thread, 
+    .item-voting {
         display: none;
     }
 }
