@@ -20,8 +20,9 @@ public class ViewModelService : IViewModelService
     private readonly IPostService _postService;
     private readonly ICommentService _commentService;
     private readonly ICommentVotesService _commentVotesService;
+    private readonly IPostVotesService _postVotesService;
 
-    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService, IPostService postService, ICommentService commentService, ICommentVotesService commentVotesService)
+    public ViewModelService(ICommunityService communityService, ICommunityMemberService memberService, IAuthService authService, IPostService postService, ICommentService commentService, ICommentVotesService commentVotesService, IPostVotesService postVotesService)
     {
         _communityService = communityService;
         _memberService = memberService;
@@ -29,53 +30,98 @@ public class ViewModelService : IViewModelService
         _postService = postService;
         _commentService = commentService;
         _commentVotesService = commentVotesService;
+        _postVotesService = postVotesService;
     }
 
     /// <summary>
     /// Get the view model for the CommunityPage
     /// </summary>
     /// <param name="communityName"></param>
-    /// <param name="userId"></param>
+    /// <param name="clientId"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundHttpResponseException"></exception>
-    public async Task<ServiceDataResponse<CommunityPageViewModel>> GetCommunityPageViewModelAsync(string communityName, uint? userId)
+    public async Task<ServiceDataResponse<CommunityPageViewModel>> GetCommunityPageViewModelAsync(string communityName, uint? clientId)
     {
-        // get the community
+        try
+        {
+            // get the community information
+            var community = await GetCommunityAsync(communityName);
+
+            // get the posts in the community
+            List<ViewPost> posts = await GetCommunityPostsAsync(communityName);
+
+            // If client is logged in, get their vote history for the posts
+            List<ViewVotePost> userVotes = await GetUserPostVotesInCommunity(clientId, communityName);
+
+            // Combine each post with the client's vote choice (defaults to novote if they have never voted on the post)
+            var getPostDtos = posts.BuildGetPostUserVoteDtos(userVotes).OrderByDescending(p => p.Post.PostCreatedOn);
+
+            // check if client community member
+            bool isMember = await IsUserCommunityMemberAsync(community.CommunityId, clientId);
+
+            CommunityPageViewModel viewModel = new()
+            {
+                Community = community,
+                IsMember = isMember,
+                IsLoggedIn = _authService.IsClientLoggedIn(),
+                PostDtos = getPostDtos.ToList(),
+            };
+
+            return new(viewModel);
+        }
+        catch (ServiceResponseException ex)
+        {
+            return new(ex.Response);
+        }
+
+    }
+
+
+    private async Task<ViewCommunity> GetCommunityAsync(string communityName)
+    {
         var getCommunity = await _communityService.GetCommunityAsync(communityName);
 
         if (!getCommunity.Successful)
         {
-            return new(getCommunity);
+            throw new ServiceResponseException(getCommunity);
         }
 
-        if (getCommunity.Data is not ViewCommunity community)
-        {
-            throw new NotFoundHttpResponseException();
-        }
+        var community = NotFoundHttpResponseException.ThrowIfNot<ViewCommunity>(getCommunity.Data);
 
-        // get the posts
+        return community;
+    }
+
+    private async Task<List<ViewPost>> GetCommunityPostsAsync(string communityName)
+    {
         var getPosts = await _postService.GetAllBasicPostsAsync(communityName);
 
         if (!getPosts.Successful)
         {
-            return new(getPosts);
+            throw new ServiceResponseException(getPosts);
         }
 
-        List<ViewPost> posts = getPosts.Data ?? new();
-        
-        // check if member
-        bool isMember = await IsUserCommunityMemberAsync(community.CommunityId, userId);
-
-        CommunityPageViewModel viewModel = new()
-        {
-            Community = community,
-            IsMember = isMember,
-            IsLoggedIn = _authService.IsClientLoggedIn(),
-            Posts = posts.OrderByDescending(p => p.PostCreatedOn).ToList(),
-        };
-
-        return new(viewModel);
+        return getPosts.Data ?? new();
     }
+
+
+    private async Task<List<ViewVotePost>> GetUserPostVotesInCommunity(uint? clientId, string communityName)
+    {
+        if (clientId is not uint userId)
+        {
+            return new();
+        }
+
+        var getVotes = await _postVotesService.GetUserPostVotesInCommunity(userId, communityName);
+
+        if (!getVotes.Successful)
+        {
+            throw new ServiceResponseException(getVotes);
+        }
+
+        return getVotes.Data ?? new();
+    }
+
+
 
     /// <summary>
     /// Check if the user is a member of the specified community

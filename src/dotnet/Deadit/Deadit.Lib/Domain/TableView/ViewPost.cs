@@ -13,25 +13,6 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     ITableView<ViewPost, PostLink>
 {
 
-
-    /*************************************************
-     * DELETE THIS SHIT!!!!!
-     * DELETE THIS SHIT!!!!!
-     */
-
-    [SqlColumn("post_count_comments")]
-    public uint PostCountComments { get; set; } = 0;
-    
-    private static readonly Random Rand = new();
-
-     /*************************************************
-     * DELETE THIS SHIT!!!!!
-     * DELETE THIS SHIT!!!!!
-     */
-
-
-
-
     [SqlColumn("post_id")]
     [CopyToProperty<PostText>(nameof(PostText.Id))]
     [CopyToProperty<PostLink>(nameof(PostLink.Id))]
@@ -60,7 +41,8 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     [CopyToProperty<PostLink>(nameof(PostLink.CreatedOn))]
     public DateTime? PostCreatedOn { get; set; }
 
-
+    [SqlColumn("post_count_comments")]
+    public uint PostCountComments { get; set; } = 0;
 
 
     #region - IVoteScore -
@@ -78,12 +60,6 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     public long VotesScore { get; set; } = 0;
 
     #endregion
-
-
-
-    public int PostVotesScore { get; set; } = Rand.Next(-100, 100);
-
-
 
     [JsonIgnore]
     public virtual string PostBodyContent => string.Empty;
@@ -110,6 +86,7 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
 
     #endregion
 
+
     #region - ITableView -
 
     public static explicit operator PostText(ViewPost other) => other.CastToModel<ViewPost, PostText>();
@@ -128,6 +105,4 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     }
 
     #endregion
-
-
 }

@@ -52,4 +52,15 @@ public class PostVotesRepository(DatabaseConnection connection) : IPostVotesRepo
 
         return await _connection.FetchAsync(command);
     }
+
+
+    public async Task<DataTable> SelectUserPostVotesInCommunityAsync(uint userId, string communityName)
+    {
+        MySqlCommand command = new(PostVotesRepositoryCommands.SelectAllUserVotesInCommunity);
+
+        command.Parameters.AddWithValue("@user_id", userId);
+        command.Parameters.AddWithValue("@community_name", communityName);
+
+        return await _connection.FetchAllAsync(command);
+    }
 }

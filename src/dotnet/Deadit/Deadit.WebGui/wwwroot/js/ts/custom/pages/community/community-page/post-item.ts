@@ -1,3 +1,4 @@
+import { VoteType } from "../../../domain/enum/vote-type";
 import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
 import { Guid } from "../../../domain/types/aliases";
 
@@ -14,7 +15,7 @@ export class PostListItem
     private readonly _postTitleLinkElement: HTMLAnchorElement;
     private readonly _voting: VoteScore;
 
-    private get postId(): Guid | null
+    public get postId(): Guid | null
     {
         return this._container.getAttribute(PostElements.postIdAttr);
     }
@@ -27,13 +28,15 @@ export class PostListItem
         this._voting = new VoteScore(this._container.querySelector(`.item-voting`));
     }
 
-    public upvoted()
+    public upvoted(): VoteType
     {
-        return this._voting.upvoted();
+        this._voting.upvoted();
+        return this._voting.currentVote;
     }
 
-    public downvoted()
+    public downvoted(): VoteType
     {
-        return this._voting.downvoted();
+        this._voting.downvoted();
+        return this._voting.currentVote;
     }
 }

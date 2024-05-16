@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
@@ -47,11 +48,8 @@ public class PostVotesService(IPostVotesRepository repo, ITableMapperService map
     {
         try
         {
-
             var table = await _repo.SelectPostVotesAsync(postId);
-
             var models = _mapperService.ToModels<ViewVotePost>(table);
-
             return new(models);
         }
         catch (RepositoryException ex)
@@ -74,6 +72,21 @@ public class PostVotesService(IPostVotesRepository repo, ITableMapperService map
             }
 
             return result;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+
+    public async Task<ServiceDataResponse<List<ViewVotePost>>> GetUserPostVotesInCommunity(uint userId, string communityName)
+    {
+        try
+        {
+            var table = await _repo.SelectUserPostVotesInCommunityAsync(userId, communityName);
+            var models = _mapperService.ToModels<ViewVotePost>(table);
+            return new(models);
         }
         catch (RepositoryException ex)
         {

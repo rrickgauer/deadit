@@ -1,5 +1,7 @@
 ﻿using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Response;
+using Deadit.Lib.Domain.ViewModel;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
@@ -29,7 +31,7 @@ public class CommunityController(IViewModelService viewModelService, IPostServic
     [ActionName(nameof(GetCommunityPage))]
     public async Task<IActionResult> GetCommunityPage([FromRoute] string communityName)
     {
-        var serviceResponse = await _viewModelService.GetCommunityPageViewModelAsync(communityName, ClientId);
+        ServiceDataResponse<CommunityPageViewModel> serviceResponse = await _viewModelService.GetCommunityPageViewModelAsync(communityName, ClientId);
 
         if (!serviceResponse.Successful)
         {
@@ -54,6 +56,14 @@ public class CommunityController(IViewModelService viewModelService, IPostServic
     }
 
 
+    /// <summary>
+    /// GET: /c/:communityName/posts/:postId
+    /// </summary>
+    /// <param name="communityName"></param>
+    /// <param name="postId"></param>
+    /// <param name="sort"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
     [HttpGet("posts/{postId}")]
     [ActionName(nameof(GetPostPageAsync))]
     [ServiceFilter(typeof(PostExistsFilter))]

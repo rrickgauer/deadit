@@ -1,4 +1,4 @@
-﻿
+﻿using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.TableView;
 using static Deadit.Lib.Domain.ViewModel.ViewModelContracts;
 
@@ -9,6 +9,6 @@ public class CommunityPageViewModel : ILoggedIn
     public required ViewCommunity Community { get; set; }
     public bool IsMember { get; set; } = false;
     public bool IsLoggedIn { get; set; } = false;
+    public required List<GetPostUserVoteDto> PostDtos { get; set; } = new();
 
-    public required List<ViewPost> Posts { get; set; }
 }

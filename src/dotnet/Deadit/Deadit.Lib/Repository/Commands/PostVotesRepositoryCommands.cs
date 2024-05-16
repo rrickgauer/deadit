@@ -34,4 +34,14 @@ public sealed class PostVotesRepositoryCommands
             1;";
 
 
+    public const string SelectAllUserVotesInCommunity = @"
+        SELECT
+            v.*
+        FROM
+            View_Vote_Post v
+        WHERE
+            v.vote_post_user_id = @user_id
+            AND v.post_community_name = @community_name;";
+
+
 }

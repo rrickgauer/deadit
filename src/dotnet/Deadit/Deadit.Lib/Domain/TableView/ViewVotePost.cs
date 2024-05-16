@@ -36,7 +36,6 @@ public class ViewVotePost :  IVoteScore,
     [SqlColumn("post_post_type")]
     public PostType? VotePostPostType { get; set; }
 
-
     #region - IVoteScore -
 
     [SqlColumn("post_count_votes_upvotes")]
@@ -51,8 +50,6 @@ public class ViewVotePost :  IVoteScore,
     [SqlColumn("post_count_votes_score")]
     public long VotesScore { get; set; } = 0;
 
-
-
     #endregion
 
 
@@ -63,4 +60,15 @@ public class ViewVotePost :  IVoteScore,
 
     #endregion
 
+}
+
+
+public static class ViewVotePostExtensions
+{
+    public static Dictionary<Guid, VoteType> ToVotesDict(this IEnumerable<ViewVotePost> votes)
+    {        
+        var validVotes = votes.Where(v => v.VotePostId.HasValue && v.VotePostVoteType != null);
+
+        return validVotes.ToDictionary(v => v.VotePostId!.Value, v => v.VotePostVoteType!.Value);
+    }
 }

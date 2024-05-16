@@ -9,4 +9,6 @@ public interface IPostVotesRepository
 
     public Task<DataTable> SelectPostVotesAsync(Guid postId);
     public Task<DataRow?> SelectVoteAsync(Guid postId, uint userId);
+
+    public Task<DataTable> SelectUserPostVotesInCommunityAsync(uint userId, string communityName);
 }
