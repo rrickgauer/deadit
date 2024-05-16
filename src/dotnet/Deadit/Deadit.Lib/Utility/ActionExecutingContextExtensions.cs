@@ -69,6 +69,16 @@ public static class ActionExecutingContextExtensions
         return clientId.Value;
     }
 
+    public static bool TryGetSessionClientId(this  ActionExecutingContext context, out uint? clientId)
+    {
+        var sessionMgr = context.GetSessionManager();
+
+        clientId = sessionMgr.ClientId;
+
+        return clientId.HasValue;
+
+    }
+
 
     public static void ReturnBadServiceResponse(this ActionExecutingContext context, ServiceResponse serviceResponse)
     {

@@ -2,12 +2,11 @@ import { NativeEvents } from "../../../domain/constants/native-events";
 import { IControllerAsync } from "../../../domain/contracts/i-controller";
 import { SortOption } from "../../../domain/enum/sort-option";
 import { ItemsSortInputChangedEvent, RootCommentFormSubmittedEvent } from "../../../domain/events/events";
-import { ItemsSortInput } from "../../../domain/helpers/items-sort/items-sort";
 import { MessageBoxConfirm } from "../../../domain/helpers/message-box/MessageBoxConfirm";
 import { CommentApiResponse, GetCommentsApiResponse, SaveCommentRequest } from "../../../domain/model/comment-models";
 import { PostPageParms } from "../../../domain/model/post-models";
-import { CommentVotesService } from "../../../services/comment-votes-service";
 import { CommentsService } from "../../../services/comments-service";
+import { VoteService } from "../../../services/vote-service";
 import { CommentTemplate } from "../../../templates/comment-template";
 import { ErrorUtility } from "../../../utilities/error-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
@@ -33,16 +32,11 @@ export enum CommentActionButtons
 export class CommentsController implements IControllerAsync
 {
     private readonly _args: PostPageParms;
-
     private readonly _isLoggedIn: boolean;
-
     private readonly _templateEngine: CommentTemplate;
     private readonly _rootListElement: HTMLUListElement;
-
     private readonly _commentService: CommentsService;
-
     private _comments: CommentApiResponse[];
-/*    private readonly _sortInput: ItemsSortInput;*/
 
     constructor(args: CommentsControllerArgs)
     {
@@ -238,9 +232,6 @@ export class CommentsController implements IControllerAsync
                 parentId: form.parentCommentId,
             }));
 
-
-            console.log({ d: saveResult.response.data });
-
             return saveResult.successful;
 
         }
@@ -312,11 +303,14 @@ export class CommentsController implements IControllerAsync
     private async saveVote(listItem: CommentListItem, wasUpvoted: boolean)
     {
         const newVoteType = wasUpvoted ? listItem.upvoted() : listItem.downvoted();
-        const service = new CommentVotesService({ ...this._args, commentId: listItem.commentId });
+        const service = new VoteService();
 
         try
         {
-            const response = await service.vote(newVoteType);
+            const response = await service.voteComment({
+                commentId: listItem.commentId,
+                voteType: newVoteType,
+            });
 
             if (!response.successful)
             {

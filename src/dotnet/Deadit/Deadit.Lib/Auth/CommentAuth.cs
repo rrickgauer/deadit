@@ -26,18 +26,21 @@ public class CommentAuth(ICommentService commentService) : IAsyncPermissionsAuth
                 return new(getComment);
             }
 
-            if (data.IsDelete)
+            return data.AuthPermissionType switch
             {
-                return ValidateDelete(data, getComment);
-            }
-
-            return ValidateSave(data, getComment);
+                AuthPermissionType.Delete => ValidateDelete(data, getComment),
+                AuthPermissionType.Upsert => ValidateUpsert(data, getComment),
+                AuthPermissionType.Get    => ValidateGet(data, getComment),
+                _                         => throw new NotImplementedException(),
+            };
         }
         catch(ServiceResponseException ex)
         {
             return new(ex);
         }
     }
+
+
 
     private static ServiceResponse ValidateDelete(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
     {
@@ -55,10 +58,54 @@ public class CommentAuth(ICommentService commentService) : IAsyncPermissionsAuth
     {
         if (getCommet.Data is not ViewComment comment)
         {
+            throw new NotFoundHttpResponseException();
+        }
+
+        if (comment.CommentAuthorId != data.UserId)
+        {
+            throw new ForbiddenHttpResponseException();
+        }
+
+        return new();
+    }
+
+    private static ServiceResponse ValidateCreate(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
+    {
+        if (getCommet.Data is ViewComment)
+        {
+            throw new ForbiddenHttpResponseException();
+        }
+
+        return new();
+    }
+
+
+    private static ServiceResponse ValidateUpsert(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
+    {
+        if (getCommet.Data is not ViewComment comment)
+        {
             return new();
         }
 
         if (comment.CommentAuthorId != data.UserId)
+        {
+            throw new ForbiddenHttpResponseException();
+        }
+
+
+        return new();
+    }
+
+
+
+    private static ServiceResponse ValidateGet(CommentAuthData data, ServiceDataResponse<ViewComment> getComment)
+    {
+        if (getComment.Data is not ViewComment comment)
+        {
+            throw new NotFoundHttpResponseException();
+        }
+
+        if (comment.CommentId is not Guid)
         {
             throw new NotFoundHttpResponseException();
         }

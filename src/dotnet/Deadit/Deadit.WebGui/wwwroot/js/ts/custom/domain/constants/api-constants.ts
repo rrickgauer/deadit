@@ -5,6 +5,8 @@ export enum ApiEndpoints {
     LOGIN = `${URL_PREFIX}/auth/login`,
     SIGNUP = `${URL_PREFIX}/auth/signup`,
     COMMUNITY = `${URL_PREFIX}/communities`,
+    VOTES_COMMENT = `${URL_PREFIX}/votes/comments`,
+    VOTES_POST = `${URL_PREFIX}/votes/post`,
 }
 
 export enum HttpMethods {

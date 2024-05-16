@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Deadit.Lib.Filter;
 
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.Always)]
-public class GetPostFilter(GetPostAuth auth) : IAsyncActionFilter
+public class PostExistsFilter(GetPostAuth auth) : IAsyncActionFilter
 {
     private readonly GetPostAuth _auth = auth;
 
@@ -17,7 +17,6 @@ public class GetPostFilter(GetPostAuth auth) : IAsyncActionFilter
         var authResponse = await _auth.HasPermissionAsync(new()
         {
             PostId = context.GetPostIdRouteValue(),
-            //CommunityName = context.GetCommunityNameRouteValue(),
         });
 
         if (!authResponse.Successful)

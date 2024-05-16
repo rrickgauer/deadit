@@ -10,12 +10,3 @@ public enum InjectionProject
     Api    = 1 << 2,
 }
 
-
-
-public enum AutoInjectionType
-{
-    Singleton,
-    Scoped,
-    Transient,
-}
-

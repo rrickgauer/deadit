@@ -1,4 +1,6 @@
-﻿namespace Deadit.Lib.Auth;
+﻿using Deadit.Lib.Domain.Enum;
+
+namespace Deadit.Lib.Auth;
 
 public class AuthParms
 {
@@ -15,8 +17,8 @@ public class AuthParms
 
     public class CommentAuthData
     {
-        public required bool IsDelete { get; set; }
-        public required uint UserId { get; set; }
+        public required AuthPermissionType AuthPermissionType { get; set; }
+        public required uint? UserId { get; set; }
         public required Guid CommentId { get; set; }
     }
 }

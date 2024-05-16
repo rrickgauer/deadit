@@ -15,7 +15,7 @@ namespace Deadit.WebGui.Controllers.Api;
 
 [ApiController]
 [Route("api/communities/{communityName}/posts/{postId:guid}/comments")]
-[ServiceFilter(typeof(GetPostFilter))]
+[ServiceFilter(typeof(PostExistsFilter))]
 public class ApiCommentsController(IViewModelService viewModelService, ICommentService commentService) : InternalApiController, IControllerName
 {
     // IControllerName
