@@ -19,7 +19,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     {
         try
         {
-            var repoResponse = await _postRepository.SelectAllCommunityAsync(communityName);
+            var repoResponse = await _postRepository.SelectAllCommunityPostsAsync(communityName);
 
             var models = _tableMapperService.ToModels<ViewPost>(repoResponse);
 
@@ -29,15 +29,32 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
         {
             return ex;
         }
-
-
     }
+
+
+    public async Task<ServiceDataResponse<List<ViewPost>>> GetTopCommunityPostsAsync(string communityName, TopPostSort sortedBy)
+    {
+        try
+        {
+            var table = await _postRepository.SelectAllTopCommunityPostsAsync(communityName, sortedBy.GetStartingDate());
+
+            var models = _tableMapperService.ToModels<ViewPost>(table);
+
+            return new(models);
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+        
+    }
+
 
     public async Task<ServiceDataResponse<List<ViewPostText>>> GetAllTextPostsAsync(string communityName)
     {
         try
         {
-            var repoResponse = await _postRepository.SelectAllCommunityTextAsync(communityName);
+            var repoResponse = await _postRepository.SelectAllCommunityTextPostsAsync(communityName);
 
             var models = _tableMapperService.ToModels<ViewPostText>(repoResponse);
 
@@ -54,7 +71,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     {
         try
         {
-            var repoResponse = await _postRepository.SelectAllCommunityLinkAsync(communityName);
+            var repoResponse = await _postRepository.SelectAllCommunityLinkPostsAsync(communityName);
 
             var models = _tableMapperService.ToModels<ViewPostLink>(repoResponse);
 

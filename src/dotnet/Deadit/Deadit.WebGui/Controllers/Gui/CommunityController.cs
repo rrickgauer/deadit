@@ -1,5 +1,6 @@
 ﻿using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Other;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.ViewModel;
 using Deadit.Lib.Filter;
@@ -13,14 +14,12 @@ namespace Deadit.WebGui.Controllers.Gui;
 [Controller]
 [Route("/c/{communityName}")]
 [ServiceFilter(typeof(CommunityNameExistsFilter))]
-public class CommunityController(IViewModelService viewModelService, IPostService postService, ICommentService commentService) : GuiController, IControllerName
+public class CommunityController(IViewModelService viewModelService) : GuiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunityController));
 
     private readonly IViewModelService _viewModelService = viewModelService;
-    private readonly IPostService _postService = postService;
-    private readonly ICommentService _commentService = commentService;
 
 
     /// <summary>
@@ -28,10 +27,35 @@ public class CommunityController(IViewModelService viewModelService, IPostServic
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    [ActionName(nameof(GetCommunityPage))]
-    public async Task<IActionResult> GetCommunityPage([FromRoute] string communityName)
+    [ActionName(nameof(GetCommunityPageAsync))]
+    public async Task<IActionResult> GetCommunityPageAsync([FromRoute] string communityName)
     {
-        ServiceDataResponse<CommunityPageViewModel> serviceResponse = await _viewModelService.GetCommunityPageViewModelAsync(communityName, ClientId);
+        PostSorting postSorting = new(CommunityPagePostSort.New);
+
+        return await ReturnCommunityPageAsync(communityName, postSorting);
+    }
+
+    /// <summary>
+    /// GET: /c/:communityName/top?sort=day,week,month,year,all
+    /// </summary>
+    /// <param name="communityName"></param>
+    /// <param name="sort"></param>
+    /// <returns></returns>
+    [HttpGet("top")]
+    [ActionName(nameof(GetCommunityPageTop))]
+    public async Task<IActionResult> GetCommunityPageTop([FromRoute] string communityName, [FromQuery] TopPostSort? sort)
+    {
+        TopPostSort topSort = sort ?? TopPostSort.Month;
+
+        PostSorting postSorting = new(CommunityPagePostSort.Top, topSort);
+
+        return await ReturnCommunityPageAsync(communityName, postSorting);
+    }
+
+
+    private async Task<IActionResult> ReturnCommunityPageAsync(string communityName, PostSorting postSorting)
+    {
+        ServiceDataResponse<CommunityPageViewModel> serviceResponse = await _viewModelService.GetCommunityPageViewModelAsync(communityName, ClientId, postSorting);
 
         if (!serviceResponse.Successful)
         {
@@ -40,7 +64,6 @@ public class CommunityController(IViewModelService viewModelService, IPostServic
 
         return View(GuiPageViewFiles.CommunityPage, serviceResponse.Data);
     }
-
 
     /// <summary>
     /// /c/:communityName/submit
@@ -56,32 +79,7 @@ public class CommunityController(IViewModelService viewModelService, IPostServic
     }
 
 
-    /// <summary>
-    /// GET: /c/:communityName/posts/:postId
-    /// </summary>
-    /// <param name="communityName"></param>
-    /// <param name="postId"></param>
-    /// <param name="sort"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    [HttpGet("posts/{postId}")]
-    [ActionName(nameof(GetPostPageAsync))]
-    [ServiceFilter(typeof(PostExistsFilter))]
-    public async Task<IActionResult> GetPostPageAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromQuery] SortOption? sort)
-    {
-        SortOption sortOption = sort ?? SortOption.New;
 
-        PostType postType = RequestItems.Post?.PostType ?? throw new ArgumentNullException();
-
-        var getViewModel = await _viewModelService.GetPostPageViewModelAsync(postId, postType, ClientId, sortOption);
-
-        if (!getViewModel.Successful)
-        {
-            return BadRequest(getViewModel);
-        }
-
-        return View(GuiPageViewFiles.PostPage, getViewModel.Data);
-    }
 
 
 }

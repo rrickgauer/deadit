@@ -2,6 +2,7 @@
 using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Domain.Other;
 using Deadit.Lib.Domain.Parms;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
@@ -40,7 +41,7 @@ public class ViewModelService : IViewModelService
     /// <param name="clientId"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundHttpResponseException"></exception>
-    public async Task<ServiceDataResponse<CommunityPageViewModel>> GetCommunityPageViewModelAsync(string communityName, uint? clientId)
+    public async Task<ServiceDataResponse<CommunityPageViewModel>> GetCommunityPageViewModelAsync(string communityName, uint? clientId, PostSorting postSorting)
     {
         try
         {
@@ -48,13 +49,23 @@ public class ViewModelService : IViewModelService
             var community = await GetCommunityAsync(communityName);
 
             // get the posts in the community
-            List<ViewPost> posts = await GetCommunityPostsAsync(communityName);
+            List<ViewPost> posts = new();
+
+            if (postSorting.SortByNew)
+            {
+                posts = await GetNewestCommunityPostsAsync(communityName);
+            }
+            else
+            {
+                posts = await GetTopCommunityPostsAsync(communityName, postSorting.TopSort);
+            }
 
             // If client is logged in, get their vote history for the posts
             List<ViewVotePost> userVotes = await GetUserPostVotesInCommunity(clientId, communityName);
 
             // Combine each post with the client's vote choice (defaults to novote if they have never voted on the post)
-            var getPostDtos = posts.BuildGetPostUserVoteDtos(userVotes).OrderByDescending(p => p.Post.PostCreatedOn);
+            //var getPostDtos = posts.BuildGetPostUserVoteDtos(userVotes).OrderByDescending(p => p.Post.PostCreatedOn);
+            var getPostDtos = posts.BuildGetPostUserVoteDtos(userVotes);
 
             // check if client community member
             bool isMember = await IsUserCommunityMemberAsync(community.CommunityId, clientId);
@@ -65,6 +76,7 @@ public class ViewModelService : IViewModelService
                 IsMember = isMember,
                 IsLoggedIn = _authService.IsClientLoggedIn(),
                 PostDtos = getPostDtos.ToList(),
+                PostSort = postSorting,
             };
 
             return new(viewModel);
@@ -91,9 +103,21 @@ public class ViewModelService : IViewModelService
         return community;
     }
 
-    private async Task<List<ViewPost>> GetCommunityPostsAsync(string communityName)
+    private async Task<List<ViewPost>> GetNewestCommunityPostsAsync(string communityName)
     {
         var getPosts = await _postService.GetAllBasicPostsAsync(communityName);
+
+        if (!getPosts.Successful)
+        {
+            throw new ServiceResponseException(getPosts);
+        }
+
+        return getPosts.Data ?? new();
+    }
+
+    private async Task<List<ViewPost>> GetTopCommunityPostsAsync(string communityName, TopPostSort topSort)
+    {
+        var getPosts = await _postService.GetTopCommunityPostsAsync(communityName, topSort);
 
         if (!getPosts.Successful)
         {

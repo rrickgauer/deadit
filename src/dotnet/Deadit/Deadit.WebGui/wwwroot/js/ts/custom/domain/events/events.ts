@@ -1,4 +1,5 @@
 import { SortOption } from "../enum/sort-option";
+import { TopPostSort } from "../enum/top-post-sort";
 import { CommentApiResponse } from "../model/comment-models";
 import { Guid } from "../types/aliases";
 import { BaseEvent } from "./custom-events";
@@ -31,3 +32,13 @@ export type ItemsSortInputChangedData = {
 }
 
 export const ItemsSortInputChangedEvent = new CustomMessage<ItemsSortInputChangedData>();
+
+
+export type TopPostSortOptionChangedData = {
+    sort: TopPostSort;
+}
+
+
+export const TopPostSortOptionChangedEvent = new CustomMessage<TopPostSortOptionChangedData>();
+
+
