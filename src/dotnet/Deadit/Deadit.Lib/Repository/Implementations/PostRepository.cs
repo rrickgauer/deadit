@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Repository.Commands;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Repository.Other;
@@ -13,10 +14,13 @@ namespace Deadit.Lib.Repository.Implementations;
 [AutoInject<IPostRepository>(AutoInjectionType.Scoped, InjectionProject.Always)]
 public class PostRepository(DatabaseConnection connection, TransactionConnection transactionConnection) : IPostRepository
 {
+    #region - Private Members -
     private readonly DatabaseConnection _connection = connection;
     private readonly TransactionConnection _transactionConnection = transactionConnection;
+    #endregion
 
-    #region - Select Single -
+
+    #region - Select Single Post -
 
     public async Task<DataRow?> SelectPostAsync(Guid postId)
     {
@@ -28,7 +32,7 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     }
 
     
-    public async Task<DataRow?> SelectTextAsync(Guid postId)
+    public async Task<DataRow?> SelectPostTextAsync(Guid postId)
     {
         MySqlCommand command = new(PostRepositoryCommands.SelectPostText);
 
@@ -38,7 +42,7 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     }
 
 
-    public async Task<DataRow?> SelectLinkAsync(Guid postId)
+    public async Task<DataRow?> SelectPostLinkAsync(Guid postId)
     {
         MySqlCommand command = new(PostRepositoryCommands.SelectPostLink);
 
@@ -50,19 +54,30 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     #endregion
 
 
-    #region - Select All -
+    #region - Select Newest Community Posts -
 
-    public async Task<DataTable> SelectAllCommunityPostsAsync(string communityName)
+    public async Task<DataTable> SelectNewestCommunityPostsAsync(string communityName, PaginationPosts pagination)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SelectNewestCommunityPostsLimit);
+
+        command.Parameters.AddWithValue("@community_name", communityName);
+
+        command.AddPaginationParamters(pagination);
+
+        return await _connection.FetchAllAsync(command);
+    }
+
+    public async Task<DataTable> SelectNewestCommunityPostsAsync(string communityName)
     {
         return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SelectNewestCommunityPosts);
     }
 
-    public async Task<DataTable> SelectAllCommunityTextPostsAsync(string communityName)
+    public async Task<DataTable> SelectCommunityTextPostsAsync(string communityName)
     {
         return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SelectAllCommunityText);
     }
 
-    public async Task<DataTable> SelectAllCommunityLinkPostsAsync(string communityName)
+    public async Task<DataTable> SelectCommunityLinkPostsAsync(string communityName)
     {
         return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SelectAllCommunityLink);
     }
@@ -79,19 +94,37 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     #endregion
 
 
-    public async Task<DataTable> SelectAllTopCommunityPostsAsync(string communityName, DateTime createdOn)
+    #region - Select Top Community Posts -
+
+    public async Task<DataTable> SelectTopCommunityPostsAsync(string communityName, DateTime createdAfter, PaginationPosts pagination)
     {
-        MySqlCommand command = new(PostRepositoryCommands.SelectAllTopCommunityPosts);
+        MySqlCommand command = new(PostRepositoryCommands.SelectTopCommunityPostsLimit);
 
+        return await SelectTopCommunityPostsAsync(command, communityName, createdAfter, pagination);
+    }
+
+    public async Task<DataTable> SelectTopCommunityPostsAsync(string communityName, DateTime createdAfter)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SelectTopCommunityPosts);
+
+        return await SelectTopCommunityPostsAsync(command, communityName, createdAfter);
+    }
+
+    private async Task<DataTable> SelectTopCommunityPostsAsync(MySqlCommand command, string communityName, DateTime createdAfter, PaginationPosts? pagination=null)
+    {
         command.Parameters.AddWithValue("@community_name", communityName);
-        command.Parameters.AddWithValue("@created_on", createdOn);
+        command.Parameters.AddWithValue("@created_on", createdAfter);
 
-
+        if (pagination != null)
+        {
+            command.AddPaginationParamters(pagination);
+        }
 
         return await _connection.FetchAllAsync(command);
     }
 
 
+    #endregion
 
     #region - Insert -
 

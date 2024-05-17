@@ -2,6 +2,7 @@
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
@@ -12,18 +13,58 @@ namespace Deadit.Lib.Service.Implementations;
 [AutoInject<IPostService>(AutoInjectionType.Scoped, InjectionProject.Always)]
 public class PostService(ITableMapperService tableMapperService, IPostRepository postRepository) : IPostService
 {
+    #region - Private Members -
     private readonly ITableMapperService _tableMapperService = tableMapperService;
     private readonly IPostRepository _postRepository = postRepository;
+    #endregion
 
-    public async Task<ServiceDataResponse<List<ViewPost>>> GetAllBasicPostsAsync(string communityName)
+    #region - Newest Community Posts -
+
+    public async Task<ServiceDataResponse<List<ViewPost>>> GetNewestCommunityPostsAsync(string communityName, PaginationPosts pagination)
     {
         try
         {
-            var repoResponse = await _postRepository.SelectAllCommunityPostsAsync(communityName);
+            var table = await _postRepository.SelectNewestCommunityPostsAsync(communityName, pagination);
+
+            var models = _tableMapperService.ToModels<ViewPost>(table);
+
+            return models;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+    public async Task<ServiceDataResponse<List<ViewPost>>> GetNewestCommunityPostsAsync(string communityName)
+    {
+        try
+        {
+            var repoResponse = await _postRepository.SelectNewestCommunityPostsAsync(communityName);
 
             var models = _tableMapperService.ToModels<ViewPost>(repoResponse);
 
             return new(models);
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+    #endregion
+
+    #region - Top Community Posts -
+
+    public async Task<ServiceDataResponse<List<ViewPost>>> GetTopCommunityPostsAsync(string communityName, TopPostSort sortedBy, PaginationPosts pagination)
+    {
+        try
+        {
+            var table = await _postRepository.SelectTopCommunityPostsAsync(communityName, sortedBy.GetStartingDate(), pagination);
+
+            var models = _tableMapperService.ToModels<ViewPost>(table);
+
+            return models;
         }
         catch (RepositoryException ex)
         {
@@ -36,25 +77,29 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     {
         try
         {
-            var table = await _postRepository.SelectAllTopCommunityPostsAsync(communityName, sortedBy.GetStartingDate());
+            var table = await _postRepository.SelectTopCommunityPostsAsync(communityName, sortedBy.GetStartingDate());
 
             var models = _tableMapperService.ToModels<ViewPost>(table);
 
             return new(models);
         }
-        catch(RepositoryException ex)
+        catch (RepositoryException ex)
         {
             return ex;
         }
-        
+
     }
 
+
+    #endregion
+
+    #region - Specific Type (Link/Text) Community Posts -
 
     public async Task<ServiceDataResponse<List<ViewPostText>>> GetAllTextPostsAsync(string communityName)
     {
         try
         {
-            var repoResponse = await _postRepository.SelectAllCommunityTextPostsAsync(communityName);
+            var repoResponse = await _postRepository.SelectCommunityTextPostsAsync(communityName);
 
             var models = _tableMapperService.ToModels<ViewPostText>(repoResponse);
 
@@ -71,7 +116,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     {
         try
         {
-            var repoResponse = await _postRepository.SelectAllCommunityLinkPostsAsync(communityName);
+            var repoResponse = await _postRepository.SelectCommunityLinkPostsAsync(communityName);
 
             var models = _tableMapperService.ToModels<ViewPostLink>(repoResponse);
 
@@ -82,6 +127,11 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
             return ex;
         }
     }
+
+    #endregion
+
+    #region - Get Single Post -
+
 
     public async Task<ServiceDataResponse<ViewPost>> GetPostAsync(Guid postId)
     {
@@ -108,7 +158,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     {
         try
         {
-            var row = await _postRepository.SelectTextAsync(postId);
+            var row = await _postRepository.SelectPostTextAsync(postId);
 
             if (row != null)
             {
@@ -118,7 +168,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
             return new();
         }
-        catch(RepositoryException ex)
+        catch (RepositoryException ex)
         {
             return ex;
         }
@@ -128,7 +178,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     {
         try
         {
-            var row = await _postRepository.SelectLinkAsync(postId);
+            var row = await _postRepository.SelectPostLinkAsync(postId);
 
             if (row != null)
             {
@@ -145,6 +195,9 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     }
 
 
+    #endregion
+
+    #region - Save -
 
     public async Task<ServiceDataResponse<ViewPostText>> SavePostTextAsync(PostText post)
     {
@@ -187,4 +240,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
         return await GetLinkPostAsync(postId);
     }
+
+    #endregion
 }

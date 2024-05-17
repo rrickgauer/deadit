@@ -1,8 +1,11 @@
-﻿namespace Deadit.Lib.Repository.Commands;
+﻿using Deadit.Lib.Domain.Constants;
+
+namespace Deadit.Lib.Repository.Commands;
 
 public sealed class PostRepositoryCommands
 {
-    public const string SelectNewestCommunityPosts = @"
+
+    private const string _selectNewestCommunityPostsTemplate = @"
         SELECT
             p.*
         FROM
@@ -10,10 +13,14 @@ public sealed class PostRepositoryCommands
         WHERE
             p.community_name = @community_name
         ORDER BY 
-            p.post_created_on DESC;";
+            p.post_created_on DESC
+        {0};";
+
+    public static readonly string SelectNewestCommunityPosts = string.Format(_selectNewestCommunityPostsTemplate, string.Empty);
+    public static readonly string SelectNewestCommunityPostsLimit = string.Format(_selectNewestCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE);
 
 
-    public const string SelectAllTopCommunityPosts = @"
+    private const string _selectTopCommunityPostsTemplate = @"
         SELECT
             p.*
         FROM
@@ -22,7 +29,13 @@ public sealed class PostRepositoryCommands
             p.community_name = @community_name
             AND p.post_created_on > @created_on
         ORDER BY
-            p.post_count_votes_score DESC;";
+            p.post_count_votes_score DESC
+        {0};";
+
+    public static readonly string SelectTopCommunityPosts = string.Format(_selectTopCommunityPostsTemplate, string.Empty);
+    public static readonly string SelectTopCommunityPostsLimit = string.Format(_selectTopCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE);
+
+
 
 
     public const string SelectAllCommunityLink = @"

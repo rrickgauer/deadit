@@ -1,5 +1,6 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Configurations;
+using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
 using MySql.Data.MySqlClient;
@@ -15,8 +16,6 @@ namespace Deadit.Lib.Repository.Other;
 public class DatabaseConnection(IConfigs configs)
 {
     protected readonly IConfigs _configs = configs;
-
-    protected const int USER_DEFINED_EXCEPTION_NUMBER = 1644;
 
     public string ConnectionString => $"server={_configs.DbServer};user={_configs.DbUser};database={_configs.DbDataBase};password={_configs.DbPassword}";
 
@@ -98,7 +97,7 @@ public class DatabaseConnection(IConfigs configs)
         {
             await transaction.RollbackAsync();
 
-            if (ex.Number == USER_DEFINED_EXCEPTION_NUMBER)
+            if (ex.Number == RepositoryConstants.USER_DEFINED_EXCEPTION_NUMBER)
             {
                 throw new RepositoryException(ex);
             }
@@ -155,7 +154,7 @@ public class DatabaseConnection(IConfigs configs)
         }
         catch(MySqlException ex)
         {
-            if (ex.Number == USER_DEFINED_EXCEPTION_NUMBER)
+            if (ex.Number == RepositoryConstants.USER_DEFINED_EXCEPTION_NUMBER)
             {
                 throw new RepositoryException(ex);
             }
