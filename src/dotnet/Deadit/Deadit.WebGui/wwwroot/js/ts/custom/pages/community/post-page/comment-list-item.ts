@@ -1,3 +1,4 @@
+import { IVoted } from "../../../domain/contracts/ivoted";
 import { VoteType } from "../../../domain/enum/vote-type";
 import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
 import { CommentApiResponse } from "../../../domain/model/comment-models";
@@ -24,7 +25,7 @@ export const CommentSelectors = {
     collapsedClass: 'collapsed',
 }
 
-export class CommentListItem
+export class CommentListItem implements IVoted
 {
     private _container: HTMLLIElement;
     private _editFormContainer: HTMLDivElement;

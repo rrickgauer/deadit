@@ -1,7 +1,21 @@
+import { PostType } from "../enum/post-type";
 import { VoteType } from "../enum/vote-type";
 import { DateTimeString, Guid } from "../types/aliases";
 import { VoteScores } from "./common-api-response-types";
-import { PostPageParms } from "./post-models";
+
+
+
+export type VoteApiRequest = {
+    voteType: VoteType;
+}
+
+export type CommentVoteApiRequest = VoteApiRequest & {
+    commentId: Guid;
+}
+
+export type PostVoteApiRequest = VoteApiRequest & {
+    postId: Guid;
+}
 
 
 export type CommentVoteApiResponse = VoteScores & {
@@ -13,7 +27,14 @@ export type CommentVoteApiResponse = VoteScores & {
     voteCommentUserName?: string;
 }
 
-
-export type CommentVoteServiceArgs = PostPageParms & {
-    commentId: Guid;
+export type PostVoteApiResponse = VoteScores & {
+    votePostId?: Guid;
+    votePostUserId?: number;
+    votePostVoteType?: VoteType;
+    votePostCreatedOn?: DateTimeString;
+    votePostUserName?: string;
+    votePostCommunityId?: number;
+    votePostCommunityName?: string;
+    votePostPostType?: PostType;
 }
+

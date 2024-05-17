@@ -7,6 +7,6 @@ PageUtility.pageReady(async () =>
 {
 
     const controller = new CommunityPageController();
-    controller.control();
+    await controller.control();
     
 });

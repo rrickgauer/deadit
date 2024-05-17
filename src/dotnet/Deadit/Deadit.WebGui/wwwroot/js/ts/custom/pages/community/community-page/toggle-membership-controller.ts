@@ -20,7 +20,7 @@ export class ToggleMembershipController implements IController
 
     private addListeners = () =>
     {
-        this._elements.btnToggleMembership.button.addEventListener(NativeEvents.Click, this.onToggleMembershipButtonClick);
+        this._elements.btnToggleMembership.button?.addEventListener(NativeEvents.Click, this.onToggleMembershipButtonClick);
     }
 
 

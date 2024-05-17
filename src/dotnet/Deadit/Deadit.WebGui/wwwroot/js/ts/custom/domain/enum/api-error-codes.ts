@@ -19,5 +19,14 @@ export enum ApiErrorCode
     CreateCommunityNameBanned = 302,
 
     //#endregion
+
+
+    //#region - Voting -
+
+    VotingMissingRequiredParm = 400,
+    VotingBothParmsGiven = 401,
+
+    //#endregion
+
 }
 

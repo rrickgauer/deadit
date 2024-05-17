@@ -5,7 +5,7 @@ using System.Data;
 
 namespace Deadit.Lib.Mapping.Tables;
 
-public class ViewPostTableMapper : TableMapper<ViewPost>
+public class ViewPostMapper : TableMapper<ViewPost>
 {
     public override ViewPost ToModel(DataRow row)
     {
@@ -18,6 +18,8 @@ public class ViewPostTableMapper : TableMapper<ViewPost>
         result.PostAuthorId    = row.Field<uint?>(GetColumnName(nameof(result.PostAuthorId)));
         result.PostCreatedOn   = row.Field<DateTime?>(GetColumnName(nameof(result.PostCreatedOn)));
         result.PostCountComments = Convert.ToUInt32(row.Field<object?>(GetColumnName(nameof(result.PostCountComments))));
+
+        row.SetVotingValues(result);
 
         return result;
     }

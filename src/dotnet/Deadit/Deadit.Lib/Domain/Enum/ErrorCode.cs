@@ -29,4 +29,14 @@ public enum ErrorCode : uint
     CreateCommunityNameBanned = 302,
 
     #endregion
+
+    #region - Voting -
+
+    [ErrorCodeGroup(ErrorCodeGroup.Voting)]
+    VotingMissingRequiredParm = 400,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Voting)]
+    VotingBothParmsGiven = 401,
+
+    #endregion
 }

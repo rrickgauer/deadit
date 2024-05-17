@@ -8,7 +8,7 @@ public class ViewPostLinkMapper : TableMapper<ViewPostLink>
 {
     public override ViewPostLink ToModel(DataRow row)
     {
-        ViewPostLink result = InheritanceUtility.GetParentProperties<ViewPost, ViewPostLink, ViewPostTableMapper>(row);
+        ViewPostLink result = InheritanceUtility.GetParentProperties<ViewPost, ViewPostLink, ViewPostMapper>(row);
 
         result.PostUrl = row.Field<string?>(GetColumnName(nameof(result.PostUrl)));
 

@@ -1,9 +1,10 @@
-﻿import { VoteButtonIcons, VoteButtonIconsSolid } from "../../constants/vote-button-icons";
+﻿import { Nullable } from "../../../utilities/nullable";
+import { VoteButtonIcons, VoteButtonIconsSolid } from "../../constants/vote-button-icons";
 
 export enum VoteButtonType 
 {
-    Upvote,
-    Downvote
+     Upvote = "Upvote",
+     Downvote = "Downvote",
 }
 
 export abstract class VoteButton
@@ -12,7 +13,7 @@ export abstract class VoteButton
     protected abstract readonly _selectedIcon: string;
     protected abstract readonly _normalIcon: string;
 
-    private _button: HTMLButtonElement;
+    public buttonElement: HTMLButtonElement;
 
     public get selected(): boolean
     {
@@ -21,18 +22,18 @@ export abstract class VoteButton
 
     public set selected(isSelected: boolean)
     {
-        this._button.innerHTML = isSelected ? this._selectedIcon : this._normalIcon;
+        this.buttonElement.innerHTML = isSelected ? this._selectedIcon : this._normalIcon;
     }
 
     protected get _icon(): HTMLElement
     {
-        return this._button.querySelector('i.bx') as HTMLElement;
+        return this.buttonElement.querySelector('i.bx') as HTMLElement;
     }
 
 
     constructor(button: HTMLButtonElement)
     {
-        this._button = button;
+        this.buttonElement = button;
 
     }
 
@@ -41,8 +42,15 @@ export abstract class VoteButton
         this.selected = !this.selected;
     }
 
-    public static getVoteButton(button: HTMLButtonElement)
+    public static getVoteButton(element: Element): VoteButton
     {
+        const button = element.closest('.btn-vote') as HTMLButtonElement;
+
+        if (!Nullable.hasValue(button))
+        {
+            throw new Error('Invalid vote button');
+        }
+
         if (button.classList.contains('btn-vote-up'))
         {
             return new UpvoteButton(button);
@@ -53,7 +61,7 @@ export abstract class VoteButton
         }
         else
         {
-            console.error(`Invalid vote button`);
+            throw new Error('Invalid vote button');
         }
     }
 }

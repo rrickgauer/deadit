@@ -8,15 +8,10 @@ using System.Text.Json.Serialization;
 namespace Deadit.Lib.Domain.TableView;
 
 
-public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
+public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteScore,
     ITableView<ViewPost, PostText>,
     ITableView<ViewPost, PostLink>
 {
-
-    #region - Private Members -
-    private static readonly Random Rand = new();
-    #endregion
-
 
     [SqlColumn("post_id")]
     [CopyToProperty<PostText>(nameof(PostText.Id))]
@@ -50,8 +45,21 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
     public uint PostCountComments { get; set; } = 0;
 
 
-    public int PostVotesScore { get; set; } = Rand.Next(-100, 100);
+    #region - IVoteScore -
 
+    [SqlColumn("post_count_votes_upvotes")]
+    public long VotesCountUp { get; set; } = 0;
+
+    [SqlColumn("post_count_votes_downvotes")]
+    public long VotesCountDown { get; set; } = 0;
+
+    [SqlColumn("post_count_votes_novotes")]
+    public long VotesCountNone { get; set; } = 0;
+
+    [SqlColumn("post_count_votes_score")]
+    public long VotesScore { get; set; } = 0;
+
+    #endregion
 
     [JsonIgnore]
     public virtual string PostBodyContent => string.Empty;
@@ -78,6 +86,7 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
 
     #endregion
 
+
     #region - ITableView -
 
     public static explicit operator PostText(ViewPost other) => other.CastToModel<ViewPost, PostText>();
@@ -96,6 +105,4 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference,
     }
 
     #endregion
-
-
 }

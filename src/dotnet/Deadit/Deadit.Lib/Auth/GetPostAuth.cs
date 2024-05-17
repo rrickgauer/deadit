@@ -36,19 +36,12 @@ public class GetPostAuth(IPostService postService, IHttpContextAccessor contextA
             throw new NotFoundHttpResponseException();
         }
 
-        // make sure the post belongs to the specified community
-        if (!data.CommunityName.Equals(post.CommunityName, StringComparison.OrdinalIgnoreCase))
-        {
-            throw new NotFoundHttpResponseException();
-        }
-
         // store the post in request data
         if (Context != null)
         {
             HttpRequestItems dataDict = new(Context)
             {
-                Post = post,
-                
+                Post = post,  
             };
         }
 
