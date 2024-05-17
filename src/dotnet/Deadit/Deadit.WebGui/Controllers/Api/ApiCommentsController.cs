@@ -5,6 +5,7 @@ using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
+using Deadit.Lib.Service.ViewModels;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,14 @@ namespace Deadit.WebGui.Controllers.Api;
 [ApiController]
 [Route("api/communities/{communityName}/posts/{postId:guid}/comments")]
 [ServiceFilter(typeof(PostExistsFilter))]
-public class ApiCommentsController(IViewModelService viewModelService, ICommentService commentService) : InternalApiController, IControllerName
+public class ApiCommentsController(ICommentService commentService, GetCommentsApiVMService getCommentsApiVMService, GetCommentDtoVMService getCommentDtoVMService) : InternalApiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(ApiCommentsController));
 
-    private readonly IViewModelService _viewModelService = viewModelService;
     private readonly ICommentService _commentService = commentService;
+    private readonly GetCommentsApiVMService _getCommentsApiVMService = getCommentsApiVMService;
+    private readonly GetCommentDtoVMService _getCommentDtoVMService = getCommentDtoVMService;
 
 
     /// <summary>
@@ -37,7 +39,12 @@ public class ApiCommentsController(IViewModelService viewModelService, ICommentS
     {
         SortOption sortOption = sort ?? SortOption.New;
 
-        var getComments = await _viewModelService.GetCommentsApiResponseAsync(postId, ClientId, sortOption);
+        var getComments = await _getCommentsApiVMService.GetViewModelAsync(new()
+        {
+            ClientId = ClientId,
+            PostId = postId,
+            SortOption = sortOption,
+        });
 
         if (!getComments.Successful)
         {
@@ -78,7 +85,11 @@ public class ApiCommentsController(IViewModelService viewModelService, ICommentS
             return BadRequest(saveComment);
         }
 
-        var getComment = await _viewModelService.GetCommentApiResponseAsync(commentId, ClientId);
+        var getComment = await _getCommentDtoVMService.GetViewModelAsync(new()
+        {
+            ClientId = ClientId,
+            CommentId = commentId,
+        });
 
         return Ok(getComment);
     }
