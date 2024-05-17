@@ -1,10 +1,9 @@
 ﻿using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Other;
-using Deadit.Lib.Domain.Response;
-using Deadit.Lib.Domain.ViewModel;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
+using Deadit.Lib.Service.ViewModels;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +13,12 @@ namespace Deadit.WebGui.Controllers.Gui;
 [Controller]
 [Route("/c/{communityName}")]
 [ServiceFilter(typeof(CommunityNameExistsFilter))]
-public class CommunityController(IViewModelService viewModelService) : GuiController, IControllerName
+public class CommunityController(CommunityPageVMService communityPage) : GuiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunityController));
 
-    private readonly IViewModelService _viewModelService = viewModelService;
+    private readonly CommunityPageVMService _communityPage = communityPage;
 
 
     /// <summary>
@@ -55,7 +54,12 @@ public class CommunityController(IViewModelService viewModelService) : GuiContro
 
     private async Task<IActionResult> ReturnCommunityPageAsync(string communityName, PostSorting postSorting)
     {
-        ServiceDataResponse<CommunityPageViewModel> serviceResponse = await _viewModelService.GetCommunityPageViewModelAsync(communityName, ClientId, postSorting);
+        var serviceResponse = await _communityPage.GetViewModelAsync(new()
+        {
+            ClientId = ClientId,
+            CommunityName = communityName,
+            PostSorting = postSorting
+        });
 
         if (!serviceResponse.Successful)
         {

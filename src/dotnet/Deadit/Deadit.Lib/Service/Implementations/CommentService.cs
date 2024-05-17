@@ -39,7 +39,7 @@ public class CommentService(ITableMapperService tableMapperService, ICommentRepo
     {
         try
         {
-            var selectResult = await _repo.SelectAllPostCommentsAsync(args.PostId, args.Sort);
+            var selectResult = await _repo.SelectAllPostCommentsAsync(args.PostId, args.SortOption);
 
             var models = _tableMapperService.ToModels<ViewComment>(selectResult);
 

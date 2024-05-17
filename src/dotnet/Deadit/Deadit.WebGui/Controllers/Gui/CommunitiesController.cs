@@ -1,5 +1,6 @@
 ﻿using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Service.Contracts;
+using Deadit.Lib.Service.ViewModels;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
@@ -8,12 +9,13 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/communities")]
-public class CommunitiesController(IViewModelService viewModelService) : GuiController, IControllerName
+public class CommunitiesController(JoinedCommunitiesPageVMService joinedCommunitiesPageVMService) : GuiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunitiesController));
 
-    private readonly IViewModelService _viewModelService = viewModelService;
+
+    private readonly JoinedCommunitiesPageVMService _joinedCommunitiesPageVM = joinedCommunitiesPageVMService;
 
     /// <summary>
     /// GET: /communities
@@ -44,7 +46,10 @@ public class CommunitiesController(IViewModelService viewModelService) : GuiCont
     [ActionName(nameof(JoinedCommunitiesPage))]
     public async Task<IActionResult> JoinedCommunitiesPage()
     {
-        var getViewModelResponse = await _viewModelService.GetJoinedCommunitiesPageViewModelAsync(ClientId!.Value);
+        var getViewModelResponse = await _joinedCommunitiesPageVM.GetViewModelAsync(new()
+        {
+            ClientId = ClientId!.Value,
+        });
 
         if (!getViewModelResponse.Successful)
         {
@@ -54,6 +59,6 @@ public class CommunitiesController(IViewModelService viewModelService) : GuiCont
         return View(GuiPageViewFiles.JoinedCommunitiesPage, getViewModelResponse.Data);
     }
 
-    
+
 
 }
