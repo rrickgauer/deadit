@@ -6,6 +6,7 @@
 @{
     var requestPath = HttpContextAccessor?.HttpContext?.Request.Path.ToString();
     var absoluteUrl = HttpContextAccessor?.HttpContext?.Request.GetEncodedUrl();
+    var normalPath = $"/{Model.Community.CommunityUrlGui}/submit";
     var loginUrl = $"/auth/login?destination={absoluteUrl}";
 }
 
@@ -35,5 +36,5 @@
         }
     }
 
-    <a href="@requestPath/submit" class="btn btn-sm btn-secondary mb-1">Create Post</a>
+    <a href="@normalPath" class="btn btn-sm btn-secondary mb-1">Create Post</a>
 </div>

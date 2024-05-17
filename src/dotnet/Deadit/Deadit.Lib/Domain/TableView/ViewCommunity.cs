@@ -1,5 +1,6 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Contracts;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
 
 namespace Deadit.Lib.Domain.TableView;
@@ -34,6 +35,15 @@ public class ViewCommunity : ITableView<ViewCommunity, Community>
     public long CommunityCountMembers { get; set; } = 0;
 
     public string CommunityUrlGui => $"c/{CommunityName}";
+
+    public string CommunityUrlTop => $"{CommunityUrlGui}/top";
+
+    public string GetCommunityUrlTopSort(TopPostSort topSort)
+    {
+
+        return "";
+    }
+
 
     // ITableView
     public static explicit operator Community(ViewCommunity other)

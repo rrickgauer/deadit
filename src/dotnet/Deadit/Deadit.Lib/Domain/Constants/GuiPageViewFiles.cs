@@ -15,7 +15,4 @@ public sealed class GuiPageViewFiles
     public static string CreateCommunitiesPage => $"{ParentDirectory}/CreateCommunity/CreateCommunityPage.cshtml";
     public static string CommunitiesPage       => $"{ParentDirectory}/Communities/CommunitiesPage.cshtml";
     public static string JoinedCommunitiesPage => $"{ParentDirectory}/Communities/JoinedCommunitiesPage.cshtml";
-
-    
-    
 }

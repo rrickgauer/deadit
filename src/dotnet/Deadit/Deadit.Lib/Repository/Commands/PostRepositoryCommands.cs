@@ -2,13 +2,27 @@
 
 public sealed class PostRepositoryCommands
 {
-    public const string SeelctAllCommunity = @"
+    public const string SelectNewestCommunityPosts = @"
         SELECT
             p.*
         FROM
             View_Post p
         WHERE
-            p.community_name = @community_name;";
+            p.community_name = @community_name
+        ORDER BY 
+            p.post_created_on DESC;";
+
+
+    public const string SelectAllTopCommunityPosts = @"
+        SELECT
+            p.*
+        FROM
+            View_Post p
+        WHERE
+            p.community_name = @community_name
+            AND p.post_created_on > @created_on
+        ORDER BY
+            p.post_count_votes_score DESC;";
 
 
     public const string SelectAllCommunityLink = @"
@@ -101,6 +115,4 @@ public sealed class PostRepositoryCommands
             (@id, @url) AS new_values 
         ON DUPLICATE KEY UPDATE
             url = new_values.url;";
-
-
 }

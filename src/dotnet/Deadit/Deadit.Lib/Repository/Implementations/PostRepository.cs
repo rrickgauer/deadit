@@ -52,17 +52,17 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
 
     #region - Select All -
 
-    public async Task<DataTable> SelectAllCommunityAsync(string communityName)
+    public async Task<DataTable> SelectAllCommunityPostsAsync(string communityName)
     {
-        return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SeelctAllCommunity);
+        return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SelectNewestCommunityPosts);
     }
 
-    public async Task<DataTable> SelectAllCommunityTextAsync(string communityName)
+    public async Task<DataTable> SelectAllCommunityTextPostsAsync(string communityName)
     {
         return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SelectAllCommunityText);
     }
 
-    public async Task<DataTable> SelectAllCommunityLinkAsync(string communityName)
+    public async Task<DataTable> SelectAllCommunityLinkPostsAsync(string communityName)
     {
         return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SelectAllCommunityLink);
     }
@@ -77,6 +77,21 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     }
 
     #endregion
+
+
+    public async Task<DataTable> SelectAllTopCommunityPostsAsync(string communityName, DateTime createdOn)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SelectAllTopCommunityPosts);
+
+        command.Parameters.AddWithValue("@community_name", communityName);
+        command.Parameters.AddWithValue("@created_on", createdOn);
+
+
+
+        return await _connection.FetchAllAsync(command);
+    }
+
+
 
     #region - Insert -
 
