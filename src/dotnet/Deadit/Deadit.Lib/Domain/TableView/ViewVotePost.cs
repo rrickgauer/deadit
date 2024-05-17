@@ -18,7 +18,8 @@ public class ViewVotePost :  IVoteScore,
 
     [SqlColumn("vote_post_vote_type")]
     [CopyToProperty<VotePost>(nameof(VotePost.VoteType))]
-    public VoteType? VotePostVoteType { get; set; }
+    //public VoteType? VotePostVoteType { get; set; }
+    public VoteType VotePostVoteType { get; set; } = VoteType.Novote;
 
     [SqlColumn("vote_post_created_on")]
     [CopyToProperty<VotePost>(nameof(VotePost.CreatedOn))]
@@ -53,6 +54,8 @@ public class ViewVotePost :  IVoteScore,
     #endregion
 
 
+    public static implicit operator VoteType(ViewVotePost vote) => vote.VotePostVoteType;
+
 
     #region - ITableView -
 
@@ -67,8 +70,10 @@ public static class ViewVotePostExtensions
 {
     public static Dictionary<Guid, VoteType> ToVotesDict(this IEnumerable<ViewVotePost> votes)
     {        
-        var validVotes = votes.Where(v => v.VotePostId.HasValue && v.VotePostVoteType != null);
+        var validVotes = votes.Where(v => v.VotePostId.HasValue);
 
-        return validVotes.ToDictionary(v => v.VotePostId!.Value, v => v.VotePostVoteType!.Value);
+        return validVotes.ToDictionary(v => v.VotePostId!.Value, v => v.VotePostVoteType);
     }
+
+    
 }

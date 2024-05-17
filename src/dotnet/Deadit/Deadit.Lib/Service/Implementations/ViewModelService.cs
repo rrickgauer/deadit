@@ -196,6 +196,25 @@ public class ViewModelService : IViewModelService
             return new(getComments);
         }
 
+        // get user's vote selection for the post
+
+        VoteType userPostVote = VoteType.Novote;
+
+        if (userId.HasValue)
+        {
+            var getPostVote = await _postVotesService.GetVoteAsync(postId, userId.Value);
+
+            if (!getPostVote.Successful)
+            {
+                return new(getPostVote);
+            }
+
+            userPostVote = getPostVote.Data?.VotePostVoteType ?? VoteType.Novote;
+            
+        }
+
+
+
         PostPageViewModel viewModel = new()
         {
             Post = post,
@@ -204,6 +223,8 @@ public class ViewModelService : IViewModelService
             ClientId = userId,
             IsLoggedIn = userId != null,
             SortOption = sortBy,
+            UserPostVote = userPostVote,
+            
         };
 
         return new(viewModel);

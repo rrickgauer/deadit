@@ -8,10 +8,11 @@ public class PostPageViewModel : IAuthor, IClientId, ILoggedIn, ISortOption
 {
     public required ViewPost Post { get; set; }
     public required bool IsAuthor { get; set; }
-    public required uint? ClientId { get; set; }
+    public required uint? ClientId { get; set; } 
     public required bool IsLoggedIn { get; set; } 
     public required List<ViewComment> Comments { get; set; }
     public required SortOption SortOption { get; set; }
+    public required VoteType UserPostVote { get; set; }
 }
 
 

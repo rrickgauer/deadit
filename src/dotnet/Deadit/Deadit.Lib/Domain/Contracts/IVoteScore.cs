@@ -11,4 +11,3 @@ public interface IVoteScore
     public static readonly List<string> PropertyNames = typeof(IVoteScore).GetProperties().Select(p => p.Name).ToList();
 }
 
-

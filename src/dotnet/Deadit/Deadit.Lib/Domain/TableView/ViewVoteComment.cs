@@ -44,6 +44,8 @@ public class ViewVoteComment : IVoteScore,
     public long VotesScore { get; set; } = 0;
 
 
+    public static implicit operator VoteType(ViewVoteComment vote) => vote.VoteCommentType;
+
     #region - ITableView -
 
     public static explicit operator VoteComment(ViewVoteComment other) => other.CastToModel();

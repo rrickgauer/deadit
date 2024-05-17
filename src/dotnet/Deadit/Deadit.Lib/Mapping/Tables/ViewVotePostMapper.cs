@@ -13,7 +13,7 @@ public class ViewVotePostMapper : TableMapper<ViewVotePost>
 
         result.VotePostId = row.Field<Guid?>(GetColumnName(nameof(result.VotePostId)));
         result.VotePostUserId = row.Field<uint?>(GetColumnName(nameof(result.VotePostUserId)));
-        result.VotePostVoteType = (VoteType?)row.Field<ushort?>(GetColumnName(nameof(result.VotePostVoteType)));
+        result.VotePostVoteType = (VoteType)row.Field<ushort>(GetColumnName(nameof(result.VotePostVoteType)));
         result.VotePostCreatedOn = row.Field<DateTime?>(GetColumnName(nameof(result.VotePostCreatedOn)));
         result.VotePostUserName = row.Field<string?>(GetColumnName(nameof(result.VotePostUserName)));
         result.VotePostCommunityId = row.Field<uint?>(GetColumnName(nameof(result.VotePostCommunityId)));
