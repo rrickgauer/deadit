@@ -38,22 +38,12 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
             var community = await GetCommunityAsync(args.CommunityName);
 
             // get the posts in the community
-            List<ViewPost> posts = new();
-
-            if (args.PostSorting.SortByNew)
-            {
-                posts = await GetNewestCommunityPostsAsync(args.CommunityName);
-            }
-            else
-            {
-                posts = await GetTopCommunityPostsAsync(args.CommunityName, args.PostSorting.TopSort);
-            }
+            List<ViewPost> posts = await GetCommunityPostsAsync(args);
 
             // If client is logged in, get their vote history for the posts
-            List<ViewVotePost> userVotes = await GetUserPostVotesInCommunity(args.ClientId, args.CommunityName);
+            List<ViewVotePost> userVotes = await GetUserPostVotesInCommunity(args);
 
             // Combine each post with the client's vote choice (defaults to novote if they have never voted on the post)
-            //var getPostDtos = posts.BuildGetPostUserVoteDtos(userVotes).OrderByDescending(p => p.Post.PostCreatedOn);
             var getPostDtos = posts.BuildGetPostUserVoteDtos(userVotes);
 
             // check if client community member
@@ -66,6 +56,7 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
                 IsLoggedIn = _authService.IsClientLoggedIn(),
                 PostDtos = getPostDtos.ToList(),
                 PostSort = args.PostSorting,
+                Pagination = args.Pagination,
             };
 
             return new(viewModel);
@@ -85,12 +76,32 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
             throw new ServiceResponseException(getCommunity);
         }
 
+        // return 404 if we couldn't find the community
         return NotFoundHttpResponseException.ThrowIfNot<ViewCommunity>(getCommunity.Data);
     }
 
-    private async Task<List<ViewPost>> GetNewestCommunityPostsAsync(string communityName)
+
+    private async Task<List<ViewPost>> GetCommunityPostsAsync(CommunityPageViewModelParms args)
     {
-        var getPosts = await _postService.GetAllBasicPostsAsync(communityName);
+        List<ViewPost> posts = new();
+
+        // order the posts appropriately
+        if (args.PostSorting.SortByNew)
+        {
+            posts = await GetNewestCommunityPostsAsync(args);
+        }
+        else
+        {
+            posts = await GetTopCommunityPostsAsync(args);
+        }
+
+        return posts;
+    }
+
+
+    private async Task<List<ViewPost>> GetNewestCommunityPostsAsync(CommunityPageViewModelParms args)
+    {
+        var getPosts = await _postService.GetNewestCommunityPostsAsync(args.CommunityName, args.Pagination);
 
         if (!getPosts.Successful)
         {
@@ -100,9 +111,9 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
         return getPosts.Data ?? new();
     }
 
-    private async Task<List<ViewPost>> GetTopCommunityPostsAsync(string communityName, TopPostSort topSort)
+    private async Task<List<ViewPost>> GetTopCommunityPostsAsync(CommunityPageViewModelParms args)
     {
-        var getPosts = await _postService.GetTopCommunityPostsAsync(communityName, topSort);
+        var getPosts = await _postService.GetTopCommunityPostsAsync(args.CommunityName, args.PostSorting.TopSort, args.Pagination);
 
         if (!getPosts.Successful)
         {
@@ -113,14 +124,14 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
     }
 
 
-    private async Task<List<ViewVotePost>> GetUserPostVotesInCommunity(uint? clientId, string communityName)
+    private async Task<List<ViewVotePost>> GetUserPostVotesInCommunity(CommunityPageViewModelParms args)
     {
-        if (clientId is not uint userId)
+        if (args.ClientId is not uint userId)
         {
             return new();
         }
 
-        var getVotes = await _postVotesService.GetUserPostVotesInCommunity(userId, communityName);
+        var getVotes = await _postVotesService.GetUserPostVotesInCommunity(userId, args.CommunityName);
 
         if (!getVotes.Successful)
         {
@@ -131,13 +142,6 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
     }
 
 
-
-    /// <summary>
-    /// Check if the user is a member of the specified community
-    /// </summary>
-    /// <param name="communityId"></param>
-    /// <param name="userId"></param>
-    /// <returns></returns>
     private async Task<bool> IsUserCommunityMemberAsync(uint? communityId, uint? userId)
     {
         bool isMember = false;

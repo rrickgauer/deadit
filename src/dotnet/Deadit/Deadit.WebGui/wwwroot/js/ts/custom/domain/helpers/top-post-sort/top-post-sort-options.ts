@@ -59,6 +59,9 @@ export class TopPostSortOptions implements IController
 
         queryParms.set('sort', sort.toLowerCase());
 
+        // restart the pagination
+        queryParms.delete('page');
+
         let newUrl = `${url.pathname}?${queryParms.toString()}`;
 
         return newUrl;

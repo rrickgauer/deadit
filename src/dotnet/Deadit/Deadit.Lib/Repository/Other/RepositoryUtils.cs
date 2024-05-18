@@ -16,17 +16,3 @@ public static class RepositoryUtils
         return dataTable;
     }
 }
-
-
-public static class MySqlCommandExtensions
-{
-    public static async Task<DataTable> GetDataTableAsync(this MySqlCommand command)
-    {
-        DataTable dataTable = new();
-
-        DbDataReader reader = await command.ExecuteReaderAsync();
-        dataTable.Load(reader);
-
-        return dataTable;
-    }
-}

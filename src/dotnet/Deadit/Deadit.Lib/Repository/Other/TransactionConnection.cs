@@ -1,5 +1,6 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Configurations;
+using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
 using MySql.Data.MySqlClient;
@@ -36,7 +37,7 @@ public class TransactionConnection(IConfigs configs) : DatabaseConnection(config
         {
             await _transaction!.RollbackAsync();
 
-            if (ex.Number == USER_DEFINED_EXCEPTION_NUMBER)
+            if (ex.Number == RepositoryConstants.USER_DEFINED_EXCEPTION_NUMBER)
             {
                 throw new RepositoryException(ex);
             }
