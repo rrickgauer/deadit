@@ -56,6 +56,7 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
                 IsLoggedIn = _authService.IsClientLoggedIn(),
                 PostDtos = getPostDtos.ToList(),
                 PostSort = args.PostSorting,
+                Pagination = args.Pagination,
             };
 
             return new(viewModel);

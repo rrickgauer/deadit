@@ -1,4 +1,6 @@
-﻿namespace Deadit.Lib.Domain.Paging;
+﻿using Deadit.Lib.Utility;
+
+namespace Deadit.Lib.Domain.Paging;
 
 public abstract class Pagination
 {
@@ -7,7 +9,7 @@ public abstract class Pagination
     public abstract uint Limit { get; }
     public uint Offset => (Page - 1) * Limit;
     public uint NextPage => Page + 1;
-    public uint PrevPage => IsFirstPage ? Page - 1 : Page;
+    public uint PreviousPage => !IsFirstPage ? Page - 1 : Page;
     public bool IsFirstPage => Page == 1;
     public string SqlClause => $"LIMIT {Limit} OFFSET {Offset}";
 
@@ -32,17 +34,20 @@ public abstract class Pagination
         Page = page ?? DEFAULT_PAGE_NUMBER;
     }
 
-    public void Next()
+
+    public string GetNextPageUrl(string url)
     {
-        Page++; 
+        Uri uri = new(url);
+
+        return uri.SetQueryParmValue("page", NextPage);
     }
 
-    public void Previous()
+
+    public string GetPreviousPageUrl(string url)
     {
-        if (!IsFirstPage)
-        {
-            Page--;
-        }
+        Uri uri = new(url);
+
+        return uri.SetQueryParmValue("page", PreviousPage);
     }
 }
 
