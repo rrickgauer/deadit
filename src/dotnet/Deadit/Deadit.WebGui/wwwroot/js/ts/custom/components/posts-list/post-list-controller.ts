@@ -1,23 +1,14 @@
-import { NativeEvents } from "../../../domain/constants/native-events";
-import { IControllerAsync } from "../../../domain/contracts/i-controller";
-import { VoteType } from "../../../domain/enum/vote-type";
-import { VoteButton, VoteButtonType } from "../../../domain/helpers/vote-scores/vote-button";
-import { VoteService } from "../../../services/vote-service";
+import { NativeEvents } from "../../domain/constants/native-events";
+import { IControllerAsync } from "../../domain/contracts/i-controller";
+import { VoteType } from "../../domain/enum/vote-type";
+import { VoteButton, VoteButtonType } from "../../domain/helpers/vote-scores/vote-button";
+import { VoteService } from "../../services/vote-service";
 import { PostListItem } from "./post-item";
 
 
 
-export type PostListControllerArgs = {
-    
-}
-
-
 export class PostListController implements IControllerAsync
 {
-    constructor(args: PostListControllerArgs)
-    {
-
-    }
 
     public async control()
     {

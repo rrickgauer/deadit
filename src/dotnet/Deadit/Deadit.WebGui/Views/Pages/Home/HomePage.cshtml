@@ -1,8 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@model Deadit.Lib.Domain.ViewModel.HomePageViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.Enum
+@using Deadit.Lib.Utility
+@using Microsoft.AspNetCore.Http.Extensions;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <partial name="~/Views/Includes/_Header.cshtml" />
-    <title>Bootstrap demo</title>
+    <title>Deadit</title>
 </head>
 <body>
     <partial name="~/Views/Includes/_Navbar.cshtml" />
@@ -12,6 +19,22 @@
         <h1>Home page</h1>
     </div>
 
+    <div class="container mt-3">
+        <partial name="_HomeNavbarTop.cshtml" />
+    </div>
+
+
+
+    <div class="container mt-3">
+        <partial name="_Posts.cshtml" />
+    </div>
+
+    <div class="container mt-3">
+        <partial name="_Pagination.cshtml" />
+    </div>
+
+
+    <div class="page-bottom"></div>
 
     <partial name="~/Views/Includes/_Footer.cshtml" />
     <script src="~/js/dist/home.bundle.js"></script>

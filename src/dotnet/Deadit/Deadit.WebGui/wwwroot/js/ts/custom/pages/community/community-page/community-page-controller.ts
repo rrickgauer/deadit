@@ -4,7 +4,7 @@ import { TopPostSort } from "../../../domain/enum/top-post-sort";
 import { TopPostSortOptionChangedEvent } from "../../../domain/events/events";
 import { TopPostSortOptions } from "../../../domain/helpers/top-post-sort/top-post-sort-options";
 import { UrlUtility } from "../../../utilities/url-utility";
-import { PostListController } from "./post-list-controller";
+import { PostListController } from "../../../components/posts-list/post-list-controller";
 import { ToggleMembershipController } from "./toggle-membership-controller";
 
 
@@ -17,10 +17,7 @@ export class CommunityPageController implements IControllerAsync
 
     constructor()
     {
-        this._postListController = new PostListController({
-
-        });
-
+        this._postListController = new PostListController();
     }
 
     public async control()

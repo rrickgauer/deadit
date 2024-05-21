@@ -2,14 +2,14 @@
 
 namespace Deadit.Lib.Domain.Other;
 
-public class PostSorting(CommunityPagePostSort postSort)
+public class PostSorting(PostSortType postSort)
 {
-    public CommunityPagePostSort PostSort { get; set; } = postSort;
+    public PostSortType PostSortType { get; set; } = postSort;
     public TopPostSort TopSort { get; set; } = TopPostSort.Day;
 
-    public bool SortByNew => PostSort == CommunityPagePostSort.New;
+    public bool SortByNew => PostSortType == PostSortType.New;
 
-    public PostSorting(CommunityPagePostSort postSort, TopPostSort topSort) : this(postSort)
+    public PostSorting(PostSortType postSort, TopPostSort topSort) : this(postSort)
     {
         TopSort = topSort; 
     }

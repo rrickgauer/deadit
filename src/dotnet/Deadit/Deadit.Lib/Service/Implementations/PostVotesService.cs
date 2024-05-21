@@ -96,4 +96,19 @@ public class PostVotesService(IPostVotesRepository repo, ITableMapperService map
 
 
 
+    public async Task<ServiceDataResponse<List<ViewVotePost>>> GetUserPostVotesAsync(uint userId, IEnumerable<Guid> postIds)
+    {
+        try
+        {
+            var table = await _repo.SelectUserPostVotesAsync(userId, postIds);
+            var models = _mapperService.ToModels<ViewVotePost>(table);
+            return new(models);
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+
 }

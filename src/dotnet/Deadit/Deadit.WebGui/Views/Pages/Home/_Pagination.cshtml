@@ -1,4 +1,4 @@
-﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel;
+﻿@model Deadit.Lib.Domain.ViewModel.HomePageViewModel;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @using Microsoft.AspNetCore.Http.Extensions;
 
@@ -10,10 +10,10 @@
 
 <div class="posts-pagination my-5">
     <nav aria-label="Page navigation example">
-        
+
         <ul class="pagination justify-content-center">
-            
-            @if(Model.Pagination.IsFirstPage)
+
+            @if (Model.Pagination.IsFirstPage)
             {
                 <li class="page-item disabled"><a class="page-link" href="@Model.Pagination.GetPreviousPageUrl(currentUrl)">Previous</a></li>
             }
@@ -23,7 +23,7 @@
             }
 
 
-            @if(Model.PostDtos.Count < Model.Pagination.Limit)
+            @if (Model.Posts.Count < Model.Pagination.Limit)
             {
                 <li class="page-item disabled"><a class="page-link" href="@Model.Pagination.GetNextPageUrl(currentUrl)">Next</a></li>
             }

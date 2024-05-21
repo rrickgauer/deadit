@@ -15,3 +15,4 @@ public class CommunityPageViewModel : ILoggedIn
     public required PostSorting PostSort { get; set; }
     public required PaginationPosts Pagination { get; set; }
 }
+

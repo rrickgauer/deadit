@@ -63,4 +63,20 @@ public class PostVotesRepository(DatabaseConnection connection) : IPostVotesRepo
 
         return await _connection.FetchAllAsync(command);
     }
+
+    public async Task<DataTable> SelectUserPostVotesAsync(uint userId, IEnumerable<Guid> postIds)
+    {
+
+        InClause<Guid> inClause = new(postIds);
+
+        string sql = string.Format(PostVotesRepositoryCommands.SelectUserPostVotesLimit, inClause.GetSqlClause());
+
+        MySqlCommand command = new(sql);
+
+        command.Parameters.AddWithValue("@user_id", userId);
+        
+        inClause.AddParms(command);
+
+        return await _connection.FetchAllAsync(command);
+    }
 }

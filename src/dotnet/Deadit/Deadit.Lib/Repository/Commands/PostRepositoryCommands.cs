@@ -5,6 +5,50 @@ namespace Deadit.Lib.Repository.Commands;
 public sealed class PostRepositoryCommands
 {
 
+
+    private const string _selectNewHomePagePostsTemplate = @"
+        SELECT
+            p.*
+        FROM
+            View_Post p
+        WHERE EXISTS 
+        (
+            SELECT 1
+            FROM Community_Membership m
+            WHERE m.user_id = @user_id
+            AND m.community_id = p.post_community_id
+        )
+        ORDER BY p.post_created_on DESC
+        {0};";
+
+
+    public static readonly string SelectNewUserHomePosts = string.Format(_selectNewHomePagePostsTemplate, string.Empty);
+    public static readonly string SelectNewUserHomePostsLimit = string.Format(_selectNewHomePagePostsTemplate, RepositoryConstants.PAGINATION_CLAUSE);
+
+
+
+    private const string _selectTopHomePagePostsTemplate = @"
+        SELECT
+            p.*
+        FROM
+            View_Post p
+        WHERE
+            EXISTS 
+            (
+                SELECT 1
+                FROM Community_Membership m
+                WHERE m.user_id = @user_id 
+                AND m.community_id = p.post_community_id
+                AND p.post_created_on > @created_on
+            )
+        ORDER BY p.post_count_votes_score DESC
+        {0};";
+
+    public static readonly string SelectTopHomePagePosts = string.Format(_selectTopHomePagePostsTemplate, string.Empty);
+    public static readonly string SelectTopHomePagePostsLimit = string.Format(_selectTopHomePagePostsTemplate, RepositoryConstants.PAGINATION_CLAUSE);
+
+
+
     private const string _selectNewestCommunityPostsTemplate = @"
         SELECT
             p.*
@@ -34,9 +78,6 @@ public sealed class PostRepositoryCommands
 
     public static readonly string SelectTopCommunityPosts = string.Format(_selectTopCommunityPostsTemplate, string.Empty);
     public static readonly string SelectTopCommunityPostsLimit = string.Format(_selectTopCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE);
-
-
-
 
     public const string SelectAllCommunityLink = @"
         SELECT

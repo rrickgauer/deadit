@@ -10,4 +10,9 @@ public interface IPostVotesService
     public Task<ServiceDataResponse<List<ViewVotePost>>> GetPostVotesAsync(Guid postId);
     public Task<ServiceDataResponse<ViewVotePost>> GetVoteAsync(Guid postId, uint userId);
     public Task<ServiceDataResponse<List<ViewVotePost>>> GetUserPostVotesInCommunity(uint userId, string communityName);
+
+
+    public Task<ServiceDataResponse<List<ViewVotePost>>> GetUserPostVotesAsync(uint userId, IEnumerable<Guid> postIds);
+
+
 }

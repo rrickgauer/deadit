@@ -1,6 +1,6 @@
 ﻿namespace Deadit.Lib.Domain.Enum;
 
-public enum CommunityPagePostSort
+public enum PostSortType
 {
     New,
     Top,

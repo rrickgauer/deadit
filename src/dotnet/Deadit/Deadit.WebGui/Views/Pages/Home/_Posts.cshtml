@@ -1,18 +1,17 @@
-﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel
+﻿@model Deadit.Lib.Domain.ViewModel.HomePageViewModel
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-@using Deadit.Lib.Domain.Enum;
-@using Deadit.Lib.Domain.Constants;
+@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.Enum
 @using Deadit.Lib.Domain.ViewModel
-@using Deadit.Lib.Utility;
+@using Deadit.Lib.Utility
 @using Deadit.WebGui.ViewComponents
 @using Microsoft.AspNetCore.Http.Extensions;
 
+<div>
 
-<div class="community-posts-container">
-    
     <ul class="list-group">
 
-        @foreach(var post in Model.PostDtos)
+        @foreach (var post in Model.Posts)
         {
             @await Component.InvokeAsync(nameof(PostListItemComponent), new PostListItemViewModel()
             {
@@ -23,8 +22,3 @@
     </ul>
 
 </div>
-
-
-
-
-
