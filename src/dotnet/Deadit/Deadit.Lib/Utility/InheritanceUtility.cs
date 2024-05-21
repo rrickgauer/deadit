@@ -30,12 +30,12 @@ public class InheritanceUtility
     }
 
 
-    public static TChild GetParentProperties<TParent, TChild, TMapper>(DataRow row)
+    public static TChild GetParentProperties<TParent, TChild, TParentMapper>(DataRow row)
         where TChild : TParent, new()
-        where TMapper : TableMapper<TParent>, new()
+        where TParentMapper : TableMapper<TParent>, new()
     {
         // get the mapped parent values
-        TMapper parentMapper = new();
+        TParentMapper parentMapper = new();
         TParent parent = parentMapper.ToModel(row);
 
         // create a new post instance

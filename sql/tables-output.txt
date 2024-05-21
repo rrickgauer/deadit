@@ -1,5 +1,17 @@
 
 
+Api_Access_Token
+
+| Position | Name       | Type         | IsNullable | DefaultValue      | Extra |
+|----------|------------|--------------|------------|-------------------|-------|
+| 1        | id         | int unsigned | False      |                   |       |
+| 2        | token      | char(36)     | False      |                   |       |
+| 3        | user_id    | int unsigned | False      |                   |       |
+| 4        | created_on | timestamp    | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
 Banned_Community_Name
 
 | Position | Name | Type         | IsNullable | DefaultValue | Extra |
@@ -126,6 +138,23 @@ User
 | 3        | username   | char(30)     | False      |                   |       |
 | 4        | password   | char(250)    | False      |                   |       |
 | 5        | created_on | timestamp    | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
+View_Api_Access_Token
+
+| Position | Name             | Type         | IsNullable | DefaultValue        | Extra |
+|----------|------------------|--------------|------------|---------------------|-------|
+| 1        | token_id         | int unsigned | False      | 0                   |       |
+| 2        | token_token      | char(36)     | False      |                     |       |
+| 3        | token_user_id    | int unsigned | False      |                     |       |
+| 4        | token_created_on | timestamp    | False      | CURRENT_TIMESTAMP   |       |
+| 5        | user_id          | int unsigned | False      | 0                   |       |
+| 6        | user_email       | char(200)    | False      |                     |       |
+| 7        | user_username    | char(30)     | False      |                     |       |
+| 8        | user_password    | char(250)    | False      |                     |       |
+| 9        | user_created_on  | timestamp    | False      | 0000-00-00 00:00:00 |       |
 
 
 
