@@ -2,7 +2,9 @@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @using Deadit.Lib.Domain.Constants
 @using Deadit.Lib.Domain.Enum
+@using Deadit.Lib.Domain.ViewModel
 @using Deadit.Lib.Utility
+@using Deadit.WebGui.ViewComponents
 @using Microsoft.AspNetCore.Http.Extensions;
 
 <div>
@@ -11,60 +13,11 @@
 
         @foreach (var post in Model.Posts)
         {
-            <li class="list-group-item list-group-item-post" data-post-id="@post.Post.PostId">
-
-                <div class="d-flex">
-
-                    @* Votes *@
-                    <div class="item-voting me-3" data-current-vote="@post.UserVoteType">
-
-
-                        @{
-                            if (Model.IsLoggedIn)
-                            {
-                                <button class="btn btn-sm btn-reset btn-vote btn-vote-up" title="Upvote" type="button">
-                                    @if (post.UserVoteType == VoteType.Upvote)
-                                    {
-                                        @Html.Raw(VoteButtonIconsSolid.Upvote)
-                                    }
-                                    else
-                                    {
-                                        @Html.Raw(VoteButtonIcons.Upvote)
-                                    }
-                                </button>
-
-                                <div class="item-voting-score">@post.Post.VotesScore</div>
-
-
-                                <button class="btn btn-sm btn-reset btn-vote btn-vote-down" title="Downvote" type="button">
-                                    @if (post.UserVoteType == VoteType.Downvote)
-                                    {
-                                        @Html.Raw(VoteButtonIconsSolid.Downvote)
-                                    }
-                                    else
-                                    {
-                                        @Html.Raw(VoteButtonIcons.Downvote)
-                                    }
-                                </button>
-                            }
-                            else
-                            {
-                                <button disabled class="btn btn-sm btn-reset btn-vote btn-vote-up" title="Upvote" type="button">@Html.Raw(VoteButtonIcons.Upvote)</button>
-                                <div class="item-voting-score">@post.Post.VotesScore</div>
-                                <button disabled class="btn btn-sm btn-reset btn-vote btn-vote-down" title="Downvote" type="button">@Html.Raw(VoteButtonIcons.Downvote)</button>
-                            }
-                        }
-
-                    </div>
-
-                    @* Post metadata *@
-                    <div>
-                        <div class="post-title"><h5><a class="text-decoration-none post-title-link" target="_blank" href="@post.Post.UriWeb">@post.Post.PostTitle</a></h5></div>
-                        <div class="post-created-on">@post.Post.PostType?.GetIconHtml() Submitted @post.Post.CreatedOnDifferenceDisplay ago</div>
-                        <div class="post-count-comments">@NumberUtilities.FormatNumberWithCommas(post.Post.PostCountComments) comments</div>
-                    </div>
-                </div>
-            </li>
+            @await Component.InvokeAsync(nameof(PostListItemComponent), new PostListItemViewModel()
+            {
+                IsLoggedIn = Model.IsLoggedIn,
+                Post = post,
+            });
         }
     </ul>
 

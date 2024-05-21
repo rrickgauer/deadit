@@ -26,6 +26,12 @@ builder.Services.AddControllersWithViews(options =>
     options.SuppressAsyncSuffixInActionNames = false;
 })
 
+.AddRazorOptions(options =>
+{
+    options.ViewLocationFormats.Add("/{0}.cshtml");
+    options.ViewLocationFormats.Add("/");
+})
+
 // https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-8.0#disable-automatic-400-response
 .ConfigureApiBehaviorOptions(options =>
 {

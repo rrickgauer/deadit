@@ -1,0 +1,61 @@
+﻿@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.Enum
+@using Deadit.Lib.Domain.ViewModel
+@using Deadit.Lib.Utility
+@model PostListItemViewModel;
+
+
+<li class="list-group-item list-group-item-post" data-post-id="@Model.Post.Post.PostId">
+
+    <div class="d-flex">
+
+        @* Votes *@
+        <div class="item-voting me-3" data-current-vote="@Model.Post.UserVoteType">
+
+
+            @{
+                if (Model.IsLoggedIn)
+                {
+                    <button class="btn btn-sm btn-reset btn-vote btn-vote-up" title="Upvote" type="button">
+                        @if (Model.Post.UserVoteType == VoteType.Upvote)
+                        {
+                            @Html.Raw(VoteButtonIconsSolid.Upvote)
+                        }
+                        else
+                        {
+                            @Html.Raw(VoteButtonIcons.Upvote)
+                        }
+                    </button>
+
+                    <div class="item-voting-score">@Model.Post.Post.VotesScore</div>
+
+
+                    <button class="btn btn-sm btn-reset btn-vote btn-vote-down" title="Downvote" type="button">
+                        @if (Model.Post.UserVoteType == VoteType.Downvote)
+                        {
+                            @Html.Raw(VoteButtonIconsSolid.Downvote)
+                        }
+                        else
+                        {
+                            @Html.Raw(VoteButtonIcons.Downvote)
+                        }
+                    </button>
+                }
+                else
+                {
+                    <button disabled class="btn btn-sm btn-reset btn-vote btn-vote-up" title="Upvote" type="button">@Html.Raw(VoteButtonIcons.Upvote)</button>
+                    <div class="item-voting-score">@Model.Post.Post.VotesScore</div>
+                    <button disabled class="btn btn-sm btn-reset btn-vote btn-vote-down" title="Downvote" type="button">@Html.Raw(VoteButtonIcons.Downvote)</button>
+                }
+            }
+
+        </div>
+
+        @* Post metadata *@
+        <div>
+            <div class="post-title"><h5><a class="text-decoration-none post-title-link" target="_blank" href="@Model.Post.Post.UriWeb">@Model.Post.Post.PostTitle</a></h5></div>
+            <div class="post-created-on">@Model.Post.Post.PostType?.GetIconHtml() Submitted @Model.Post.Post.CreatedOnDifferenceDisplay ago</div>
+            <div class="post-count-comments">@NumberUtilities.FormatNumberWithCommas(Model.Post.Post.PostCountComments) comments</div>
+        </div>
+    </div>
+</li>
