@@ -1,7 +1,7 @@
-import { IVoted } from "../../../domain/contracts/ivoted";
-import { VoteType } from "../../../domain/enum/vote-type";
-import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
-import { Guid } from "../../../domain/types/aliases";
+import { IVoted } from "../../domain/contracts/ivoted";
+import { VoteType } from "../../domain/enum/vote-type";
+import { VoteScore } from "../../domain/helpers/vote-scores/vote-score";
+import { Guid } from "../../domain/types/aliases";
 
 
 export const PostElements = {

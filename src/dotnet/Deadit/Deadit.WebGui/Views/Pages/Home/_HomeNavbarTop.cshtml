@@ -1,0 +1,35 @@
+﻿@model Deadit.Lib.Domain.ViewModel.HomePageViewModel;
+@using Microsoft.AspNetCore.Http.Extensions;
+@using Deadit.Lib.Domain.Enum;
+
+
+
+@if(Model.PostSort.SortByNew)
+{
+    <nav class="nav nav-pills">
+        <a class="nav-link active" aria-current="page" href="/">New</a>
+        <a class="nav-link" href="/top">Top</a>
+    </nav>
+}
+else
+{
+
+    <div class="d-flex justify-content-between align-items-baseline community-page-top-sort-options">
+        <nav class="nav nav-pills">
+            <a class="nav-link" href="/">New</a>
+            <a class="nav-link active" aria-current="page" href="/top">Top</a>
+        </nav>
+
+        <div class="top-post-sort d-flex justify-content-start align-items-center">
+            <p class="m-0 p-0 me-2">Sort by:</p>
+
+            <select class="form-select w-auto top-post-sort-options">
+                @Html.Raw(Model.PostSort.TopSort.GetSortOptionHtml())
+            </select>
+        </div>
+
+    </div>
+}
+
+
+

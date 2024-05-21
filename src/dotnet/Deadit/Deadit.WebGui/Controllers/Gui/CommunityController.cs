@@ -46,7 +46,7 @@ public class CommunityController(CommunityPageVMService communityPage, IPostServ
     public async Task<IActionResult> GetCommunityPageAsync([FromRoute] string communityName, [FromQuery] uint? page)
     {
         // og shit below
-        PostSorting postSorting = new(CommunityPagePostSort.New);
+        PostSorting postSorting = new(PostSortType.New);
 
         return await ReturnCommunityPageAsync(communityName, postSorting, page);
     }
@@ -63,7 +63,7 @@ public class CommunityController(CommunityPageVMService communityPage, IPostServ
     {
         TopPostSort topSort = sort ?? TopPostSort.Month;
 
-        PostSorting postSorting = new(CommunityPagePostSort.Top, topSort);
+        PostSorting postSorting = new(PostSortType.Top, topSort);
 
         return await ReturnCommunityPageAsync(communityName, postSorting, page);
     }

@@ -1,4 +1,5 @@
-﻿using Deadit.Lib.Domain.Model;
+﻿using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Paging;
 using System.Data;
 
@@ -6,6 +7,11 @@ namespace Deadit.Lib.Repository.Contracts;
 
 public interface IPostRepository
 {
+
+    public Task<DataTable> SelectUserNewHomePostsAsnc(uint clientId, PaginationPosts pagination);
+    public Task<DataTable> SelectUserTopHomePostsAsnc(uint clientId, PaginationPosts pagination, DateTime createdAfter);
+
+
     public Task<DataTable> SelectNewestCommunityPostsAsync(string communityName, PaginationPosts pagination);
     public Task<DataTable> SelectNewestCommunityPostsAsync(string communityName);
 

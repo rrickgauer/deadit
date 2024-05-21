@@ -20,6 +20,36 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     #endregion
 
 
+
+    #region - User Home Feed -
+
+    public async Task<DataTable> SelectUserNewHomePostsAsnc(uint clientId, PaginationPosts pagination)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SelectNewUserHomePostsLimit);
+
+        command.Parameters.AddWithValue("@user_id", clientId);
+
+        command.AddPaginationParamters(pagination);
+
+        return await _connection.FetchAllAsync(command);
+    }
+
+    public async Task<DataTable> SelectUserTopHomePostsAsnc(uint clientId, PaginationPosts pagination, DateTime createdAfter)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SelectTopHomePagePostsLimit);
+
+        command.Parameters.AddWithValue("@user_id", clientId);
+        command.Parameters.AddWithValue("@created_on", createdAfter);
+
+        command.AddPaginationParamters(pagination);
+
+        return await _connection.FetchAllAsync(command);
+    }
+
+    #endregion
+
+
+
     #region - Select Single Post -
 
     public async Task<DataRow?> SelectPostAsync(Guid postId)

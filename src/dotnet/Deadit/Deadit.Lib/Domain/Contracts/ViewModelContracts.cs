@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Paging;
 
 namespace Deadit.Lib.Domain.Contracts;
 
@@ -12,7 +13,6 @@ public interface IClientIdArg
 {
     public uint? ClientId { get; set; }
 }
-
 
 public interface ICommunityNameArg
 {
@@ -31,4 +31,7 @@ public interface ISortOptionArg
 
 
 
-
+public interface IPostPagination
+{
+    public PaginationPosts Pagination { get; set; }
+}

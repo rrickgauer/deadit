@@ -44,4 +44,14 @@ public sealed class PostVotesRepositoryCommands
             AND v.post_community_name = @community_name;";
 
 
+
+    public const string SelectUserPostVotesLimit = @"
+        SELECT
+            v.*
+        FROM
+            View_Vote_Post v
+        WHERE
+            v.vote_post_user_id = @user_id
+            AND v.vote_post_post_id in {0};";
+
 }

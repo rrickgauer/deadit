@@ -7,6 +7,7 @@ using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Service.Contracts;
+using System.Runtime.InteropServices;
 
 namespace Deadit.Lib.Service.Implementations;
 
@@ -17,6 +18,48 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     private readonly ITableMapperService _tableMapperService = tableMapperService;
     private readonly IPostRepository _postRepository = postRepository;
     #endregion
+
+
+
+    #region - Home Feed -
+
+    public async Task<ServiceDataResponse<List<ViewPost>>> GetUserNewHomeFeedAsycn(uint clientId, PaginationPosts pagination)
+    {
+        try
+        {
+            var table = await _postRepository.SelectUserNewHomePostsAsnc(clientId, pagination);
+
+            var posts = _tableMapperService.ToModels<ViewPost>(table);
+
+            return posts;
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+    public async Task<ServiceDataResponse<List<ViewPost>>> GetUserTopHomeFeedAsync(uint clientId, PaginationPosts pagination, TopPostSort sort)
+    {
+        try
+        {
+            var createdAfter = sort.GetStartingDate();
+            var table = await _postRepository.SelectUserTopHomePostsAsnc(clientId, pagination, createdAfter);
+            var posts = _tableMapperService.ToModels<ViewPost>(table);
+
+            return posts;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+
+    #endregion
+
+
+
 
     #region - Newest Community Posts -
 
