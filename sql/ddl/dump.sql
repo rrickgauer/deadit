@@ -22,6 +22,26 @@
 USE `Deadit_Dev`;
 
 --
+-- Table structure for table `Api_Access_Token`
+--
+
+DROP TABLE IF EXISTS `Api_Access_Token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Api_Access_Token` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `token` char(36) NOT NULL,
+  `user_id` int unsigned NOT NULL,
+  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `token` (`token`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `Api_Access_Token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `Banned_Community_Name`
 --
 
@@ -230,6 +250,26 @@ CREATE TABLE `User` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary view structure for view `View_Api_Access_Token`
+--
+
+DROP TABLE IF EXISTS `View_Api_Access_Token`;
+/*!50001 DROP VIEW IF EXISTS `View_Api_Access_Token`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `View_Api_Access_Token` AS SELECT 
+ 1 AS `token_id`,
+ 1 AS `token_token`,
+ 1 AS `token_user_id`,
+ 1 AS `token_created_on`,
+ 1 AS `user_id`,
+ 1 AS `user_email`,
+ 1 AS `user_username`,
+ 1 AS `user_password`,
+ 1 AS `user_created_on`*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Temporary view structure for view `View_Comment`
@@ -625,6 +665,24 @@ DELIMITER ;
 USE `Deadit_Dev`;
 
 --
+-- Final view structure for view `View_Api_Access_Token`
+--
+
+/*!50001 DROP VIEW IF EXISTS `View_Api_Access_Token`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `View_Api_Access_Token` AS select `t`.`id` AS `token_id`,`t`.`token` AS `token_token`,`t`.`user_id` AS `token_user_id`,`t`.`created_on` AS `token_created_on`,`u`.`user_id` AS `user_id`,`u`.`user_email` AS `user_email`,`u`.`user_username` AS `user_username`,`u`.`user_password` AS `user_password`,`u`.`user_created_on` AS `user_created_on` from (`Api_Access_Token` `t` join `View_User` `u` on((`u`.`user_id` = `t`.`user_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `View_Comment`
 --
 
@@ -849,7 +907,7 @@ USE `Deadit_Dev`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-17 22:13:02
+-- Dump completed on 2024-05-20 19:14:43
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
@@ -931,4 +989,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-17 22:13:08
+-- Dump completed on 2024-05-20 19:15:10
