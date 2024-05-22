@@ -2,6 +2,7 @@ import { NativeEvents } from "../../../domain/constants/native-events";
 import { IControllerAsync } from "../../../domain/contracts/i-controller";
 import { IVoted } from "../../../domain/contracts/ivoted";
 import { VoteType } from "../../../domain/enum/vote-type";
+import { PostDropdownItemClickEvent } from "../../../domain/events/events";
 import { VoteButton, VoteButtonType } from "../../../domain/helpers/vote-scores/vote-button";
 import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
 import { PostPageParms } from "../../../domain/model/post-models";
@@ -9,6 +10,7 @@ import { Guid } from "../../../domain/types/aliases";
 import { VoteService } from "../../../services/vote-service";
 import { ErrorUtility } from "../../../utilities/error-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
+import { PostDropdownButton } from "./post-dropdown-button";
 
 
 
@@ -19,6 +21,7 @@ export type PostContentArgs = PostPageParms & {
 
 export const PostContentElements = {
     ContainerClass: 'card-post-content',
+    DropdownMenuClass: 'dropdown-post',
 }
 
 export class PostContent implements IControllerAsync, IVoted
@@ -27,6 +30,7 @@ export class PostContent implements IControllerAsync, IVoted
     private readonly _container: HTMLDivElement;
     private readonly _voting: VoteScore;
     private readonly _voteService: VoteService;
+    private _dropdownMenu: HTMLDivElement;
 
     //#region - Getters/Setters -
 
@@ -53,6 +57,8 @@ export class PostContent implements IControllerAsync, IVoted
         this._container = document.querySelector(`.${PostContentElements.ContainerClass}`) as HTMLDivElement;
         this._voting = new VoteScore(this._container.querySelector(`.item-voting`));
 
+        this._dropdownMenu = this._container.querySelector(`.${PostContentElements.DropdownMenuClass}`) as HTMLDivElement;
+
         this._voteService = new VoteService();
     }
 
@@ -74,6 +80,15 @@ export class PostContent implements IControllerAsync, IVoted
             }
 
             await this.onVoteButtonClick(buttonElement);
+        });
+
+
+
+        PostDropdownButton.addListenersToDropdown(this._dropdownMenu);
+
+        PostDropdownItemClickEvent.addListener((message) =>
+        {
+            alert(message.data.action);
         });
     }
 

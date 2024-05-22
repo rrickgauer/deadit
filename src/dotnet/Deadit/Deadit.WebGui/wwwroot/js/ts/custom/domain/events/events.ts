@@ -1,3 +1,4 @@
+import { PostDropdownAction } from "../enum/post-dropdown-action";
 import { SortOption } from "../enum/sort-option";
 import { TopPostSort } from "../enum/top-post-sort";
 import { CommentApiResponse } from "../model/comment-models";
@@ -42,3 +43,8 @@ export type TopPostSortOptionChangedData = {
 export const TopPostSortOptionChangedEvent = new CustomMessage<TopPostSortOptionChangedData>();
 
 
+export type PostDropdownItemClickData = {
+    action: PostDropdownAction,
+}
+
+export const PostDropdownItemClickEvent = new CustomMessage<PostDropdownItemClickData>();
