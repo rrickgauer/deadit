@@ -27,6 +27,7 @@ export type CommentApiResponse = UserVoteScores & {
 export type GetCommentsApiResponse = {
     comments?: CommentApiResponse[];
     isLoggedIn?: boolean;
+    postIsDeleted?: boolean;
 }
 
 

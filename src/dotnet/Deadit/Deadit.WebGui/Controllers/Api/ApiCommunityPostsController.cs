@@ -126,4 +126,29 @@ public class ApiCommunityPostsController(IPostService postService) : InternalApi
 
         return post;
     }
+
+
+    [HttpDelete("{postId:guid}")]
+    [ActionName(nameof(DeletePostAsync))]
+    [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(ModifyPostFilter))]
+    public async Task<IActionResult> DeletePostAsync([FromRoute] string communityName, [FromRoute] Guid postId)
+    {
+        try
+        {
+            var deletePost = await _postService.AuthorDeletePostAsync(postId);
+
+            if (!deletePost.Successful)
+            {
+                return BadRequest(deletePost);
+            }
+
+            return NoContent();
+
+        }
+        catch(ServiceResponseException ex)
+        {
+            return BadRequest(ex.Response);
+        }
+    }
 }

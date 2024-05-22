@@ -8,32 +8,32 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Deadit.Lib.Filter;
 
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.Always)]
-public class CreateVoteFilter(VoteAuth voteAuth) : IAsyncActionFilter
+public class CommentVoteFilter(CommentVoteAuth auth) : IAsyncActionFilter
 {
-    private readonly VoteAuth _voteAuth = voteAuth;
+    private readonly CommentVoteAuth _auth = auth;
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
         try
         {
-            var isAuth = await _voteAuth.HasPermissionAsync(new()
+
+            var result = await _auth.HasPermissionAsync(new()
             {
-                VoteForm = context.GetRequestCreateVoteForm(),
-                ClientId = context.GetSessionClientId(),
+                CommentId = context.GetCommentIdRouteValue(),
             });
 
-            if (!isAuth.Successful)
+            if (!result.Successful)
             {
-                context.ReturnBadServiceResponse(isAuth);
+                context.ReturnBadServiceResponse(result);
                 return;
             }
+
+            await next();
         }
-        catch(ServiceResponseException ex)
+        catch (ServiceResponseException ex)
         {
-            context.ReturnBadServiceResponse(ex);
+            context.ReturnBadServiceResponse(ex.Response);
             return;
         }
-
-        await next();
     }
 }

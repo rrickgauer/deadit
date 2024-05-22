@@ -4,46 +4,55 @@
 
 <div class="container">
 
-    <div class="card">
-
-        <div class="card-header">Share your thoughts</div>
-    
-        <div class="card-body">
-
-
-            @if(Model.IsLoggedIn)
-            {
-                <form class="form-post-comment root">
-                    <div class="form-feedback"></div>
-
-                    <fieldset>
-
-                        @* Content *@
-                        <div class="input-feedback">
-                            <label class="form-label-container">
-                                <textarea class="form-control input-feedback-input" name="content" rows="3"></textarea>
-                                <div class="valid-feedback"></div>
-                                <div class="invalid-feedback"></div>
-                            </label>
-                        </div>
-
-                        @* Action Buttons *@
-                        <div class="d-flex">
-                            <button class="btn btn-sm btn-success btn-submit" type="submit">Save</button>
-                        </div>
-                    </fieldset>
-
-                </form>
-            }
-            else
-            {
-                @* Log in to comment button *@
-                <button class="btn btn-primary btn-root-form-login" type="button">Log in to comment</button>
-            }
-
+    @if (Model.Post.PostDeletedOn.HasValue)
+    {
+        <div class="alert alert-light" role="alert">
+            Sorry, this post was deleted by the person who originally posted it.
         </div>
+    }
+    else
+    {
+        <div class="card">
 
-    </div>
+            <div class="card-header">Share your thoughts</div>
+
+            <div class="card-body">
+
+                @if (!Model.IsLoggedIn)
+                {
+                    @* Log in to comment button *@
+                    <button class="btn btn-primary btn-root-form-login" type="button">Log in to comment</button>
+                }
+                else
+                {
+                    <form class="form-post-comment root">
+                        <div class="form-feedback"></div>
+
+                        <fieldset>
+
+                            @* Content *@
+                            <div class="input-feedback">
+                                <label class="form-label-container">
+                                    <textarea class="form-control input-feedback-input" name="content" rows="3"></textarea>
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback"></div>
+                                </label>
+                            </div>
+
+                            @* Action Buttons *@
+                            <div class="d-flex">
+                                <button class="btn btn-sm btn-success btn-submit" type="submit">Save</button>
+                            </div>
+                        </fieldset>
+
+                    </form>
+                }
+
+            </div>
+        </div>
+    }
+
+
 </div>
 
 

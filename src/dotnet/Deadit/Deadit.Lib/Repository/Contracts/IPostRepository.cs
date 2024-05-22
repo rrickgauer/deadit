@@ -18,9 +18,6 @@ public interface IPostRepository
     public Task<DataTable> SelectTopCommunityPostsAsync(string communityName, DateTime createdAfter, PaginationPosts pagination);
     public Task<DataTable> SelectTopCommunityPostsAsync(string communityName, DateTime createdAfter);
 
-    public Task<DataTable> SelectCommunityTextPostsAsync(string communityName);
-    public Task<DataTable> SelectCommunityLinkPostsAsync(string communityName);
-
     public Task<DataRow?> SelectPostAsync(Guid postId);
     public Task<DataRow?> SelectPostTextAsync(Guid postId);
     public Task<DataRow?> SelectPostLinkAsync(Guid postId);
@@ -29,4 +26,6 @@ public interface IPostRepository
     public Task<List<int>> InsertPostAsync(PostLink post);
 
     public Task<int> UpdatePostAsync(PostText post);
+
+    public Task<int> MarkPostDeletedAsync(Guid postId);
 }

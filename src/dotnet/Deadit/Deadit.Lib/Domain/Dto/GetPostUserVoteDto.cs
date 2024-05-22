@@ -14,7 +14,7 @@ public class GetPostUserVoteDto
 
 public static class GetPostUserVoteDtoExtensions
 {
-    public static List<GetPostUserVoteDto> BuildGetPostUserVoteDtos(this List<ViewPost> posts, List<ViewVotePost> userVotes)
+    public static List<GetPostUserVoteDto> BuildGetPostUserVoteDtos(this IEnumerable<ViewPost> posts, List<ViewVotePost> userVotes)
     {
         var userVotesDict = userVotes.ToVotesDict();
 

@@ -40,6 +40,8 @@ public class CommentFilters
                 CommentId = context.GetCommentIdRouteValue(),
                 AuthPermissionType = PermissionType,
                 UserId = clientId,
+                PostId = context.GetPostIdRouteValue(),
+                CommunityName = context.GetCommunityNameRouteValue(), 
             };
 
             return result;

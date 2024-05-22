@@ -1,4 +1,4 @@
-import { ApiPostsLink, ApiPostsText } from "../api/api-posts";
+import { ApiPosts, ApiPostsLink, ApiPostsText } from "../api/api-posts";
 import { CreateLinkPostApiRequest, LinkPostApiResponse, CreateTextPostApiRequest, TextPostApiResponse, UpdateTextPostApiRequest } from "../domain/model/post-models";
 import { Guid } from "../domain/types/aliases";
 import { ServiceUtility } from "../utilities/service-utility";
@@ -37,5 +37,14 @@ export class PostService
         const apiResponse = await api.put(postId, request);
 
         return await ServiceUtility.toServiceResponse<TextPostApiResponse>(apiResponse);
+    }
+
+    public async deletePost(postId: Guid)
+    {
+        const api = new ApiPosts(this._communityName);
+
+        const response = await api.delete(postId);
+
+        return await ServiceUtility.toServiceResponseNoContent(response);
     }
 }

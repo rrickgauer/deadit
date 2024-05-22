@@ -16,6 +16,17 @@ public class ViewPostLink : ViewPost, ITableView<ViewPostLink, PostLink>
 
     public override string PostBodyContent => PostUrl ?? string.Empty;
 
+
+    public override void HandlePostDeleted()
+    {
+        base.HandlePostDeleted();
+
+        if (PostDeletedOn.HasValue)
+        {   
+            PostUrl = null;
+        }
+    }
+
     #region - ITableView -
 
     public static explicit operator PostLink(ViewPostLink other) => other.CastToModel<ViewPostLink, PostLink>();

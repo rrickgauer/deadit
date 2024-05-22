@@ -41,6 +41,22 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     [CopyToProperty<PostLink>(nameof(PostLink.CreatedOn))]
     public DateTime? PostCreatedOn { get; set; }
 
+    [SqlColumn("post_deleted_on")]
+    [CopyToProperty<PostText>(nameof(PostText.DeletedOn))]
+    [CopyToProperty<PostLink>(nameof(PostLink.DeletedOn))]
+    public DateTime? PostDeletedOn { get; set; }
+
+    [SqlColumn("post_archived_on")]
+    [CopyToProperty<PostText>(nameof(PostText.ArchivedOn))]
+    [CopyToProperty<PostLink>(nameof(PostLink.ArchivedOn))]
+    public DateTime? PostArchivedOn { get; set; }
+
+    [SqlColumn("post_mod_removed_on")]
+    [CopyToProperty<PostText>(nameof(PostText.ModRemovedOn))]
+    [CopyToProperty<PostLink>(nameof(PostLink.ModRemovedOn))]
+    public DateTime? PostModRemovedOn { get; set; }
+
+
     [SqlColumn("post_count_comments")]
     public uint PostCountComments { get; set; } = 0;
 
@@ -63,6 +79,16 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
 
     [JsonIgnore]
     public virtual string PostBodyContent => string.Empty;
+
+
+
+    public virtual void HandlePostDeleted()
+    {
+        if (PostDeletedOn.HasValue)
+        {
+            //PostTitle = "[Post deleted by author]";
+        }
+    }
 
 
     #region - ICreatedUri -

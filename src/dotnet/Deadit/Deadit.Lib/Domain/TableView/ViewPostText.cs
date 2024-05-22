@@ -18,6 +18,19 @@ public class ViewPostText : ViewPost,
 
     public override string PostBodyContent => MarkdownUtility.ToHtmlString(PostContent ?? string.Empty);
 
+
+    public override void HandlePostDeleted()
+    {
+        base.HandlePostDeleted();
+
+        if (PostDeletedOn.HasValue)
+        {
+            PostContent = "[Post deleted by author]";
+        }
+    }
+
+
+
     #region - ITableView -
 
     public static explicit operator PostText(ViewPostText other) => other.CastToModel<ViewPostText, PostText>();

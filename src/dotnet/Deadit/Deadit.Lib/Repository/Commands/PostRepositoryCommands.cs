@@ -4,8 +4,6 @@ namespace Deadit.Lib.Repository.Commands;
 
 public sealed class PostRepositoryCommands
 {
-
-
     private const string _selectNewHomePagePostsTemplate = @"
         SELECT
             p.*
@@ -17,6 +15,7 @@ public sealed class PostRepositoryCommands
             FROM Community_Membership m
             WHERE m.user_id = @user_id
             AND m.community_id = p.post_community_id
+            AND p.post_deleted_on IS NULL
         )
         ORDER BY p.post_created_on DESC
         {0};";
@@ -40,6 +39,7 @@ public sealed class PostRepositoryCommands
                 WHERE m.user_id = @user_id 
                 AND m.community_id = p.post_community_id
                 AND p.post_created_on > @created_on
+                AND p.post_deleted_on IS NULL
             )
         ORDER BY p.post_count_votes_score DESC
         {0};";
@@ -56,6 +56,7 @@ public sealed class PostRepositoryCommands
             View_Post p
         WHERE
             p.community_name = @community_name
+            AND p.post_deleted_on IS NULL
         ORDER BY 
             p.post_created_on DESC
         {0};";
@@ -72,29 +73,13 @@ public sealed class PostRepositoryCommands
         WHERE
             p.community_name = @community_name
             AND p.post_created_on > @created_on
+            AND p.post_deleted_on IS NULL
         ORDER BY
             p.post_count_votes_score DESC
         {0};";
 
     public static readonly string SelectTopCommunityPosts = string.Format(_selectTopCommunityPostsTemplate, string.Empty);
     public static readonly string SelectTopCommunityPostsLimit = string.Format(_selectTopCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE);
-
-    public const string SelectAllCommunityLink = @"
-        SELECT
-            *
-        FROM
-            View_Post_Link p
-        WHERE
-            p.community_name = @community_name;";
-
-
-    public const string SelectAllCommunityText = @"
-        SELECT
-            *
-        FROM
-            View_Post_Text p
-        WHERE
-            p.community_name = @community_name;";
 
 
 
@@ -169,4 +154,15 @@ public sealed class PostRepositoryCommands
             (@id, @url) AS new_values 
         ON DUPLICATE KEY UPDATE
             url = new_values.url;";
+
+
+    public const string AuthorDeletePost = @"
+        UPDATE
+            Post
+        SET
+            deleted_on = now()
+        WHERE
+            id = @post_id;";
+
+
 }

@@ -9,12 +9,13 @@ using static Deadit.Lib.Auth.PermissionContracts;
 
 namespace Deadit.Lib.Auth;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always)]
-public class ModifyPostAuth(IPostService postService) : IAsyncPermissionsAuth<ModifyPostAuthData>
-{
-    private readonly IPostService _postService = postService;
 
-    public async Task<ServiceResponse> HasPermissionAsync(ModifyPostAuthData data)
+[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always)]
+public class PostVoteAuth(IPostService postService) : IAsyncPermissionsAuth<PostVoteAuthData>
+{
+    protected readonly IPostService _postService = postService;
+
+    public virtual async Task<ServiceResponse> HasPermissionAsync(PostVoteAuthData data)
     {
         var getPost = await _postService.GetPostAsync(data.PostId);
 
@@ -28,16 +29,6 @@ public class ModifyPostAuth(IPostService postService) : IAsyncPermissionsAuth<Mo
             throw new NotFoundHttpResponseException();
         }
 
-        if (post.PostAuthorId != data.ClientId)
-        {
-            throw new ForbiddenHttpResponseException();
-        }
-
-        if (post.CommunityName != data.CommunityName)
-        {
-            throw new NotFoundHttpResponseException();
-        }
-
         if (post.PostDeletedOn.HasValue)
         {
             throw new ForbiddenHttpResponseException();
@@ -45,4 +36,5 @@ public class ModifyPostAuth(IPostService postService) : IAsyncPermissionsAuth<Mo
 
         return new();
     }
+
 }

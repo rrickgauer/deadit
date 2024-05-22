@@ -19,8 +19,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     private readonly IPostRepository _postRepository = postRepository;
     #endregion
 
-
-
     #region - Home Feed -
 
     public async Task<ServiceDataResponse<List<ViewPost>>> GetUserNewHomeFeedAsycn(uint clientId, PaginationPosts pagination)
@@ -57,9 +55,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
 
     #endregion
-
-
-
 
     #region - Newest Community Posts -
 
@@ -136,42 +131,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
     #endregion
 
-    #region - Specific Type (Link/Text) Community Posts -
-
-    public async Task<ServiceDataResponse<List<ViewPostText>>> GetAllTextPostsAsync(string communityName)
-    {
-        try
-        {
-            var repoResponse = await _postRepository.SelectCommunityTextPostsAsync(communityName);
-
-            var models = _tableMapperService.ToModels<ViewPostText>(repoResponse);
-
-            return new(models);
-        }
-        catch (RepositoryException ex)
-        {
-            return ex;
-        }
-
-    }
-
-    public async Task<ServiceDataResponse<List<ViewPostLink>>> GetAllLinkPostsAsync(string communityName)
-    {
-        try
-        {
-            var repoResponse = await _postRepository.SelectCommunityLinkPostsAsync(communityName);
-
-            var models = _tableMapperService.ToModels<ViewPostLink>(repoResponse);
-
-            return new(models);
-        }
-        catch (RepositoryException ex)
-        {
-            return ex;
-        }
-    }
-
-    #endregion
 
     #region - Get Single Post -
 
@@ -307,4 +266,29 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     }
 
     #endregion
+
+
+
+    #region - Delete -
+
+    public async Task<ServiceResponse> AuthorDeletePostAsync(Guid postId)
+    {
+        try
+        {
+
+            var result = await _postRepository.MarkPostDeletedAsync(postId);
+
+            return new();
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+
+    #endregion
+
+
+
 }

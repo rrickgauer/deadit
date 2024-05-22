@@ -39,9 +39,9 @@ export class PostDropdownButton implements IController
 
 
 
-    public static addListenersToDropdown(dropdown: Element)
+    public static addListenersToDropdown(dropdown?: Element)
     {
-        dropdown.querySelectorAll('.dropdown-item').forEach(buttonElement =>
+        dropdown?.querySelectorAll('.dropdown-item').forEach(buttonElement =>
         {
             const item = new PostDropdownButton(buttonElement);
             item.control();

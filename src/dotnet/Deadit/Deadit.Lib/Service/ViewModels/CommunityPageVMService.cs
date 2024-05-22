@@ -95,6 +95,8 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
             posts = await GetTopCommunityPostsAsync(args);
         }
 
+        posts.ForEach(p => p.HandlePostDeleted());
+
         return posts;
     }
 

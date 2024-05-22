@@ -16,7 +16,6 @@ namespace Deadit.WebGui.Controllers.Api;
 
 [ApiController]
 [Route("api/communities/{communityName}/posts/{postId:guid}/comments")]
-[ServiceFilter(typeof(PostExistsFilter))]
 public class ApiCommentsController(ICommentService commentService, GetCommentsApiVMService getCommentsApiVMService, GetCommentDtoVMService getCommentDtoVMService) : InternalApiController, IControllerName
 {
     // IControllerName
@@ -35,6 +34,7 @@ public class ApiCommentsController(ICommentService commentService, GetCommentsAp
     /// <returns></returns>
     [HttpGet]
     [ActionName(nameof(GetCommentsAsync))]
+    [ServiceFilter(typeof(PostExistsFilter))]
     public async Task<IActionResult> GetCommentsAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromQuery] SortOption? sort)
     {
         SortOption sortOption = sort ?? SortOption.New;

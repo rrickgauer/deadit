@@ -7,15 +7,17 @@ using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Domain.ViewModel;
 using Deadit.Lib.Service.Contracts;
+using System.Runtime.InteropServices;
 
 namespace Deadit.Lib.Service.ViewModels;
 
 
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui)]
-public class GetCommentsApiVMService(ICommentService commentService, ICommentVotesService commentVotesService) : IVMService<GetCommentsApiVMServiceParms, GetCommentsApiViewModel>
+public class GetCommentsApiVMService(ICommentService commentService, ICommentVotesService commentVotesService, IPostService postService) : IVMService<GetCommentsApiVMServiceParms, GetCommentsApiViewModel>
 {
     private readonly ICommentService _commentService = commentService;
     private readonly ICommentVotesService _commentVotesService = commentVotesService;
+    private readonly IPostService _postService = postService;
 
     public async Task<ServiceDataResponse<GetCommentsApiViewModel>> GetViewModelAsync(GetCommentsApiVMServiceParms args)
     {
@@ -37,10 +39,14 @@ public class GetCommentsApiVMService(ICommentService commentService, ICommentVot
             var votes = await GetUserCommentVotesAsync(args.PostId, args.ClientId);
             var dtos = comments.BuildGetCommentDtos(args.ClientId, votes);
 
+
+            var post = await GetPostAsync(args);
+
             GetCommentsApiViewModel viewModel = new()
             {
                 Comments = dtos.ToList(),
                 IsLoggedIn = args.ClientId.HasValue,
+                PostIsDeleted = post.PostDeletedOn.HasValue,
             };
 
             return viewModel;
@@ -68,4 +74,23 @@ public class GetCommentsApiVMService(ICommentService commentService, ICommentVot
 
         return getVotes.Data ?? new();
     }
+
+    
+    
+    private async Task<ViewPost> GetPostAsync(GetCommentsApiVMServiceParms args)
+    {
+        var getPost = await _postService.GetPostAsync(args.PostId);
+        
+        if (!getPost.Successful)
+        {
+            throw new ServiceResponseException(getPost);
+        }
+
+        var post = NotFoundHttpResponseException.ThrowIfNot<ViewPost>(getPost.Data);
+
+        return post;
+    }
+
+
+
 }
