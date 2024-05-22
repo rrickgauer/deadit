@@ -1,8 +1,9 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
 import { IControllerAsync } from "../../../domain/contracts/i-controller";
 import { IVoted } from "../../../domain/contracts/ivoted";
+import { PostDropdownAction } from "../../../domain/enum/post-dropdown-action";
 import { VoteType } from "../../../domain/enum/vote-type";
-import { PostDropdownItemClickEvent } from "../../../domain/events/events";
+import { PostDropdownItemClickData, PostDropdownItemClickEvent } from "../../../domain/events/events";
 import { VoteButton, VoteButtonType } from "../../../domain/helpers/vote-scores/vote-button";
 import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
 import { PostPageParms } from "../../../domain/model/post-models";
@@ -10,6 +11,7 @@ import { Guid } from "../../../domain/types/aliases";
 import { VoteService } from "../../../services/vote-service";
 import { ErrorUtility } from "../../../utilities/error-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
+import { PostContentForm } from "./post-content-form";
 import { PostDropdownButton } from "./post-dropdown-button";
 
 
@@ -31,6 +33,7 @@ export class PostContent implements IControllerAsync, IVoted
     private readonly _voting: VoteScore;
     private readonly _voteService: VoteService;
     private _dropdownMenu: HTMLDivElement;
+    private _editForm: PostContentForm;
 
     //#region - Getters/Setters -
 
@@ -56,15 +59,15 @@ export class PostContent implements IControllerAsync, IVoted
         this._args = args;
         this._container = document.querySelector(`.${PostContentElements.ContainerClass}`) as HTMLDivElement;
         this._voting = new VoteScore(this._container.querySelector(`.item-voting`));
-
         this._dropdownMenu = this._container.querySelector(`.${PostContentElements.DropdownMenuClass}`) as HTMLDivElement;
-
+        this._editForm = new PostContentForm(this._communityName, this._postId);
         this._voteService = new VoteService();
     }
 
     public async control()
     {
         this.addListeners();
+        await this._editForm.control();
     }
 
     private addListeners = () =>
@@ -83,12 +86,11 @@ export class PostContent implements IControllerAsync, IVoted
         });
 
 
-
         PostDropdownButton.addListenersToDropdown(this._dropdownMenu);
 
         PostDropdownItemClickEvent.addListener((message) =>
         {
-            alert(message.data.action);
+            this.onPostDropdownItemClickEvent(message.data);
         });
     }
 
@@ -173,5 +175,23 @@ export class PostContent implements IControllerAsync, IVoted
     {
         this._voting.downvoted();
         return this._voting.currentVote;
+    }
+
+
+    private onPostDropdownItemClickEvent(message: PostDropdownItemClickData)
+    {
+
+        switch (message.action)
+        {
+            case PostDropdownAction.Edit:
+                this._editForm.editing = true;
+                break;
+
+            default:
+                alert(message.action);
+                break;
+        }
+
+
     }
 }

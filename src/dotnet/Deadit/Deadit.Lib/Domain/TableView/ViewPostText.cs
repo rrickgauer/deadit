@@ -16,7 +16,7 @@ public class ViewPostText : ViewPost,
     public string? PostContent { get; set; }
 
 
-    public override string PostBodyContent => MarkdownUtility.ToHtml(PostContent ?? string.Empty);
+    public override string PostBodyContent => MarkdownUtility.ToHtmlString(PostContent ?? string.Empty);
 
     #region - ITableView -
 

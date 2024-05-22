@@ -242,7 +242,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
     #region - Save -
 
-    public async Task<ServiceDataResponse<ViewPostText>> SavePostTextAsync(PostText post)
+    public async Task<ServiceDataResponse<ViewPostText>> CreatePostTextAsync(PostText post)
     {
         // make sure the post has an id value
         if (post.Id is not Guid postId)
@@ -263,7 +263,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
         return await GetTextPostAsync(postId);
     }
 
-    public async Task<ServiceDataResponse<ViewPostLink>> SavePostLinkAsync(PostLink post)
+    public async Task<ServiceDataResponse<ViewPostLink>> CreatePostLinkAsync(PostLink post)
     {
         // make sure the post has an id value
         if (post.Id is not Guid postId)
@@ -282,6 +282,28 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
         }
 
         return await GetLinkPostAsync(postId);
+    }
+
+
+    public async Task<ServiceDataResponse<ViewPostText>> SavePostTextAsync(PostText post)
+    {
+        // make sure the post has an id value
+        if (post.Id is not Guid postId)
+        {
+            throw new Exception($"{nameof(PostText.Id)} is null");
+        }
+
+        // save the post to the database
+        try
+        {
+            var repoResult = await _postRepository.UpdatePostAsync(post);
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+
+        return await GetTextPostAsync(postId);
     }
 
     #endregion

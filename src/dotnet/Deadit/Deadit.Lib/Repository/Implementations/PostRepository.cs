@@ -19,8 +19,6 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     private readonly TransactionConnection _transactionConnection = transactionConnection;
     #endregion
 
-
-
     #region - User Home Feed -
 
     public async Task<DataTable> SelectUserNewHomePostsAsnc(uint clientId, PaginationPosts pagination)
@@ -47,8 +45,6 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     }
 
     #endregion
-
-
 
     #region - Select Single Post -
 
@@ -82,7 +78,6 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     }
 
     #endregion
-
 
     #region - Select Newest Community Posts -
 
@@ -122,7 +117,6 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     }
 
     #endregion
-
 
     #region - Select Top Community Posts -
 
@@ -226,6 +220,17 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
         command.Parameters.AddWithValue("@created_on", post.CreatedOn);
 
         return await transaction.ExecuteInTransactionAsync(command);
+    }
+
+
+    public async Task<int> UpdatePostAsync(PostText post)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SavePostText);
+
+        command.Parameters.AddWithValue("@id", post.Id);
+        command.Parameters.AddWithValue("@content", post.Content);
+
+        return await _connection.ModifyAsync(command);
     }
 
     #endregion

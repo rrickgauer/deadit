@@ -1,6 +1,6 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
 import { IController } from "../../../domain/contracts/i-controller";
-import { LinkPostApiRequest, TextPostApiRequest } from "../../../domain/model/post-models";
+import { CreateLinkPostApiRequest, CreateTextPostApiRequest } from "../../../domain/model/post-models";
 import { PostService } from "../../../services/post-service";
 import { ErrorUtility } from "../../../utilities/error-utility";
 import { CreatePostFormElements } from "./create-post-form-elements";
@@ -130,11 +130,11 @@ export class CreatePostTextForm extends CreatePostFormBase
         }
     }
 
-    private getFormData = (): TextPostApiRequest =>
+    private getFormData = (): CreateTextPostApiRequest =>
     {
         const model = this._form.getModel();
 
-        const formData: TextPostApiRequest = {
+        const formData: CreateTextPostApiRequest = {
             title: model.title,
             content: model.content,
         };
@@ -181,11 +181,11 @@ export class CreatePostLinkForm extends CreatePostFormBase
         }
     }
 
-    private getFormData = (): LinkPostApiRequest =>
+    private getFormData = (): CreateLinkPostApiRequest =>
     {
         const model = this._form.getModel();
 
-        const formData: LinkPostApiRequest = {
+        const formData: CreateLinkPostApiRequest = {
             title: model.title,
             url: model.content,
         };

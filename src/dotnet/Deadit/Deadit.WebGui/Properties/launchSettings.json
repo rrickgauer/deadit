@@ -28,7 +28,7 @@
     "Profile 1": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:7013/c/rmr/posts/8381cb4c-d4c3-40aa-b36e-db5893dbcf93",
+      "launchUrl": "https://localhost:7013/c/rmr/posts/d05c3219-7d27-4e4c-81a2-ab56f23bed78",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

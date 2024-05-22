@@ -8,15 +8,18 @@ export type PostApiRequest = {
     title: string;
 }
 
-export type TextPostApiRequest = PostApiRequest & {
+export type CreateTextPostApiRequest = PostApiRequest & {
     content?: string;
 }
 
-export type LinkPostApiRequest = PostApiRequest & {
+export type CreateLinkPostApiRequest = PostApiRequest & {
     url: string;
 }
 
 
+export type UpdateTextPostApiRequest = {
+    content: string;
+}
 
 
 export type PostApiResponse = CommunityApiRequest & {

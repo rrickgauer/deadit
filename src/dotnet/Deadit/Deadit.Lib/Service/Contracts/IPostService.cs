@@ -12,9 +12,6 @@ public interface IPostService
     public Task<ServiceDataResponse<List<ViewPost>>> GetUserNewHomeFeedAsycn(uint clientId, PaginationPosts pagination);
     public Task<ServiceDataResponse<List<ViewPost>>> GetUserTopHomeFeedAsync(uint clientId, PaginationPosts pagination, TopPostSort sort);
 
-
-
-
     public Task<ServiceDataResponse<List<ViewPost>>> GetNewestCommunityPostsAsync(string communityName, PaginationPosts pagination);
     public Task<ServiceDataResponse<List<ViewPost>>> GetNewestCommunityPostsAsync(string communityName);
 
@@ -28,8 +25,10 @@ public interface IPostService
     public Task<ServiceDataResponse<ViewPostText>> GetTextPostAsync(Guid postId);
     public Task<ServiceDataResponse<ViewPostLink>> GetLinkPostAsync(Guid postId);
 
+    public Task<ServiceDataResponse<ViewPostText>> CreatePostTextAsync(PostText post);
+    public Task<ServiceDataResponse<ViewPostLink>> CreatePostLinkAsync(PostLink post);
+
     public Task<ServiceDataResponse<ViewPostText>> SavePostTextAsync(PostText post);
-    public Task<ServiceDataResponse<ViewPostLink>> SavePostLinkAsync(PostLink post);
 
 }
 

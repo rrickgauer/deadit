@@ -27,4 +27,6 @@ public interface IPostRepository
 
     public Task<List<int>> InsertPostAsync(PostText post);
     public Task<List<int>> InsertPostAsync(PostLink post);
+
+    public Task<int> UpdatePostAsync(PostText post);
 }
