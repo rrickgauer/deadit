@@ -126,4 +126,14 @@ public class ApiCommunityPostsController(IPostService postService) : InternalApi
 
         return post;
     }
+
+
+    [HttpDelete("{postId:guid}")]
+    [ActionName(nameof(DeletePostAsync))]
+    [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(ModifyPostFilter))]
+    public async Task<IActionResult> DeletePostAsync([FromRoute] string communityName, [FromRoute] Guid postId)
+    {
+        return Ok();
+    }
 }

@@ -81,6 +81,16 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     public virtual string PostBodyContent => string.Empty;
 
 
+
+    public virtual void HandlePostDeleted()
+    {
+        if (PostDeletedOn.HasValue)
+        {
+            PostTitle = "[Post deleted by author]";
+        }
+    }
+
+
     #region - ICreatedUri -
 
     [JsonPropertyName("postUriWeb")]
