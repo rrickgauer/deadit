@@ -86,7 +86,7 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     {
         if (PostDeletedOn.HasValue)
         {
-            PostTitle = "[Post deleted by author]";
+            //PostTitle = "[Post deleted by author]";
         }
     }
 
