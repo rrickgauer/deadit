@@ -4,10 +4,12 @@ import { IVoted } from "../../../domain/contracts/ivoted";
 import { PostDropdownAction } from "../../../domain/enum/post-dropdown-action";
 import { VoteType } from "../../../domain/enum/vote-type";
 import { PostDropdownItemClickData, PostDropdownItemClickEvent } from "../../../domain/events/events";
+import { MessageBoxConfirm } from "../../../domain/helpers/message-box/MessageBoxConfirm";
 import { VoteButton, VoteButtonType } from "../../../domain/helpers/vote-scores/vote-button";
 import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
 import { PostPageParms } from "../../../domain/model/post-models";
 import { Guid } from "../../../domain/types/aliases";
+import { PostService } from "../../../services/post-service";
 import { VoteService } from "../../../services/vote-service";
 import { ErrorUtility } from "../../../utilities/error-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
@@ -34,6 +36,7 @@ export class PostContent implements IControllerAsync, IVoted
     private readonly _voteService: VoteService;
     private _dropdownMenu: HTMLDivElement;
     private _editForm: PostContentForm;
+    private _postService: PostService;
 
     //#region - Getters/Setters -
 
@@ -62,6 +65,7 @@ export class PostContent implements IControllerAsync, IVoted
         this._dropdownMenu = this._container.querySelector(`.${PostContentElements.DropdownMenuClass}`) as HTMLDivElement;
         this._editForm = new PostContentForm(this._communityName, this._postId);
         this._voteService = new VoteService();
+        this._postService = new PostService(this._communityName);
     }
 
     public async control()
@@ -88,9 +92,9 @@ export class PostContent implements IControllerAsync, IVoted
 
         PostDropdownButton.addListenersToDropdown(this._dropdownMenu);
 
-        PostDropdownItemClickEvent.addListener((message) =>
+        PostDropdownItemClickEvent.addListener(async (message) =>
         {
-            this.onPostDropdownItemClickEvent(message.data);
+            await this.onPostDropdownItemClickEvent(message.data);
         });
     }
 
@@ -178,7 +182,7 @@ export class PostContent implements IControllerAsync, IVoted
     }
 
 
-    private onPostDropdownItemClickEvent(message: PostDropdownItemClickData)
+    private async onPostDropdownItemClickEvent(message: PostDropdownItemClickData)
     {
 
         switch (message.action)
@@ -187,11 +191,49 @@ export class PostContent implements IControllerAsync, IVoted
                 this._editForm.editing = true;
                 break;
 
+            case PostDropdownAction.Delete:
+                await this.confirmDeletePost();
+                break;
+
             default:
                 alert(message.action);
                 break;
         }
+    }
 
+    private async confirmDeletePost()
+    {
+        const message = new MessageBoxConfirm('Are you sure you want to delete permanently this post?');
 
+        message.confirm({
+            onSuccess: async () =>
+            {
+                await this.deletePost();
+            }
+        });
+    }
+
+    private async deletePost()
+    {
+        try
+        {
+            const response = await this._postService.deletePost(this._postId);
+
+            if (!response.successful)
+            {
+                MessageBoxUtility.showErrorList(response.response.errors);
+                return;
+            }
+
+            window.location.href = window.location.href;
+        }
+        catch (error)
+        {
+            MessageBoxUtility.showError({
+                message: 'There was an error deleting the post.',
+            });
+
+            console.error({ error });
+        }
     }
 }

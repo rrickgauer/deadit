@@ -5,6 +5,7 @@ using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Repository.Commands;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Repository.Other;
+using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -234,4 +235,22 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     }
 
     #endregion
+
+
+
+    #region - Delete -
+
+    public async Task<int> MarkPostDeletedAsync(Guid postId)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.AuthorDeletePost);
+
+        command.Parameters.AddWithValue("@post_id", postId);
+
+        return await _connection.ModifyAsync(command);
+    }
+
+
+    #endregion
+
+
 }

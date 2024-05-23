@@ -30,6 +30,8 @@ public interface IPostService
 
     public Task<ServiceDataResponse<ViewPostText>> SavePostTextAsync(PostText post);
 
+
+    public Task<ServiceResponse> AuthorDeletePostAsync(Guid postId);
 }
 
 

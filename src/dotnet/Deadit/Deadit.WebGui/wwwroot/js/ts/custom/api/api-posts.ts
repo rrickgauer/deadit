@@ -13,6 +13,15 @@ export class ApiPosts
     {
         this._url = `${ApiEndpoints.COMMUNITY}/${communityName}/posts`;
     }
+
+    public async delete(postId: Guid): Promise<Response>
+    {
+        const url = `${this._url}/${postId}`;
+
+        return await fetch(url, {
+            method: HttpMethods.DELETE,
+        });
+    }
 }
 
 export class ApiPostsText 

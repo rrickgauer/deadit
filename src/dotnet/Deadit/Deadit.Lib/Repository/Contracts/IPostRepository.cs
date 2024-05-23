@@ -29,4 +29,6 @@ public interface IPostRepository
     public Task<List<int>> InsertPostAsync(PostLink post);
 
     public Task<int> UpdatePostAsync(PostText post);
+
+    public Task<int> MarkPostDeletedAsync(Guid postId);
 }

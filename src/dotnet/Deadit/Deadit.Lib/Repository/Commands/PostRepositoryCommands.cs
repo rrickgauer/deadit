@@ -169,4 +169,15 @@ public sealed class PostRepositoryCommands
             (@id, @url) AS new_values 
         ON DUPLICATE KEY UPDATE
             url = new_values.url;";
+
+
+    public const string AuthorDeletePost = @"
+        UPDATE
+            Post
+        SET
+            deleted_on = now()
+        WHERE
+            id = @post_id;";
+
+
 }

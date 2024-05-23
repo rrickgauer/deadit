@@ -3,6 +3,7 @@ using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.ViewModels;
 using Deadit.WebGui.Controllers.Contracts;
+using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deadit.WebGui.Controllers.Gui;
@@ -27,6 +28,7 @@ public class PostController(PostPageVMService postPageVMService) : GuiController
     /// <exception cref="ArgumentNullException"></exception>
     [HttpGet]
     [ActionName(nameof(GetPostPageAsync))]
+    [ServiceFilter(typeof(LoginFirstRedirectFilter))]
     [ServiceFilter(typeof(PostExistsFilter))]
     public async Task<IActionResult> GetPostPageAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromQuery] SortOption? sort)
     {

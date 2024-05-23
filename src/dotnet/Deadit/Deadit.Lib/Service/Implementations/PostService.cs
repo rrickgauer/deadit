@@ -19,8 +19,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     private readonly IPostRepository _postRepository = postRepository;
     #endregion
 
-
-
     #region - Home Feed -
 
     public async Task<ServiceDataResponse<List<ViewPost>>> GetUserNewHomeFeedAsycn(uint clientId, PaginationPosts pagination)
@@ -57,9 +55,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
 
     #endregion
-
-
-
 
     #region - Newest Community Posts -
 
@@ -307,4 +302,30 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     }
 
     #endregion
+
+
+
+    #region - Delete -
+
+    public async Task<ServiceResponse> AuthorDeletePostAsync(Guid postId)
+    {
+        try
+        {
+
+
+
+
+            return new();
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+
+    #endregion
+
+
+
 }
