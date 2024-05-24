@@ -1,6 +1,5 @@
 import { LoginForm } from "../../components/login-form/login-form"
 import { SignupForm } from "../../components/signup-form/signup-form";
-import { BaseEventDetail } from "../../domain/events/custom-events";
 import { SuccessfulLoginEvent, SuccessfulSignupEvent } from "../../domain/events/events";
 
 
@@ -25,7 +24,7 @@ export class LoginController
         SuccessfulSignupEvent.addListener(this.redirectPage);
     }
 
-    private redirectPage = (e: BaseEventDetail) =>
+    private redirectPage = (e: any) =>
     {
         const url = new URL(window.location.href);
 
