@@ -8,4 +8,6 @@ public interface IConfigs
     public string DbDataBase { get; }
     public string DbUser { get; }
     public string DbPassword { get; }
+
+    public string StaticWebFilesPath { get; }
 }

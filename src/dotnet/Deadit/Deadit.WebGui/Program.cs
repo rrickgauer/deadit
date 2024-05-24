@@ -6,6 +6,7 @@ using Deadit.Lib.Filter;
 using Deadit.Lib.JsonConverters;
 using Deadit.Lib.Service.Contracts;
 using Deadit.Lib.Utility;
+using Microsoft.Extensions.FileProviders;
 using System.Reflection;
 
 bool isProduction = true;
@@ -13,6 +14,10 @@ bool isProduction = true;
 #if DEBUG
 isProduction = false;
 #endif
+
+
+IConfigs config = isProduction ? new ConfigurationProduction() : new ConfigurationDev();
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -111,7 +116,13 @@ if (!app.Environment.IsDevelopment())
 app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(config.StaticWebFilesPath),
+    ServeUnknownFileTypes = true,
+});
+
 
 app.UseRouting();
 
