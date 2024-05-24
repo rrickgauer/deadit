@@ -1,5 +1,6 @@
-import { ApiPostsLink, ApiPostsText } from "../api/api-posts";
-import { LinkPostApiRequest, LinkPostApiResponse, TextPostApiRequest, TextPostApiResponse } from "../domain/model/post-models";
+import { ApiPosts, ApiPostsLink, ApiPostsText } from "../api/api-posts";
+import { CreateLinkPostApiRequest, LinkPostApiResponse, CreateTextPostApiRequest, TextPostApiResponse, UpdateTextPostApiRequest } from "../domain/model/post-models";
+import { Guid } from "../domain/types/aliases";
 import { ServiceUtility } from "../utilities/service-utility";
 
 export class PostService
@@ -11,7 +12,7 @@ export class PostService
         this._communityName = communityName;        
     }
 
-    public createTextPost = async (textPost: TextPostApiRequest) =>
+    public createTextPost = async (textPost: CreateTextPostApiRequest) =>
     {
         const api = new ApiPostsText(this._communityName);
 
@@ -20,17 +21,30 @@ export class PostService
         return await ServiceUtility.toServiceResponse<TextPostApiResponse>(apiResponse);
     }
 
-
-
-
-
-
-    public createLinkPost = async (linkPost: LinkPostApiRequest) =>
+    public createLinkPost = async (linkPost: CreateLinkPostApiRequest) =>
     {
         const api = new ApiPostsLink(this._communityName);
 
         const apiResponse = await api.post(linkPost);
 
         return await ServiceUtility.toServiceResponse<LinkPostApiResponse>(apiResponse);
+    }
+
+    public async updateTextPost(postId: Guid, request: UpdateTextPostApiRequest)
+    {
+        const api = new ApiPostsText(this._communityName);
+
+        const apiResponse = await api.put(postId, request);
+
+        return await ServiceUtility.toServiceResponse<TextPostApiResponse>(apiResponse);
+    }
+
+    public async deletePost(postId: Guid)
+    {
+        const api = new ApiPosts(this._communityName);
+
+        const response = await api.delete(postId);
+
+        return await ServiceUtility.toServiceResponseNoContent(response);
     }
 }

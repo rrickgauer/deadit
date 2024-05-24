@@ -119,11 +119,6 @@
 }
 
 
-
-
-
-
-
 .loading-screen {
     position: absolute; /* Stay in place */
     width: 100%;
@@ -138,4 +133,26 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+
+
+.post-content {
+    .post-content-display {
+        display: block;
+    }
+
+    .post-content-edit {
+        display: none;
+    }
+
+    &.editing {
+        .post-content-display {
+            display: none;
+        }
+
+        .post-content-edit {
+            display: block;
+        }
+    }
 }

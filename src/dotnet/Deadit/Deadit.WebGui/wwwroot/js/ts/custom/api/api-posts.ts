@@ -1,6 +1,7 @@
 import { ApiEndpoints, HttpMethods } from "../domain/constants/api-constants";
 import { ApplicationTypes } from "../domain/constants/application-types";
-import { LinkPostApiRequest, TextPostApiRequest } from "../domain/model/post-models";
+import { CreateLinkPostApiRequest, CreateTextPostApiRequest, UpdateTextPostApiRequest } from "../domain/model/post-models";
+import { Guid } from "../domain/types/aliases";
 
 
 
@@ -11,6 +12,15 @@ export class ApiPosts
     constructor(communityName: string)
     {
         this._url = `${ApiEndpoints.COMMUNITY}/${communityName}/posts`;
+    }
+
+    public async delete(postId: Guid): Promise<Response>
+    {
+        const url = `${this._url}/${postId}`;
+
+        return await fetch(url, {
+            method: HttpMethods.DELETE,
+        });
     }
 }
 
@@ -23,13 +33,24 @@ export class ApiPostsText
         this._url = `${ApiEndpoints.COMMUNITY}/${communityName}/posts/text`;
     }
 
-    public post = async (textPost: TextPostApiRequest) =>
+    public post = async (textPost: CreateTextPostApiRequest) =>
     {
         const url = this._url;
 
         return await fetch(url, {
             body: JSON.stringify(textPost),
             method: HttpMethods.POST,
+            headers: ApplicationTypes.GetJsonHeaders(),
+        });
+    }
+
+    public async put(postId: Guid, request: UpdateTextPostApiRequest)
+    {
+        const url = `${this._url}/${postId}`;
+
+        return await fetch(url, {
+            body: JSON.stringify(request),
+            method: HttpMethods.PUT,
             headers: ApplicationTypes.GetJsonHeaders(),
         });
     }
@@ -45,7 +66,7 @@ export class ApiPostsLink
         this._url = `${ApiEndpoints.COMMUNITY}/${communityName}/posts/link`;
     }
 
-    public post = async (textPost: LinkPostApiRequest) =>
+    public post = async (textPost: CreateLinkPostApiRequest) =>
     {
         const url = this._url;
 

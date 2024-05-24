@@ -5,6 +5,7 @@ using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Repository.Commands;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Repository.Other;
+using Microsoft.Extensions.Hosting;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -18,8 +19,6 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     private readonly DatabaseConnection _connection = connection;
     private readonly TransactionConnection _transactionConnection = transactionConnection;
     #endregion
-
-
 
     #region - User Home Feed -
 
@@ -47,8 +46,6 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     }
 
     #endregion
-
-
 
     #region - Select Single Post -
 
@@ -83,7 +80,6 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
 
     #endregion
 
-
     #region - Select Newest Community Posts -
 
     public async Task<DataTable> SelectNewestCommunityPostsAsync(string communityName, PaginationPosts pagination)
@@ -99,22 +95,7 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
 
     public async Task<DataTable> SelectNewestCommunityPostsAsync(string communityName)
     {
-        return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SelectNewestCommunityPosts);
-    }
-
-    public async Task<DataTable> SelectCommunityTextPostsAsync(string communityName)
-    {
-        return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SelectAllCommunityText);
-    }
-
-    public async Task<DataTable> SelectCommunityLinkPostsAsync(string communityName)
-    {
-        return await RunSelectAllCommandAsync(communityName, PostRepositoryCommands.SelectAllCommunityLink);
-    }
-
-    private async Task<DataTable> RunSelectAllCommandAsync(string communityName, string sql)
-    {
-        MySqlCommand command = new(sql);
+        MySqlCommand command = new(PostRepositoryCommands.SelectNewestCommunityPosts);
 
         command.Parameters.AddWithValue("@community_name", communityName);
 
@@ -122,7 +103,6 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
     }
 
     #endregion
-
 
     #region - Select Top Community Posts -
 
@@ -228,5 +208,34 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
         return await transaction.ExecuteInTransactionAsync(command);
     }
 
+
+    public async Task<int> UpdatePostAsync(PostText post)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SavePostText);
+
+        command.Parameters.AddWithValue("@id", post.Id);
+        command.Parameters.AddWithValue("@content", post.Content);
+
+        return await _connection.ModifyAsync(command);
+    }
+
     #endregion
+
+
+
+    #region - Delete -
+
+    public async Task<int> MarkPostDeletedAsync(Guid postId)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.AuthorDeletePost);
+
+        command.Parameters.AddWithValue("@post_id", postId);
+
+        return await _connection.ModifyAsync(command);
+    }
+
+
+    #endregion
+
+
 }

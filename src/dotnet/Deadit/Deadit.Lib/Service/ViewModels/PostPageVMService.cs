@@ -36,6 +36,7 @@ public class PostPageVMService(IPostService postService, ICommentService comment
             return new(ex.Response);
         }
 
+        post.HandlePostDeleted();
 
         // get comments
         var getComments = await _commentService.GetCommentsNestedAsync(new GetCommentsParms

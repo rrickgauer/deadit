@@ -19,8 +19,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     private readonly IPostRepository _postRepository = postRepository;
     #endregion
 
-
-
     #region - Home Feed -
 
     public async Task<ServiceDataResponse<List<ViewPost>>> GetUserNewHomeFeedAsycn(uint clientId, PaginationPosts pagination)
@@ -57,9 +55,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
 
     #endregion
-
-
-
 
     #region - Newest Community Posts -
 
@@ -136,42 +131,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
     #endregion
 
-    #region - Specific Type (Link/Text) Community Posts -
-
-    public async Task<ServiceDataResponse<List<ViewPostText>>> GetAllTextPostsAsync(string communityName)
-    {
-        try
-        {
-            var repoResponse = await _postRepository.SelectCommunityTextPostsAsync(communityName);
-
-            var models = _tableMapperService.ToModels<ViewPostText>(repoResponse);
-
-            return new(models);
-        }
-        catch (RepositoryException ex)
-        {
-            return ex;
-        }
-
-    }
-
-    public async Task<ServiceDataResponse<List<ViewPostLink>>> GetAllLinkPostsAsync(string communityName)
-    {
-        try
-        {
-            var repoResponse = await _postRepository.SelectCommunityLinkPostsAsync(communityName);
-
-            var models = _tableMapperService.ToModels<ViewPostLink>(repoResponse);
-
-            return new(models);
-        }
-        catch (RepositoryException ex)
-        {
-            return ex;
-        }
-    }
-
-    #endregion
 
     #region - Get Single Post -
 
@@ -242,7 +201,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
     #region - Save -
 
-    public async Task<ServiceDataResponse<ViewPostText>> SavePostTextAsync(PostText post)
+    public async Task<ServiceDataResponse<ViewPostText>> CreatePostTextAsync(PostText post)
     {
         // make sure the post has an id value
         if (post.Id is not Guid postId)
@@ -263,7 +222,7 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
         return await GetTextPostAsync(postId);
     }
 
-    public async Task<ServiceDataResponse<ViewPostLink>> SavePostLinkAsync(PostLink post)
+    public async Task<ServiceDataResponse<ViewPostLink>> CreatePostLinkAsync(PostLink post)
     {
         // make sure the post has an id value
         if (post.Id is not Guid postId)
@@ -284,5 +243,52 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
         return await GetLinkPostAsync(postId);
     }
 
+
+    public async Task<ServiceDataResponse<ViewPostText>> SavePostTextAsync(PostText post)
+    {
+        // make sure the post has an id value
+        if (post.Id is not Guid postId)
+        {
+            throw new Exception($"{nameof(PostText.Id)} is null");
+        }
+
+        // save the post to the database
+        try
+        {
+            var repoResult = await _postRepository.UpdatePostAsync(post);
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+
+        return await GetTextPostAsync(postId);
+    }
+
     #endregion
+
+
+
+    #region - Delete -
+
+    public async Task<ServiceResponse> AuthorDeletePostAsync(Guid postId)
+    {
+        try
+        {
+
+            var result = await _postRepository.MarkPostDeletedAsync(postId);
+
+            return new();
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+
+    #endregion
+
+
+
 }

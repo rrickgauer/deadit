@@ -20,6 +20,7 @@ export class PostPageController implements IController, ILoginModalPage
     private _rootCommentController: RootCommentFormController;
     private readonly _sortInput: ItemsSortInput;
     private _postContentController: PostContent;
+    private _postIsDeleted: boolean;
 
     constructor(args: PostPageParms)
     {
@@ -40,28 +41,7 @@ export class PostPageController implements IController, ILoginModalPage
         this.showPageContent();
     }
 
-    private async initRootCommentFormController()
-    {
-        this._rootCommentController = new RootCommentFormController({
-            isLoggedIn: this._isLoggedIn,
-            postPageArgs: this._args,
-        });
 
-
-
-        await this._rootCommentController.control();
-    }
-
-    private async initPostContentController()
-    {
-        this._postContentController = new PostContent({
-            communityName: this._args.communityName,
-            postId: this._args.postId,
-            isLoggedIn: this._isLoggedIn,
-        });
-
-        await this._postContentController.control();
-    }
 
 
     private addListeners = () =>
@@ -91,6 +71,7 @@ export class PostPageController implements IController, ILoginModalPage
             });
 
             this._isLoggedIn = response.response.data.isLoggedIn;
+            this._postIsDeleted = response.response.data.postIsDeleted;
 
             this._commentsController.control();
 
@@ -100,6 +81,28 @@ export class PostPageController implements IController, ILoginModalPage
             this.onGetCommentsDataError(error);
             return;
         }
+    }
+
+    private async initRootCommentFormController()
+    {
+        this._rootCommentController = new RootCommentFormController({
+            isLoggedIn: this._isLoggedIn,
+            postPageArgs: this._args,
+        });
+
+        await this._rootCommentController.control();
+    }
+
+    private async initPostContentController()
+    {
+        this._postContentController = new PostContent({
+            communityName: this._args.communityName,
+            postId: this._args.postId,
+            isLoggedIn: this._isLoggedIn,
+            postIsDeleted: this._postIsDeleted,
+        });
+
+        await this._postContentController.control();
     }
 
     private onGetCommentsDataError(error: Error)

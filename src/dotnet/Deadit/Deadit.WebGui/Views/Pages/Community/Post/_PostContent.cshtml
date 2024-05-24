@@ -1,6 +1,7 @@
 ﻿@model Deadit.Lib.Domain.ViewModel.PostPageViewModel
 @using Deadit.Lib.Domain.Constants
 @using Deadit.Lib.Domain.Enum
+@using Deadit.Lib.Domain.TableView
 @using Deadit.Lib.Utility
 @using Microsoft.AspNetCore.Http.Extensions;
 
@@ -9,63 +10,133 @@
     <div class="card card-post-content">
         
         <div class="card-header">
-            <div class="d-flex">
 
-                @* Votes *@
-                <div class="item-voting me-3" data-current-vote="@Model.UserPostVote">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+
+                    @* Votes *@
+                    <div class="item-voting me-3" data-current-vote="@Model.UserPostVote">
+
+                        @{
+                            if (Model.IsLoggedIn && !Model.Post.PostDeletedOn.HasValue)
+                            {
+                                <button class="btn btn-sm btn-reset btn-vote btn-vote-up" title="Upvote" type="button">
+                                    @if (Model.UserPostVote == VoteType.Upvote)
+                                    {
+                                        @Html.Raw(VoteButtonIconsSolid.Upvote)
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(VoteButtonIcons.Upvote)
+                                    }
+                                </button>
+
+                                <div class="item-voting-score">@Model.Post.VotesScore</div>
 
 
-                    @{
-                        if (Model.IsLoggedIn)
-                        {
-                            <button class="btn btn-sm btn-reset btn-vote btn-vote-up" title="Upvote" type="button">
-                                @if (Model.UserPostVote == VoteType.Upvote)
-                                {
-                                    @Html.Raw(VoteButtonIconsSolid.Upvote)
-                                }
-                                else
-                                {
-                                    @Html.Raw(VoteButtonIcons.Upvote)
-                                }
-                            </button>
-
-                            <div class="item-voting-score">@Model.Post.VotesScore</div>
-
-
-                            <button class="btn btn-sm btn-reset btn-vote btn-vote-down" title="Downvote" type="button">
-                                @if (Model.UserPostVote == VoteType.Downvote)
-                                {
-                                    @Html.Raw(VoteButtonIconsSolid.Downvote)
-                                }
-                                else
-                                {
-                                    @Html.Raw(VoteButtonIcons.Downvote)
-                                }
-                            </button>
+                                <button class="btn btn-sm btn-reset btn-vote btn-vote-down" title="Downvote" type="button">
+                                    @if (Model.UserPostVote == VoteType.Downvote)
+                                    {
+                                        @Html.Raw(VoteButtonIconsSolid.Downvote)
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(VoteButtonIcons.Downvote)
+                                    }
+                                </button>
+                            }
+                            else
+                            {
+                                <button disabled class="btn btn-sm btn-reset btn-vote btn-vote-up" title="Upvote" type="button">@Html.Raw(VoteButtonIcons.Upvote)</button>
+                                <div class="item-voting-score">@Model.Post.VotesScore</div>
+                                <button disabled class="btn btn-sm btn-reset btn-vote btn-vote-down" title="Downvote" type="button">@Html.Raw(VoteButtonIcons.Downvote)</button>
+                            }
                         }
-                        else
-                        {
-                            <button disabled class="btn btn-sm btn-reset btn-vote btn-vote-up" title="Upvote" type="button">@Html.Raw(VoteButtonIcons.Upvote)</button>
-                            <div class="item-voting-score">@Model.Post.VotesScore</div>
-                            <button disabled class="btn btn-sm btn-reset btn-vote btn-vote-down" title="Downvote" type="button">@Html.Raw(VoteButtonIcons.Downvote)</button>
-                        }
-                    }
+
+                    </div>
+
+                    @* Post metadata *@
+                    <div>
+                        <div class="post-title"><h2>@Model.Post.PostTitle</h2></div>
+                        <div class="post-created-on">@Model.Post.PostType?.GetIconHtml() Submitted @Model.Post.CreatedOnDifferenceDisplay ago</div>
+                        <div class="post-count-comments">@NumberUtilities.FormatNumberWithCommas(Model.Post.PostCountComments) comments</div>
+                    </div>
 
                 </div>
 
-                @* Post metadata *@
+                @* Dropdown items *@
                 <div>
-                    <div class="post-title"><h2>@Model.Post.PostTitle</h2></div>
-                    <div class="post-created-on">@Model.Post.PostType?.GetIconHtml() Submitted @Model.Post.CreatedOnDifferenceDisplay ago</div>
-                    <div class="post-count-comments">@NumberUtilities.FormatNumberWithCommas(Model.Post.PostCountComments) comments</div>
+                    @if(!Model.Post.PostDeletedOn.HasValue)
+                    {
+                        <div class="dropdown dropstart dropdown-post">
+                            <button class="btn btn-reset" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bx bx-dots-horizontal-rounded"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+
+                                @if (Model.IsLoggedIn)
+                                {
+                                    <li><button class="dropdown-item" type="button" data-js-action="Save">Save</button></li>
+                                }
+
+                                @if (Model.IsAuthor)
+                                {
+                                    <li><button class="dropdown-item" type="button" data-js-action="Edit">Edit</button></li>
+                                    <li><button class="dropdown-item" type="button" data-js-action="Delete">Delete</button></li>
+                                }
+                            </ul>
+                        </div>
+                    }
                 </div>
             </div>
+
+
         </div>
         
         <div class="card-body">
-            <div class="md">
-                @Html.Raw(Model.Post.PostBodyContent)
+
+            <div class="post-content">
+
+                <div class="post-content-display">
+                    <div class="md">
+                        @Html.Raw(Model.Post.PostBodyContent)
+                    </div>
+                </div>
+
+
+                @if (Model.IsAuthor && Model.Post is ViewPostText textPost)
+                {
+
+                    <div class="post-content-edit">
+
+                        <form class="edit-post-form">
+
+                            @* Content *@
+                            <div class="input-feedback">
+                                <label class="form-label-container">
+                                    <textarea class="form-control input-feedback-input" name="content" rows="8" required>@textPost.PostContent</textarea>
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback"></div>
+                                </label>
+                            </div>
+
+                            <div class="d-flex mt-2">
+                                <button type="submit" class="btn btn-sm btn-success btn-submit me-1">Save changes</button>
+                                <button type="button" class="btn btn-sm btn-outline-danger btn-cancel">Cancel</button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                }
             </div>
+
+
+
+
+
+
+
         </div>
     </div>
 </div>

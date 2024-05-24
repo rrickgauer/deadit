@@ -11,6 +11,9 @@ public abstract class Post
     public string? Title { get; set; }
     public uint? AuthorId { get; set; }
     public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+    public DateTime? DeletedOn { get; set; }
+    public DateTime? ArchivedOn { get; set; }
+    public DateTime? ModRemovedOn { get; set; }
 
     public ushort PostTypeValue => (ushort)PostType;
 }

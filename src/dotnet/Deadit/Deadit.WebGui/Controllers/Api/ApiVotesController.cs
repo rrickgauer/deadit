@@ -64,7 +64,7 @@ public class ApiVotesController(IPostVotesService postVotesService, ICommentVote
     [HttpPut("posts/{postId:guid}/{voteType}")]
     [ActionName(nameof(PutPostVoteAsync))]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
-    [ServiceFilter(typeof(PostExistsFilter))]
+    [ServiceFilter(typeof(PostVoteFilter))]
     public async Task<IActionResult> PutPostVoteAsync([FromRoute] Guid postId, [FromRoute] VoteType voteType)
     {
         try
@@ -127,7 +127,7 @@ public class ApiVotesController(IPostVotesService postVotesService, ICommentVote
     [HttpPut("comments/{commentId:guid}/{voteType}")]
     [ActionName(nameof(PutCommentVoteAsync))]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
-    [ServiceFilter(typeof(CommentExistsFilter))]
+    [ServiceFilter(typeof(CommentVoteFilter))]
     public async Task<IActionResult> PutCommentVoteAsync([FromRoute] Guid commentId, [FromRoute] VoteType voteType)
     {
         try

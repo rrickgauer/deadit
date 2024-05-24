@@ -16,7 +16,20 @@ public class ViewPostText : ViewPost,
     public string? PostContent { get; set; }
 
 
-    public override string PostBodyContent => MarkdownUtility.ToHtml(PostContent ?? string.Empty);
+    public override string PostBodyContent => MarkdownUtility.ToHtmlString(PostContent ?? string.Empty);
+
+
+    public override void HandlePostDeleted()
+    {
+        base.HandlePostDeleted();
+
+        if (PostDeletedOn.HasValue)
+        {
+            PostContent = "[Post deleted by author]";
+        }
+    }
+
+
 
     #region - ITableView -
 

@@ -97,7 +97,7 @@ public class ViewComment : ICreatedOnDifference, IVoteScore,
     {
         if (!string.IsNullOrWhiteSpace(CommentContent))
         {
-            CommentContent = MarkdownUtility.ToHtml(CommentContent);
+            CommentContent = MarkdownUtility.ToHtmlString(CommentContent);
         }
     }
 

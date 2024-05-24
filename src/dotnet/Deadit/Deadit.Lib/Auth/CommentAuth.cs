@@ -11,9 +11,10 @@ namespace Deadit.Lib.Auth;
 
 
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.Always)]
-public class CommentAuth(ICommentService commentService) : IAsyncPermissionsAuth<CommentAuthData>
+public class CommentAuth(ICommentService commentService, IPostService postService) : IAsyncPermissionsAuth<CommentAuthData>
 {
     private readonly ICommentService _commentService = commentService;
+    private readonly IPostService _postService = postService;
 
     public async Task<ServiceResponse> HasPermissionAsync(CommentAuthData data)
     {
@@ -28,9 +29,9 @@ public class CommentAuth(ICommentService commentService) : IAsyncPermissionsAuth
 
             return data.AuthPermissionType switch
             {
-                AuthPermissionType.Delete => ValidateDelete(data, getComment),
-                AuthPermissionType.Upsert => ValidateUpsert(data, getComment),
-                AuthPermissionType.Get    => ValidateGet(data, getComment),
+                AuthPermissionType.Delete => await ValidateDelete(data, getComment),
+                AuthPermissionType.Upsert => await ValidateUpsert(data, getComment),
+                AuthPermissionType.Get    => await ValidateGet(data, getComment),
                 _                         => throw new NotImplementedException(),
             };
         }
@@ -42,7 +43,7 @@ public class CommentAuth(ICommentService commentService) : IAsyncPermissionsAuth
 
 
 
-    private static ServiceResponse ValidateDelete(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
+    private async Task<ServiceResponse> ValidateDelete(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
     {
         var comment = NotFoundHttpResponseException.ThrowIfNot<ViewComment>(getCommet.Data);
 
@@ -51,8 +52,17 @@ public class CommentAuth(ICommentService commentService) : IAsyncPermissionsAuth
             throw new ForbiddenHttpResponseException();
         }
 
+        var post = await GetPostAsync(data);
+
+        if (post.PostDeletedOn.HasValue)
+        {
+            throw new ForbiddenHttpResponseException();
+        }
+
         return new();
     }
+
+
 
     private static ServiceResponse ValidateSave(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
     {
@@ -80,7 +90,7 @@ public class CommentAuth(ICommentService commentService) : IAsyncPermissionsAuth
     }
 
 
-    private static ServiceResponse ValidateUpsert(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
+    private async Task<ServiceResponse> ValidateUpsert(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
     {
         if (getCommet.Data is not ViewComment comment)
         {
@@ -92,13 +102,19 @@ public class CommentAuth(ICommentService commentService) : IAsyncPermissionsAuth
             throw new ForbiddenHttpResponseException();
         }
 
+        var post = await GetPostAsync(data);
+
+        if (post.PostDeletedOn.HasValue)
+        {
+            throw new ForbiddenHttpResponseException();
+        }
 
         return new();
     }
 
 
 
-    private static ServiceResponse ValidateGet(CommentAuthData data, ServiceDataResponse<ViewComment> getComment)
+    private async Task<ServiceResponse> ValidateGet(CommentAuthData data, ServiceDataResponse<ViewComment> getComment)
     {
         if (getComment.Data is not ViewComment comment)
         {
@@ -110,6 +126,32 @@ public class CommentAuth(ICommentService commentService) : IAsyncPermissionsAuth
             throw new NotFoundHttpResponseException();
         }
 
+        var post = await GetPostAsync(data);
+
         return new();
     }
+
+
+    private async Task<ViewPost> GetPostAsync(CommentAuthData data)
+    {
+        var getPost = await _postService.GetPostAsync(data.PostId);
+
+        if (!getPost.Successful)
+        {
+            throw new ServiceResponseException(getPost);
+        }
+
+        if (getPost.Data is not ViewPost post)
+        {
+            throw new NotFoundHttpResponseException();
+        }
+
+        if (post.CommunityName != data.CommunityName)
+        {
+            throw new NotFoundHttpResponseException();
+        }
+
+        return post;
+    }
+
 }

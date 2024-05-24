@@ -1,11 +1,11 @@
 
 
-export class BaseEventDetail 
+export class MessageEventDetail<T>
 {
     public caller?: any;
-    public data?: any;
+    public data?: T;
 
-    constructor(caller?: any, data?: any) 
+    constructor(caller?: any, data?: T)
     {
         this.caller = caller;
         this.data = data;
@@ -13,37 +13,65 @@ export class BaseEventDetail
 }
 
 
-export class BaseEvent
+export class CustomMessage<T> 
 {
+    // ensures each message has a unique identifier
+    public static CustomMessageIdCount = 0;
 
-    static get EventName() 
+    protected readonly _id: number;
+
+    protected readonly _body = document.querySelector('body') as HTMLBodyElement;
+
+    protected get _eventName()
     {
-        return this.prototype.constructor.name;
+        return `Custom-Message-${this._id}`;
     }
 
-    static invoke(caller?: any, data?: any)
+    constructor()
     {
-        const eventName = this.prototype.constructor.name;
-        const eventDetail = new BaseEventDetail(caller, data);
+        CustomMessage.CustomMessageIdCount++;
+        this._id = CustomMessage.CustomMessageIdCount;
+    }
 
-        const customEvent = new CustomEvent(eventName, {
-            detail: eventDetail,
+    public invoke(caller?: any, data?: T)
+    {
+        const detail = new MessageEventDetail<T>(caller, data);
+
+        const customEvent = new CustomEvent(this._eventName, {
+            detail: detail,
             bubbles: true,
             cancelable: true,
         });
 
-        const body = document.querySelector('body');
-        body.dispatchEvent(customEvent);
+        this._body.dispatchEvent(customEvent);
     }
 
-    static addListener(callback: (event: BaseEventDetail) => void)
+    public addListener(callback: (event: MessageEventDetail<T>) => void)
     {
         const body = document.querySelector('body');
-        const eventName = this.prototype.constructor.name;
 
-        body.addEventListener(eventName, (e: CustomEvent) =>
+        this._body.addEventListener(this._eventName, (e: CustomEvent) =>
+        {
+            callback(e.detail);
+        });
+    }
+
+    public removeListener = (callback: (event: MessageEventDetail<T>) => void) =>
+    {
+        const eventName = this.constructor.name;
+
+        this._body.removeEventListener(eventName, (e: CustomEvent) =>
         {
             callback(e.detail);
         });
     }
 }
+
+
+export class CustomEmptyMessage extends CustomMessage<any>
+{
+
+}
+
+
+

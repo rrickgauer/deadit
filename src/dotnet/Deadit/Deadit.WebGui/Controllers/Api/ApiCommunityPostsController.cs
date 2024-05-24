@@ -1,5 +1,6 @@
-﻿using Deadit.Lib.Domain.Model;
-using Deadit.Lib.Domain.TableView;
+﻿using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
@@ -36,7 +37,7 @@ public class ApiCommunityPostsController(IPostService postService) : InternalApi
         var newPostRecord = InitNewPostRecord<PostText>(formData);
         newPostRecord.Content = formData.Content;   
 
-        var serviceResponse = await _postService.SavePostTextAsync(newPostRecord);
+        var serviceResponse = await _postService.CreatePostTextAsync(newPostRecord);
 
         if (!serviceResponse.Successful)
         {
@@ -45,6 +46,46 @@ public class ApiCommunityPostsController(IPostService postService) : InternalApi
 
         return Created($"", serviceResponse);
     }
+
+
+    [HttpPut("text/{postId:guid}")]
+    [ActionName(nameof(PutPostTextAsync))]
+    [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(ModifyPostFilter))]
+    public async Task<IActionResult> PutPostTextAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromBody] EditPostForm formData)
+    {
+        if (RequestItems.CommunityId is not uint communityId)
+        {
+            return NotFound();
+        }
+
+        PostText post = new()
+        {
+            Id = postId,
+            AuthorId = ClientId,
+            CommunityId = communityId,
+            Content = formData.Content,
+        };
+
+        try
+        {
+            var saveResult = await _postService.SavePostTextAsync(post);
+
+            if (!saveResult.Successful)
+            {
+                return BadRequest(saveResult);
+            }
+
+            return Ok(saveResult);
+
+        }
+        catch(ServiceResponseException ex)
+        {
+            return BadRequest(ex.Response);
+        }
+    }
+
+
 
     /// <summary>
     /// POST: /api/communities/:communityName/posts/link
@@ -61,7 +102,7 @@ public class ApiCommunityPostsController(IPostService postService) : InternalApi
         var newPostRecord = InitNewPostRecord<PostLink>(formData);
         newPostRecord.Url = formData.Url;
 
-        var serviceResponse = await _postService.SavePostLinkAsync(newPostRecord);
+        var serviceResponse = await _postService.CreatePostLinkAsync(newPostRecord);
 
         if (!serviceResponse.Successful)
         {
@@ -84,5 +125,30 @@ public class ApiCommunityPostsController(IPostService postService) : InternalApi
         };
 
         return post;
+    }
+
+
+    [HttpDelete("{postId:guid}")]
+    [ActionName(nameof(DeletePostAsync))]
+    [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(ModifyPostFilter))]
+    public async Task<IActionResult> DeletePostAsync([FromRoute] string communityName, [FromRoute] Guid postId)
+    {
+        try
+        {
+            var deletePost = await _postService.AuthorDeletePostAsync(postId);
+
+            if (!deletePost.Successful)
+            {
+                return BadRequest(deletePost);
+            }
+
+            return NoContent();
+
+        }
+        catch(ServiceResponseException ex)
+        {
+            return BadRequest(ex.Response);
+        }
     }
 }

@@ -1,5 +1,5 @@
 import { PostType } from "../enum/post-type";
-import { Guid } from "../types/aliases";
+import { DateTimeString, Guid } from "../types/aliases";
 import { CommunityApiRequest } from "./api-community-models";
 
 
@@ -8,24 +8,30 @@ export type PostApiRequest = {
     title: string;
 }
 
-export type TextPostApiRequest = PostApiRequest & {
+export type CreateTextPostApiRequest = PostApiRequest & {
     content?: string;
 }
 
-export type LinkPostApiRequest = PostApiRequest & {
+export type CreateLinkPostApiRequest = PostApiRequest & {
     url: string;
 }
 
 
+export type UpdateTextPostApiRequest = {
+    content: string;
+}
 
 
 export type PostApiResponse = CommunityApiRequest & {
     postType?: PostType;
-    postId?: string;
+    postId?: Guid;
     postCommunityId?: number;
     postTitle?: string;
     postAuthorId?: number;
-    postCreatedOn?: string;
+    postCreatedOn?: DateTimeString;
+    postDeletedOn?: DateTimeString;
+    postArchivedOn?: DateTimeString;
+    postModRemovedOn?: DateTimeString;
     postUriWeb?: string;
     postUriApi?: string;
     postCountComments?: number;

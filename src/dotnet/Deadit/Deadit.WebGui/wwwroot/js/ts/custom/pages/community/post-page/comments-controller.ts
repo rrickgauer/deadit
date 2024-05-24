@@ -37,6 +37,7 @@ export class CommentsController implements IControllerAsync
     private readonly _rootListElement: HTMLUListElement;
     private readonly _commentService: CommentsService;
     private _comments: CommentApiResponse[];
+    private _postIsDeleted: boolean;
 
     constructor(args: CommentsControllerArgs)
     {
@@ -46,8 +47,7 @@ export class CommentsController implements IControllerAsync
         this._commentService = new CommentsService(this._args);
         this._templateEngine = new CommentTemplate();
         this._rootListElement = document.querySelector('.comment-list.root') as HTMLUListElement;
-
-        
+        this._postIsDeleted = args.getCommentsResponse.postIsDeleted;
     }
 
 
@@ -349,6 +349,12 @@ export class CommentsController implements IControllerAsync
 
             return false;
         }
+
+        else if (this._postIsDeleted)
+        {
+            return false;
+        }
+
 
         return true;
     }

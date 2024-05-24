@@ -1,24 +1,32 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
 import { IControllerAsync } from "../../../domain/contracts/i-controller";
 import { IVoted } from "../../../domain/contracts/ivoted";
+import { PostDropdownAction } from "../../../domain/enum/post-dropdown-action";
 import { VoteType } from "../../../domain/enum/vote-type";
+import { PostDropdownItemClickData, PostDropdownItemClickEvent } from "../../../domain/events/events";
+import { MessageBoxConfirm } from "../../../domain/helpers/message-box/MessageBoxConfirm";
 import { VoteButton, VoteButtonType } from "../../../domain/helpers/vote-scores/vote-button";
 import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
 import { PostPageParms } from "../../../domain/model/post-models";
 import { Guid } from "../../../domain/types/aliases";
+import { PostService } from "../../../services/post-service";
 import { VoteService } from "../../../services/vote-service";
 import { ErrorUtility } from "../../../utilities/error-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
+import { PostContentForm } from "./post-content-form";
+import { PostDropdownButton } from "./post-dropdown-button";
 
 
 
 
 export type PostContentArgs = PostPageParms & {
     isLoggedIn: boolean;
+    postIsDeleted: boolean;
 }
 
 export const PostContentElements = {
     ContainerClass: 'card-post-content',
+    DropdownMenuClass: 'dropdown-post',
 }
 
 export class PostContent implements IControllerAsync, IVoted
@@ -27,6 +35,9 @@ export class PostContent implements IControllerAsync, IVoted
     private readonly _container: HTMLDivElement;
     private readonly _voting: VoteScore;
     private readonly _voteService: VoteService;
+    private _dropdownMenu: HTMLDivElement;
+    private _editForm: PostContentForm;
+    private _postService: PostService;
 
     //#region - Getters/Setters -
 
@@ -52,13 +63,16 @@ export class PostContent implements IControllerAsync, IVoted
         this._args = args;
         this._container = document.querySelector(`.${PostContentElements.ContainerClass}`) as HTMLDivElement;
         this._voting = new VoteScore(this._container.querySelector(`.item-voting`));
-
+        this._dropdownMenu = this._container.querySelector(`.${PostContentElements.DropdownMenuClass}`) as HTMLDivElement;
+        this._editForm = new PostContentForm(this._communityName, this._postId);
         this._voteService = new VoteService();
+        this._postService = new PostService(this._communityName);
     }
 
     public async control()
     {
         this.addListeners();
+        await this._editForm.control();
     }
 
     private addListeners = () =>
@@ -75,10 +89,24 @@ export class PostContent implements IControllerAsync, IVoted
 
             await this.onVoteButtonClick(buttonElement);
         });
+
+
+        PostDropdownButton.addListenersToDropdown(this._dropdownMenu);
+
+        PostDropdownItemClickEvent.addListener(async (message) =>
+        {
+            await this.onPostDropdownItemClickEvent(message.data);
+        });
     }
 
     private async onVoteButtonClick(buttonElement: HTMLButtonElement)
     {
+
+        if (this._args.postIsDeleted)
+        {
+            return;
+        }
+
         const buttonType = VoteButton.getVoteButton(buttonElement).voteButtonType;
         const newVoteType = this.getNewVoteValue(buttonType);
 
@@ -158,5 +186,61 @@ export class PostContent implements IControllerAsync, IVoted
     {
         this._voting.downvoted();
         return this._voting.currentVote;
+    }
+
+
+    private async onPostDropdownItemClickEvent(message: PostDropdownItemClickData)
+    {
+
+        switch (message.action)
+        {
+            case PostDropdownAction.Edit:
+                this._editForm.editing = true;
+                break;
+
+            case PostDropdownAction.Delete:
+                await this.confirmDeletePost();
+                break;
+
+            default:
+                alert(message.action);
+                break;
+        }
+    }
+
+    private async confirmDeletePost()
+    {
+        const message = new MessageBoxConfirm('Are you sure you want to delete permanently this post?');
+
+        message.confirm({
+            onSuccess: async () =>
+            {
+                await this.deletePost();
+            }
+        });
+    }
+
+    private async deletePost()
+    {
+        try
+        {
+            const response = await this._postService.deletePost(this._postId);
+
+            if (!response.successful)
+            {
+                MessageBoxUtility.showErrorList(response.response.errors);
+                return;
+            }
+
+            window.location.href = window.location.href;
+        }
+        catch (error)
+        {
+            MessageBoxUtility.showError({
+                message: 'There was an error deleting the post.',
+            });
+
+            console.error({ error });
+        }
     }
 }

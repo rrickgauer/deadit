@@ -1,4 +1,3 @@
-import { BaseEventDetail } from "../../domain/events/custom-events";
 import { SuccessfulLoginEvent, SuccessfulSignupEvent } from "../../domain/events/events";
 import { BootstrapUtility } from "../../utilities/bootstrap-utility";
 import { LoginForm } from "../login-form/login-form";
@@ -33,7 +32,7 @@ export class LoginModal
         }   
     }
 
-    private handleSuccessfulFormSubmission = (data: BaseEventDetail) =>
+    private handleSuccessfulFormSubmission = (data: any) =>
     {
         const url = new URL(window.location.href);
 
