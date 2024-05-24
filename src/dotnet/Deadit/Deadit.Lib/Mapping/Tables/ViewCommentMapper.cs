@@ -20,6 +20,8 @@ public class ViewCommentMapper : TableMapper<ViewComment>
             CommunityId           = row.Field<uint?>(GetColumnName(nameof(result.CommunityId))),
             CommunityName         = row.Field<string?>(GetColumnName(nameof(result.CommunityName))),
             CommentDeletedOn      = row.Field<DateTime?>(GetColumnName(nameof(result.CommentDeletedOn))),
+            CommentRemovedOn      = row.Field<DateTime?>(GetColumnName(nameof(result.CommentRemovedOn))),
+            CommentLockedOn       = row.Field<DateTime?>(GetColumnName(nameof(result.CommentLockedOn))),
         };
 
         row.SetVotingValues(result);

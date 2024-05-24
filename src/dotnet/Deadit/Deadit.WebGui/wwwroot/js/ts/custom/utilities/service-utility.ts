@@ -1,5 +1,6 @@
 import { HttpStatusCode } from "../domain/enum/http-status-code";
-import { ApiNotFoundException, ApiResponse, ApiResponseNoContent, ApiValidationException, ServiceResponse, ValidationErrorsApiResponse } from "../domain/model/api-response";
+import { ApiResponse, ApiResponseNoContent, ServiceResponse, ValidationErrorsApiResponse } from "../domain/model/api-response";
+import { ApiNotFoundException, ApiValidationException } from "../domain/model/exceptions";
 
 
 

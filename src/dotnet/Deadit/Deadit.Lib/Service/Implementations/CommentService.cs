@@ -8,6 +8,7 @@ using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Service.Contracts;
 using Deadit.Lib.Utility;
+using System.ComponentModel.Design;
 
 namespace Deadit.Lib.Service.Implementations;
 
@@ -61,13 +62,12 @@ public class CommentService(ITableMapperService tableMapperService, ICommentRepo
         try
         {
             await _repo.SaveCommentAsync(comment);
+            return await GetCommentAsync(comment.Id!.Value);
         }
         catch(RepositoryException ex)
         {
             return ex;
         }
-        
-        return await GetCommentAsync(commentId);
     }
 
 
@@ -98,6 +98,22 @@ public class CommentService(ITableMapperService tableMapperService, ICommentRepo
         try
         {
             var numrecords = await _repo.DeleteCommentAsync(commentId);
+
+            return new();
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+
+    public async Task<ServiceResponse> SaveModerateCommentAsync(Comment comment)
+    {
+
+        try
+        {
+            var result = await _repo.SaveCommentModerateAsync(comment);
 
             return new();
         }

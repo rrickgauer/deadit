@@ -1,20 +1,24 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
-import { IControllerAsync } from "../../../domain/contracts/i-controller";
+import { IController } from "../../../domain/contracts/i-controller";
 import { IVoted } from "../../../domain/contracts/ivoted";
 import { PostDropdownAction } from "../../../domain/enum/post-dropdown-action";
+import { PostModerationDropdownAction } from "../../../domain/enum/post-moderation-dropdown-action";
 import { VoteType } from "../../../domain/enum/vote-type";
-import { PostDropdownItemClickData, PostDropdownItemClickEvent } from "../../../domain/events/events";
+import { PostDropdownItemClickData, PostDropdownItemClickEvent, PostModerationDropdownItemClickData, PostModerationDropdownItemClickEvent } from "../../../domain/events/events";
 import { MessageBoxConfirm } from "../../../domain/helpers/message-box/MessageBoxConfirm";
 import { VoteButton, VoteButtonType } from "../../../domain/helpers/vote-scores/vote-button";
 import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
-import { PostPageParms } from "../../../domain/model/post-models";
+import { ModeratePostForm, PostPageParms } from "../../../domain/model/post-models";
 import { Guid } from "../../../domain/types/aliases";
 import { PostService } from "../../../services/post-service";
 import { VoteService } from "../../../services/vote-service";
 import { ErrorUtility } from "../../../utilities/error-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
+import { PageLoadingUtility } from "../../../utilities/page-loading-utility";
+import { PageUtility } from "../../../utilities/page-utility";
 import { PostContentForm } from "./post-content-form";
 import { PostDropdownButton } from "./post-dropdown-button";
+import { PostModerationDropdownButton } from "./post-moderation-dropdown-button";
 
 
 
@@ -29,7 +33,7 @@ export const PostContentElements = {
     DropdownMenuClass: 'dropdown-post',
 }
 
-export class PostContent implements IControllerAsync, IVoted
+export class PostContent implements IController, IVoted
 {
     private readonly _args: PostContentArgs;
     private readonly _container: HTMLDivElement;
@@ -38,6 +42,7 @@ export class PostContent implements IControllerAsync, IVoted
     private _dropdownMenu: HTMLDivElement;
     private _editForm: PostContentForm;
     private _postService: PostService;
+    private _postModerationDropdownMenu: HTMLDivElement | null;
 
     //#region - Getters/Setters -
 
@@ -67,12 +72,13 @@ export class PostContent implements IControllerAsync, IVoted
         this._editForm = new PostContentForm(this._communityName, this._postId);
         this._voteService = new VoteService();
         this._postService = new PostService(this._communityName);
+        this._postModerationDropdownMenu = document.querySelector(`.dropdown-post-moderation`) as HTMLDivElement;
     }
 
-    public async control()
+    public control()
     {
         this.addListeners();
-        await this._editForm.control();
+        this._editForm.control();
     }
 
     private addListeners = () =>
@@ -97,6 +103,17 @@ export class PostContent implements IControllerAsync, IVoted
         {
             await this.onPostDropdownItemClickEvent(message.data);
         });
+
+
+
+        PostModerationDropdownButton.initDropdownMenu(this._postModerationDropdownMenu);
+
+        PostModerationDropdownItemClickEvent.addListener(async (message) =>
+        {
+            await this.onPostModerationDropdownButtonClick(message.data);
+        });
+
+
     }
 
     private async onVoteButtonClick(buttonElement: HTMLButtonElement)
@@ -241,6 +258,147 @@ export class PostContent implements IControllerAsync, IVoted
             });
 
             console.error({ error });
+
+            throw error;
         }
     }
+
+
+    private async onPostModerationDropdownButtonClick(message: PostModerationDropdownItemClickData)
+    {
+        PageLoadingUtility.showLoader();
+
+        switch (message.action)
+        {
+            case PostModerationDropdownAction.Lock:
+
+                const wasLocked = await this.lockPost(true);
+
+                if (wasLocked)
+                {
+                    PageUtility.refreshPage();
+                }
+                else
+                {
+                    PageLoadingUtility.hideLoader();
+                }
+
+                break;
+
+            case PostModerationDropdownAction.Unlock:
+                const wasUnlocked = await this.lockPost(false);
+
+                if (wasUnlocked)
+                {
+                    PageUtility.refreshPage();
+                }
+                else
+                {
+                    PageLoadingUtility.hideLoader();
+                }
+
+                break;
+
+
+            case PostModerationDropdownAction.Remove:
+
+                const result = await this.removePost(true);
+
+                if (result)
+                {
+                    PageUtility.refreshPage();
+                }
+                else
+                {
+                    PageLoadingUtility.hideLoader();
+                }
+
+                break;
+
+            case PostModerationDropdownAction.Restore:
+                const restoreRestul = await this.removePost(false);
+
+                if (restoreRestul)
+                {
+                    PageUtility.refreshPage();
+                }
+                else
+                {
+                    PageLoadingUtility.hideLoader();
+                }
+                
+                break;
+
+            default:
+                PageLoadingUtility.hideLoader();
+                alert(`Unknown PostModerationDropdownAction: ${message.action}`);
+                break;
+        }
+    }
+
+
+
+
+
+
+    private async lockPost(isLocked: boolean): Promise<boolean>
+    {
+        return await this.moderatePost({
+            locked: isLocked,
+        });
+    }
+
+    private async removePost(isRemoved: boolean): Promise<boolean>
+    {
+        return await this.moderatePost({
+            removed: isRemoved,
+        });
+    }
+
+
+    private async moderatePost(form: ModeratePostForm): Promise<boolean>
+    {
+        try
+        {
+            const response = await this._postService.moderatePost(this._postId, form);
+
+            if (!response.successful)
+            {
+                MessageBoxUtility.showErrorList(response.response.errors);
+                return false;
+            }
+
+            return true;
+        }
+        catch (error)
+        {
+            const title = `Could not ${form.locked? 'lock' : 'unlock'} post`;
+
+            ErrorUtility.onException(error, {
+                onApiNotFoundException: (e) =>
+                {
+                    MessageBoxUtility.showError({
+                        message: 'Post not found. Please try again later.',
+                        title: title,
+                    });
+
+                    return false;
+                },
+                onOther: (e) =>
+                {
+                    MessageBoxUtility.showError({
+                        message: `Unknown error. Please try again later.`,
+                        title: title,
+                    });
+
+                    return false;
+                }
+            });
+
+            return false;
+        }
+
+        
+    }
+
 }

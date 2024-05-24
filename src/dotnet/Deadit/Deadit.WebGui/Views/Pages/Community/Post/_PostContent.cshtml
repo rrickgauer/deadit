@@ -57,36 +57,80 @@
 
                     @* Post metadata *@
                     <div>
-                        <div class="post-title"><h2>@Model.Post.PostTitle</h2></div>
+                        <div class="d-flex">
+         
+                            <div class="post-title">
+                                <h2>@Model.Post.PostTitle</h2>
+                            </div>
+                        </div>
+                        
                         <div class="post-created-on">@Model.Post.PostType?.GetIconHtml() Submitted @Model.Post.CreatedOnDifferenceDisplay ago</div>
                         <div class="post-count-comments">@NumberUtilities.FormatNumberWithCommas(Model.Post.PostCountComments) comments</div>
                     </div>
 
                 </div>
 
-                @* Dropdown items *@
-                <div>
-                    @if(!Model.Post.PostDeletedOn.HasValue)
+                @* Dropdown menus *@
+                <div class="d-flex justify-content-around align-items-baseline">
+
+
+                    @* Moderation actions *@
+                    @if(Model.IsCommunityModerator)
+                    {
+                        <div class="dropdown dropstart dropdown-post-moderation">
+                            <button class="btn btn-sm p-1 btn-reset" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Moderation tools">
+                                <i class="bx bx-shield"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                
+                                @if(Model.Post.PostIsLocked)
+                                {
+                                    <li><button class="dropdown-item" type="button" data-js-action="Unlock" title="Unlock this post">Unlock</button></li>
+                                }
+                                else
+                                {
+                                    <li><button class="dropdown-item" type="button" data-js-action="Lock" title="Lock this post (prevent additional comments)">Lock</button></li>
+                                }
+
+                                @if(Model.Post.PostIsRemoved)
+                                {
+                                    <li><button class="dropdown-item" type="button" data-js-action="Restore" title="Restore this post">Restore</button></li>
+                                }
+                                else
+                                {
+                                    <li><button class="dropdown-item" type="button" data-js-action="Remove" title="Unlock this post (hide this post's content)">Remove</button></li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+
+                    @* Post actions *@
+                    @if(Model.IsLoggedIn)
                     {
                         <div class="dropdown dropstart dropdown-post">
-                            <button class="btn btn-reset" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn btn-sm p-1 btn-reset" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bx bx-dots-horizontal-rounded"></i>
                             </button>
                             <ul class="dropdown-menu">
 
-                                @if (Model.IsLoggedIn)
-                                {
-                                    <li><button class="dropdown-item" type="button" data-js-action="Save">Save</button></li>
-                                }
+                                <li><button class="dropdown-item" type="button" data-js-action="Save">Save</button></li>
 
-                                @if (Model.IsAuthor)
+                                @if (Model.IsPostAuthor)
                                 {
-                                    <li><button class="dropdown-item" type="button" data-js-action="Edit">Edit</button></li>
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    if (!Model.Post.PostIsRemoved)
+                                    {
+                                        <li><button class="dropdown-item" type="button" data-js-action="Edit">Edit</button></li>
+                                    }
+
                                     <li><button class="dropdown-item" type="button" data-js-action="Delete">Delete</button></li>
                                 }
                             </ul>
                         </div>
                     }
+
                 </div>
             </div>
 
@@ -98,13 +142,22 @@
             <div class="post-content">
 
                 <div class="post-content-display">
-                    <div class="md">
-                        @Html.Raw(Model.Post.PostBodyContent)
-                    </div>
+
+                    @if(Model.Post.PostType == PostType.Text)
+                    {
+                        <div class="md">
+                            @MarkdownUtility.ToHtmlContent(Model.Post.PostBodyContent ?? string.Empty)
+                        </div>
+                    }
+                    else
+                    {
+                        <a href="@Model.Post.PostBodyContent" target="_blank">@Model.Post.PostBodyContent</a>
+                    }
+
                 </div>
 
 
-                @if (Model.IsAuthor && Model.Post is ViewPostText textPost)
+                @if (Model.IsPostAuthor && Model.Post is ViewPostText textPost)
                 {
 
                     <div class="post-content-edit">
@@ -131,15 +184,13 @@
                 }
             </div>
 
-
-
-
-
-
-
         </div>
     </div>
 </div>
+
+
+
+
 
 
 

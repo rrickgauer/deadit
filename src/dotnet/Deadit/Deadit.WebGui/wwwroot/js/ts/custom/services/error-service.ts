@@ -1,4 +1,4 @@
-import { ApiValidationException } from "../domain/model/api-response";
+import { ApiValidationException } from "../domain/model/exceptions";
 
 
 export class ErrorService

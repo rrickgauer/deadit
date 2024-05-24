@@ -1,3 +1,5 @@
+import { BootstrapUtilityClasses } from "../../../domain/constants/bootstrap-constants";
+import { Icons } from "../../../domain/constants/icons";
 import { IVoted } from "../../../domain/contracts/ivoted";
 import { VoteType } from "../../../domain/enum/vote-type";
 import { VoteScore } from "../../../domain/helpers/vote-scores/vote-score";
@@ -23,11 +25,13 @@ export const CommentSelectors = {
     actionsContainerClass: 'comment-actions',
     btnToggleClass: 'btn-comment-action-toggle',
     collapsedClass: 'collapsed',
+    lockedClass: 'locked',
+    lockedDisplay: 'comment-list-item-locked',
 }
 
 export class CommentListItem implements IVoted
 {
-    private _container: HTMLLIElement;
+    public container: HTMLLIElement;
     private _editFormContainer: HTMLDivElement;
     private _newFormContainer: HTMLDivElement;
     private _contentMdDisplay: HTMLDivElement;
@@ -35,95 +39,119 @@ export class CommentListItem implements IVoted
     private _actionsContainer: HTMLDivElement;
     private _toggleBtn: HTMLAnchorElement;
     private _voting: VoteScore;
+    private _lockedDisplay: HTMLDivElement;
 
     public get commentId(): Guid | null
     {
-        return this._container.getAttribute(CommentSelectors.commentIdAttr);
+        return this.container.getAttribute(CommentSelectors.commentIdAttr);
     }
 
     public set commentId(value: Guid)
     {
-        this._container.setAttribute(CommentSelectors.commentIdAttr, value);
+        this.container.setAttribute(CommentSelectors.commentIdAttr, value);
     } 
 
     public get parentCommentId(): Guid | null
     {
-        return this._container.getAttribute(CommentSelectors.parentIdAttr);
+        return this.container.getAttribute(CommentSelectors.parentIdAttr);
     }
 
     public set parentCommentId(value: Guid)
     {
-        this._container.setAttribute(CommentSelectors.parentIdAttr, value);
+        this.container.setAttribute(CommentSelectors.parentIdAttr, value);
     } 
 
 
     public get isReplying(): boolean
     {
-        return this._container.classList.contains(CommentSelectors.replyingClass);
+        return this.container.classList.contains(CommentSelectors.replyingClass);
     }
 
     public set isReplying(value: boolean)
     {
         if (value)
         {
-            this._container.classList.add(CommentSelectors.replyingClass);
+            this.container.classList.add(CommentSelectors.replyingClass);
         }
         else
         {
-            this._container.classList.remove(CommentSelectors.replyingClass);
+            this.container.classList.remove(CommentSelectors.replyingClass);
         }
     }
 
     public get authorUsername(): string
     {
-        return (this._container.querySelector(`.${CommentSelectors.authorUsernameClass}`) as HTMLSpanElement).innerText;
+        return (this.container.querySelector(`.${CommentSelectors.authorUsernameClass}`) as HTMLSpanElement).innerText;
     }
 
     public get isCollapsed(): boolean
     {
-        return this._container?.classList.contains(CommentSelectors.collapsedClass) ?? false;
+        return this.container?.classList.contains(CommentSelectors.collapsedClass) ?? false;
     }
 
     public set isCollapsed(value: boolean)
     {
-        if (!Nullable.hasValue(this._container))
+        if (!Nullable.hasValue(this.container))
         {
             return;
         }
 
         if (value)
         {
-            this._container.classList.add(CommentSelectors.collapsedClass);
+            this.container.classList.add(CommentSelectors.collapsedClass);
             this._toggleBtn.innerText = 'Show';
 
         }
         else
         {
-            this._container.classList.remove(CommentSelectors.collapsedClass);
+            this.container.classList.remove(CommentSelectors.collapsedClass);
             this._toggleBtn.innerText = 'Hide';
+        }
+    }
+
+    public get isLocked(): boolean
+    {
+        return this.container?.classList.contains(CommentSelectors.lockedClass) ?? false;
+    }
+
+    public set isLocked(value: boolean)
+    {
+        if (value)
+        {
+            this.container?.classList.add(CommentSelectors.lockedClass);
+            this._lockedDisplay.innerHTML = Icons.CommentLocked;
+        }
+        else
+        {
+            this.container?.classList.remove(CommentSelectors.lockedClass);
+            this._lockedDisplay.innerHTML = '';
         }
     }
 
 
 
+
+
+
     constructor(element: Element)
     {
-        this._container = element.closest(`.${CommentSelectors.listItemClass}`) as HTMLLIElement;
-        this._editFormContainer = this._container.querySelector(`.${CommentSelectors.editFormContainerClass}`) as HTMLDivElement;
-        this._newFormContainer = this._container.querySelector(`.${CommentSelectors.newFormContainerClass}`) as HTMLDivElement;
-        this._contentMdDisplay = this._container.querySelector(`.${CommentSelectors.contentMdClass}`) as HTMLDivElement;
-        this._repliesList = this._container.querySelector(`.comment-list[data-parent-comment-id="${this.commentId}"]`) as HTMLUListElement;
-        this._actionsContainer = this._container?.querySelector(`.${CommentSelectors.actionsContainerClass}`) as HTMLDivElement;
-        this._toggleBtn = this._container?.querySelector(`.${CommentSelectors.btnToggleClass}`) as HTMLAnchorElement;
+        this.container = element.closest(`.${CommentSelectors.listItemClass}`) as HTMLLIElement;
+        this._editFormContainer = this.container.querySelector(`.${CommentSelectors.editFormContainerClass}`) as HTMLDivElement;
+        this._newFormContainer = this.container.querySelector(`.${CommentSelectors.newFormContainerClass}`) as HTMLDivElement;
+        this._contentMdDisplay = this.container.querySelector(`.${CommentSelectors.contentMdClass}`) as HTMLDivElement;
+        this._repliesList = this.container.querySelector(`.comment-list[data-parent-comment-id="${this.commentId}"]`) as HTMLUListElement;
+        this._actionsContainer = this.container?.querySelector(`.${CommentSelectors.actionsContainerClass}`) as HTMLDivElement;
+        this._toggleBtn = this.container?.querySelector(`.${CommentSelectors.btnToggleClass}`) as HTMLAnchorElement;
+        this._lockedDisplay = this.container.querySelector(`.${CommentSelectors.lockedDisplay}`) as HTMLDivElement;
 
-        this._voting = new VoteScore(this._container.querySelector(`.item-voting`));
+        this._voting = new VoteScore(this.container.querySelector(`.item-voting`));
 
     }
 
 
     public showEditForm()
     {
-        this._container.classList.add(CommentSelectors.editingClass);
+        this.container.classList.add(CommentSelectors.editingClass);
     }
 
     public showReplyForm()
@@ -156,23 +184,14 @@ export class CommentListItem implements IVoted
 
     public cancelEdit()
     {
-        this._container.classList.remove(CommentSelectors.editingClass);
+        this.container.classList.remove(CommentSelectors.editingClass);
     }
 
-
-    public addReply(commentId: Guid, content: string)
+    public addReply(reply: CommentApiResponse)
     {
         const template = new CommentTemplate();
 
-        const html = template.toHtml({
-            commentId: commentId,
-            commentParentId: this.commentId,
-            commentContent: content,
-            createdOnDifferenceDisplay: 'seconds',
-            commentIsAuthor: true,
-            commentAuthorUsername: this.authorUsername,
-        });
-
+        const html = template.toHtml(reply);
 
         this._repliesList.insertAdjacentHTML("beforeend", html);
         this._newFormContainer.innerHTML = '';
@@ -219,6 +238,28 @@ export class CommentListItem implements IVoted
 
     }
 
+    public markRemoved()
+    {
+        const deletedText = '[removed]';
+
+        const deletedComment: CommentApiResponse = {
+            commentAuthorUsername: deletedText,
+            commentContent: deletedText,
+            commentIsAuthor: false,
+            commentDeletedOn: deletedText,
+        };
+
+        const template = new CommentTemplate();
+        const buttonsHtml = template.getActionsSection(deletedComment);
+
+        if (Nullable.hasValue(this._actionsContainer))
+        {
+            this._actionsContainer.innerHTML = buttonsHtml;
+        }
+
+        this.setContentText(deletedText);
+    }
+
 
     public toggleCollapse()
     {
@@ -244,5 +285,21 @@ export class CommentListItem implements IVoted
     {
         const html = `<div class="md">${MarkdownUtility.toHtml(newContent)}</div>`;
         this._contentMdDisplay.innerHTML = html;
+    }
+
+
+
+
+
+    public static getItemById(commentId: Guid): CommentListItem | null
+    {
+        let element = document.querySelector(`.${CommentSelectors.listItemClass}[${CommentSelectors.commentIdAttr}="${commentId}"]`) as Element;
+
+        if (!Nullable.hasValue(element))
+        {
+            return null;
+        }
+
+        return new CommentListItem(element);
     }
 }

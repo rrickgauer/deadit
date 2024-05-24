@@ -5,7 +5,7 @@ using Deadit.Lib.Domain.Paging;
 
 namespace Deadit.Lib.Domain.ViewModel;
 
-public class HomePageViewModel : IClientIdArg
+public class HomePageViewModel : IClientId
 {
     public required uint? ClientId { get; set; }
     public bool IsLoggedIn => ClientId.HasValue;

@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Domain.Response;
@@ -290,5 +291,54 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     #endregion
 
 
+    #region - Lock/Unlock Post -
 
+    
+    
+    public async Task<ServiceResponse> LockPostCommentsAsync(Guid postId)
+    {
+        try
+        {
+            await _postRepository.UpdatePostLockedAsync(postId, true);
+
+            return new();
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+    
+    
+    public async Task<ServiceResponse> UnlockPostCommentsAsync(Guid postId)
+    {
+        try
+        {
+            await _postRepository.UpdatePostLockedAsync(postId, false);
+
+            return new();
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+    #endregion
+
+
+    public async Task<ServiceResponse> ModeratePostAsync(Guid postId, ModeratePostForm form)
+    {
+        try
+        {
+            await _postRepository.UpdatePostModerationFieldsAsync(postId, form);
+
+            return new();
+
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+    }
 }

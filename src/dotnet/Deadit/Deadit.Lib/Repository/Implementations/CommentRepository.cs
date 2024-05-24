@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.ComponentModel.Design;
+using System.Data;
 using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
@@ -56,6 +57,17 @@ public class CommentRepository(DatabaseConnection connection) : ICommentReposito
         MySqlCommand command = new(CommentRepositoryCommands.SetDeleted);
 
         command.Parameters.AddWithValue(@"comment_id", commentId);
+
+        return await _connection.ModifyAsync(command);
+    }
+
+    public async Task<int> SaveCommentModerateAsync(Comment comment)
+    {
+        MySqlCommand command = new(CommentRepositoryCommands.SaveModerate);
+
+        command.Parameters.AddWithValue(@"comment_id", comment.Id);
+        command.Parameters.AddWithValue(@"locked_on", comment.LockedOn);
+        command.Parameters.AddWithValue(@"removed_on", comment.RemovedOn);
 
         return await _connection.ModifyAsync(command);
     }

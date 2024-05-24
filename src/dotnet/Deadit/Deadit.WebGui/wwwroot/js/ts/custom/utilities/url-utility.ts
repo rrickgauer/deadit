@@ -19,4 +19,18 @@ export class UrlUtility
 
         return pathValues[index];
     }
+
+
+    public static getQueryParmsString(data: object): string
+    {
+        const urlParms = new URLSearchParams();
+
+        for (const key in data)
+        {
+            urlParms.set(key, `${data[key]}`);
+        }
+
+        return urlParms.toString();
+    }
+
 }

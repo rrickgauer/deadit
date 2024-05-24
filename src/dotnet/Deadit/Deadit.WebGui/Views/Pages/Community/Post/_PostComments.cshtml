@@ -1,4 +1,5 @@
 ﻿@model Deadit.Lib.Domain.ViewModel.PostPageViewModel
+@using Deadit.Lib.Domain.Constants
 @using Deadit.Lib.Domain.TableView
 @using Deadit.Lib.Utility
 @using Microsoft.AspNetCore.Http.Extensions;
@@ -12,7 +13,18 @@
     <div class="card">
         <div class="card-header">
             <div class="d-flex justify-content-between">
-                <h4>Comments</h4>
+                
+                @if(Model.Post.PostIsLocked)
+                {
+                    <h4>    
+                        Comments
+                        @HtmlUtility.ToHtml(Icons.Lock)
+                    </h4>
+                }
+                else
+                {
+                    <h4>Comments</h4>
+                }
 
                 <div class="d-flex align-items-center">
                     <p class="m-0">Sort:</p>

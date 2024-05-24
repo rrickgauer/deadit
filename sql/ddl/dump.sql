@@ -38,7 +38,7 @@ CREATE TABLE `Api_Access_Token` (
   UNIQUE KEY `token` (`token`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `Api_Access_Token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,6 +72,8 @@ CREATE TABLE `Comment` (
   `parent_id` char(36) DEFAULT NULL,
   `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_on` timestamp NULL DEFAULT NULL,
+  `locked_on` timestamp NULL DEFAULT NULL,
+  `removed_on` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `author_id` (`author_id`),
@@ -102,7 +104,7 @@ CREATE TABLE `Community` (
   UNIQUE KEY `name` (`name`),
   KEY `owner_id` (`owner_id`),
   CONSTRAINT `Community_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `User` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,7 +141,7 @@ CREATE TABLE `Error_Message` (
   UNIQUE KEY `id` (`id`),
   KEY `error_message_group_id` (`error_message_group_id`),
   CONSTRAINT `Error_Message_ibfk_1` FOREIGN KEY (`error_message_group_id`) REFERENCES `Error_Message_Group` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=402 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=601 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,7 +158,7 @@ CREATE TABLE `Error_Message_Group` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,6 +178,7 @@ CREATE TABLE `Post` (
   `deleted_on` timestamp NULL DEFAULT NULL,
   `archived_on` timestamp NULL DEFAULT NULL,
   `mod_removed_on` timestamp NULL DEFAULT NULL,
+  `locked_on` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `community_id` (`community_id`),
@@ -290,6 +293,8 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `comment_parent_id`,
  1 AS `comment_created_on`,
  1 AS `comment_deleted_on`,
+ 1 AS `comment_locked_on`,
+ 1 AS `comment_removed_on`,
  1 AS `comment_count_votes_up`,
  1 AS `comment_count_votes_down`,
  1 AS `comment_count_votes_none`,
@@ -392,6 +397,7 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `post_deleted_on`,
  1 AS `post_archived_on`,
  1 AS `post_mod_removed_on`,
+ 1 AS `post_locked_on`,
  1 AS `post_count_comments`,
  1 AS `community_id`,
  1 AS `community_name`,
@@ -430,6 +436,7 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `post_deleted_on`,
  1 AS `post_archived_on`,
  1 AS `post_mod_removed_on`,
+ 1 AS `post_locked_on`,
  1 AS `post_count_comments`,
  1 AS `community_id`,
  1 AS `community_name`,
@@ -468,6 +475,7 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `post_deleted_on`,
  1 AS `post_archived_on`,
  1 AS `post_mod_removed_on`,
+ 1 AS `post_locked_on`,
  1 AS `post_count_comments`,
  1 AS `community_id`,
  1 AS `community_name`,
@@ -707,7 +715,7 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `View_Comment` AS select `c`.`id` AS `comment_id`,`c`.`author_id` AS `comment_author_id`,`c`.`post_id` AS `comment_post_id`,`c`.`content` AS `comment_content`,`c`.`parent_id` AS `comment_parent_id`,`c`.`created_on` AS `comment_created_on`,`c`.`deleted_on` AS `comment_deleted_on`,ifnull(`votes`.`count_upvotes`,0) AS `comment_count_votes_up`,ifnull(`votes`.`count_downvotes`,0) AS `comment_count_votes_down`,ifnull(`votes`.`count_novotes`,0) AS `comment_count_votes_none`,ifnull(`votes`.`score`,0) AS `comment_count_votes_score`,`u`.`username` AS `comment_author_username`,`p`.`community_id` AS `community_id`,`com`.`name` AS `community_name` from ((((`Comment` `c` join `User` `u` on((`u`.`id` = `c`.`author_id`))) left join `View_Comment_Vote_Totals` `votes` on((`votes`.`comment_id` = `c`.`id`))) join `Post` `p` on((`p`.`id` = `c`.`post_id`))) join `Community` `com` on((`com`.`id` = `p`.`community_id`))) group by `c`.`id` */;
+/*!50001 VIEW `View_Comment` AS select `c`.`id` AS `comment_id`,`c`.`author_id` AS `comment_author_id`,`c`.`post_id` AS `comment_post_id`,`c`.`content` AS `comment_content`,`c`.`parent_id` AS `comment_parent_id`,`c`.`created_on` AS `comment_created_on`,`c`.`deleted_on` AS `comment_deleted_on`,`c`.`locked_on` AS `comment_locked_on`,`c`.`removed_on` AS `comment_removed_on`,ifnull(`votes`.`count_upvotes`,0) AS `comment_count_votes_up`,ifnull(`votes`.`count_downvotes`,0) AS `comment_count_votes_down`,ifnull(`votes`.`count_novotes`,0) AS `comment_count_votes_none`,ifnull(`votes`.`score`,0) AS `comment_count_votes_score`,`u`.`username` AS `comment_author_username`,`p`.`community_id` AS `community_id`,`com`.`name` AS `community_name` from ((((`Comment` `c` join `User` `u` on((`u`.`id` = `c`.`author_id`))) left join `View_Comment_Vote_Totals` `votes` on((`votes`.`comment_id` = `c`.`id`))) join `Post` `p` on((`p`.`id` = `c`.`post_id`))) join `Community` `com` on((`com`.`id` = `p`.`community_id`))) group by `c`.`id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -797,7 +805,7 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `View_Post` AS select `p`.`id` AS `post_id`,`p`.`community_id` AS `post_community_id`,`p`.`title` AS `post_title`,`p`.`post_type` AS `post_post_type`,`p`.`author_id` AS `post_author_id`,`p`.`created_on` AS `post_created_on`,`p`.`deleted_on` AS `post_deleted_on`,`p`.`archived_on` AS `post_archived_on`,`p`.`mod_removed_on` AS `post_mod_removed_on`,(select count(0) from `Comment` `c` where (`c`.`post_id` = `p`.`id`)) AS `post_count_comments`,`c`.`community_id` AS `community_id`,`c`.`community_name` AS `community_name`,`c`.`community_title` AS `community_title`,`c`.`community_owner_id` AS `community_owner_id`,`c`.`community_description` AS `community_description`,`c`.`community_created_on` AS `community_created_on`,`c`.`community_count_members` AS `community_count_members`,`a`.`user_id` AS `user_id`,`a`.`user_email` AS `user_email`,`a`.`user_username` AS `user_username`,`a`.`user_password` AS `user_password`,`a`.`user_created_on` AS `user_created_on`,ifnull(`vote_totals`.`count_upvotes`,0) AS `post_count_votes_upvotes`,ifnull(`vote_totals`.`count_downvotes`,0) AS `post_count_votes_downvotes`,ifnull(`vote_totals`.`count_novotes`,0) AS `post_count_votes_novotes`,ifnull(`vote_totals`.`score`,0) AS `post_count_votes_score` from (((`Post` `p` join `View_Community` `c` on((`c`.`community_id` = `p`.`community_id`))) join `View_User` `a` on((`a`.`user_id` = `p`.`author_id`))) left join `View_Post_Vote_Totals` `vote_totals` on((`vote_totals`.`post_id` = `p`.`id`))) */;
+/*!50001 VIEW `View_Post` AS select `p`.`id` AS `post_id`,`p`.`community_id` AS `post_community_id`,`p`.`title` AS `post_title`,`p`.`post_type` AS `post_post_type`,`p`.`author_id` AS `post_author_id`,`p`.`created_on` AS `post_created_on`,`p`.`deleted_on` AS `post_deleted_on`,`p`.`archived_on` AS `post_archived_on`,`p`.`mod_removed_on` AS `post_mod_removed_on`,`p`.`locked_on` AS `post_locked_on`,(select count(0) from `Comment` `c` where (`c`.`post_id` = `p`.`id`)) AS `post_count_comments`,`c`.`community_id` AS `community_id`,`c`.`community_name` AS `community_name`,`c`.`community_title` AS `community_title`,`c`.`community_owner_id` AS `community_owner_id`,`c`.`community_description` AS `community_description`,`c`.`community_created_on` AS `community_created_on`,`c`.`community_count_members` AS `community_count_members`,`a`.`user_id` AS `user_id`,`a`.`user_email` AS `user_email`,`a`.`user_username` AS `user_username`,`a`.`user_password` AS `user_password`,`a`.`user_created_on` AS `user_created_on`,ifnull(`vote_totals`.`count_upvotes`,0) AS `post_count_votes_upvotes`,ifnull(`vote_totals`.`count_downvotes`,0) AS `post_count_votes_downvotes`,ifnull(`vote_totals`.`count_novotes`,0) AS `post_count_votes_novotes`,ifnull(`vote_totals`.`score`,0) AS `post_count_votes_score` from (((`Post` `p` join `View_Community` `c` on((`c`.`community_id` = `p`.`community_id`))) join `View_User` `a` on((`a`.`user_id` = `p`.`author_id`))) left join `View_Post_Vote_Totals` `vote_totals` on((`vote_totals`.`post_id` = `p`.`id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -815,7 +823,7 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `View_Post_Link` AS select `p`.`url` AS `post_url`,`v`.`post_id` AS `post_id`,`v`.`post_community_id` AS `post_community_id`,`v`.`post_title` AS `post_title`,`v`.`post_post_type` AS `post_post_type`,`v`.`post_author_id` AS `post_author_id`,`v`.`post_created_on` AS `post_created_on`,`v`.`post_deleted_on` AS `post_deleted_on`,`v`.`post_archived_on` AS `post_archived_on`,`v`.`post_mod_removed_on` AS `post_mod_removed_on`,`v`.`post_count_comments` AS `post_count_comments`,`v`.`community_id` AS `community_id`,`v`.`community_name` AS `community_name`,`v`.`community_title` AS `community_title`,`v`.`community_owner_id` AS `community_owner_id`,`v`.`community_description` AS `community_description`,`v`.`community_created_on` AS `community_created_on`,`v`.`community_count_members` AS `community_count_members`,`v`.`user_id` AS `user_id`,`v`.`user_email` AS `user_email`,`v`.`user_username` AS `user_username`,`v`.`user_password` AS `user_password`,`v`.`user_created_on` AS `user_created_on`,`v`.`post_count_votes_upvotes` AS `post_count_votes_upvotes`,`v`.`post_count_votes_downvotes` AS `post_count_votes_downvotes`,`v`.`post_count_votes_novotes` AS `post_count_votes_novotes`,`v`.`post_count_votes_score` AS `post_count_votes_score` from (`Post_Link` `p` join `View_Post` `v` on((`v`.`post_id` = `p`.`id`))) */;
+/*!50001 VIEW `View_Post_Link` AS select `p`.`url` AS `post_url`,`v`.`post_id` AS `post_id`,`v`.`post_community_id` AS `post_community_id`,`v`.`post_title` AS `post_title`,`v`.`post_post_type` AS `post_post_type`,`v`.`post_author_id` AS `post_author_id`,`v`.`post_created_on` AS `post_created_on`,`v`.`post_deleted_on` AS `post_deleted_on`,`v`.`post_archived_on` AS `post_archived_on`,`v`.`post_mod_removed_on` AS `post_mod_removed_on`,`v`.`post_locked_on` AS `post_locked_on`,`v`.`post_count_comments` AS `post_count_comments`,`v`.`community_id` AS `community_id`,`v`.`community_name` AS `community_name`,`v`.`community_title` AS `community_title`,`v`.`community_owner_id` AS `community_owner_id`,`v`.`community_description` AS `community_description`,`v`.`community_created_on` AS `community_created_on`,`v`.`community_count_members` AS `community_count_members`,`v`.`user_id` AS `user_id`,`v`.`user_email` AS `user_email`,`v`.`user_username` AS `user_username`,`v`.`user_password` AS `user_password`,`v`.`user_created_on` AS `user_created_on`,`v`.`post_count_votes_upvotes` AS `post_count_votes_upvotes`,`v`.`post_count_votes_downvotes` AS `post_count_votes_downvotes`,`v`.`post_count_votes_novotes` AS `post_count_votes_novotes`,`v`.`post_count_votes_score` AS `post_count_votes_score` from (`Post_Link` `p` join `View_Post` `v` on((`v`.`post_id` = `p`.`id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -833,7 +841,7 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `View_Post_Text` AS select `p`.`content` AS `post_content`,`v`.`post_id` AS `post_id`,`v`.`post_community_id` AS `post_community_id`,`v`.`post_title` AS `post_title`,`v`.`post_post_type` AS `post_post_type`,`v`.`post_author_id` AS `post_author_id`,`v`.`post_created_on` AS `post_created_on`,`v`.`post_deleted_on` AS `post_deleted_on`,`v`.`post_archived_on` AS `post_archived_on`,`v`.`post_mod_removed_on` AS `post_mod_removed_on`,`v`.`post_count_comments` AS `post_count_comments`,`v`.`community_id` AS `community_id`,`v`.`community_name` AS `community_name`,`v`.`community_title` AS `community_title`,`v`.`community_owner_id` AS `community_owner_id`,`v`.`community_description` AS `community_description`,`v`.`community_created_on` AS `community_created_on`,`v`.`community_count_members` AS `community_count_members`,`v`.`user_id` AS `user_id`,`v`.`user_email` AS `user_email`,`v`.`user_username` AS `user_username`,`v`.`user_password` AS `user_password`,`v`.`user_created_on` AS `user_created_on`,`v`.`post_count_votes_upvotes` AS `post_count_votes_upvotes`,`v`.`post_count_votes_downvotes` AS `post_count_votes_downvotes`,`v`.`post_count_votes_novotes` AS `post_count_votes_novotes`,`v`.`post_count_votes_score` AS `post_count_votes_score` from (`Post_Text` `p` join `View_Post` `v` on((`v`.`post_id` = `p`.`id`))) */;
+/*!50001 VIEW `View_Post_Text` AS select `p`.`content` AS `post_content`,`v`.`post_id` AS `post_id`,`v`.`post_community_id` AS `post_community_id`,`v`.`post_title` AS `post_title`,`v`.`post_post_type` AS `post_post_type`,`v`.`post_author_id` AS `post_author_id`,`v`.`post_created_on` AS `post_created_on`,`v`.`post_deleted_on` AS `post_deleted_on`,`v`.`post_archived_on` AS `post_archived_on`,`v`.`post_mod_removed_on` AS `post_mod_removed_on`,`v`.`post_locked_on` AS `post_locked_on`,`v`.`post_count_comments` AS `post_count_comments`,`v`.`community_id` AS `community_id`,`v`.`community_name` AS `community_name`,`v`.`community_title` AS `community_title`,`v`.`community_owner_id` AS `community_owner_id`,`v`.`community_description` AS `community_description`,`v`.`community_created_on` AS `community_created_on`,`v`.`community_count_members` AS `community_count_members`,`v`.`user_id` AS `user_id`,`v`.`user_email` AS `user_email`,`v`.`user_username` AS `user_username`,`v`.`user_password` AS `user_password`,`v`.`user_created_on` AS `user_created_on`,`v`.`post_count_votes_upvotes` AS `post_count_votes_upvotes`,`v`.`post_count_votes_downvotes` AS `post_count_votes_downvotes`,`v`.`post_count_votes_novotes` AS `post_count_votes_novotes`,`v`.`post_count_votes_score` AS `post_count_votes_score` from (`Post_Text` `p` join `View_Post` `v` on((`v`.`post_id` = `p`.`id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -919,7 +927,7 @@ USE `Deadit_Dev`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-23 21:13:26
+-- Dump completed on 2024-06-04 18:03:21
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
@@ -966,7 +974,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Error_Message` WRITE;
 /*!40000 ALTER TABLE `Error_Message` DISABLE KEYS */;
-REPLACE INTO `Error_Message` VALUES (200,2,'The email is already registered with another account.','2024-05-07 14:11:22'),(201,2,'The username is already taken.','2024-05-07 14:11:22'),(202,2,'The password does not meet the criteria.','2024-05-07 14:11:23'),(300,3,'The community name contains an invalid character.','2024-05-07 14:12:27'),(301,3,'The community name already exists.','2024-05-07 14:12:27'),(302,3,'The community name is banned.','2024-05-07 14:12:27'),(400,4,'Either \'commentId\' or \'postId\' must be provided.','2024-05-15 20:54:03'),(401,4,'Only \'commentId\' or \'postId\' can have a value, not both.','2024-05-15 20:54:03');
+REPLACE INTO `Error_Message` VALUES (200,2,'The email is already registered with another account.','2024-05-07 14:11:22'),(201,2,'The username is already taken.','2024-05-07 14:11:22'),(202,2,'The password does not meet the criteria.','2024-05-07 14:11:23'),(300,3,'The community name contains an invalid character.','2024-05-07 14:12:27'),(301,3,'The community name already exists.','2024-05-07 14:12:27'),(302,3,'The community name is banned.','2024-05-07 14:12:27'),(400,4,'Either \'commentId\' or \'postId\' must be provided.','2024-05-15 20:54:03'),(401,4,'Only \'commentId\' or \'postId\' can have a value, not both.','2024-05-15 20:54:03'),(500,5,'The parent comment does not exist','2024-05-31 19:10:01'),(501,5,'The parent comment is locked.','2024-05-31 19:12:45'),(502,5,'The post has been locked by a moderator.','2024-05-31 19:21:32'),(503,5,'The post has been removed by a moderator.','2024-05-31 19:21:55'),(504,5,'The post has been deleted by its author.','2024-05-31 19:22:06');
 /*!40000 ALTER TABLE `Error_Message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -988,7 +996,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Error_Message_Group` WRITE;
 /*!40000 ALTER TABLE `Error_Message_Group` DISABLE KEYS */;
-REPLACE INTO `Error_Message_Group` VALUES (1,'Misc','2024-05-07 14:07:53'),(2,'Account Signup','2024-05-07 14:08:56'),(3,'Create Community','2024-05-07 14:09:15'),(4,'Voting','2024-05-15 20:19:17');
+REPLACE INTO `Error_Message_Group` VALUES (1,'Misc','2024-05-07 14:07:53'),(2,'Account Signup','2024-05-07 14:08:56'),(3,'Create Community','2024-05-07 14:09:15'),(4,'Voting','2024-05-15 20:19:17'),(5,'Comment','2024-05-31 19:08:09');
 /*!40000 ALTER TABLE `Error_Message_Group` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -1001,4 +1009,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-23 21:13:31
+-- Dump completed on 2024-06-04 18:03:32

@@ -11,5 +11,7 @@ public class Comment
     public Guid? ParentId { get; set; }
     public DateTime? CreatedOn { get; set; }
     public DateTime? DeletedOn { get; set; }    
+    public DateTime? LockedOn { get; set; }
+    public DateTime? RemovedOn { get; set; }
 }
 

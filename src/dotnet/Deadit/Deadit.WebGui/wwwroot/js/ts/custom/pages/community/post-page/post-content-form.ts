@@ -1,5 +1,5 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
-import { IControllerAsync } from "../../../domain/contracts/i-controller";
+import { IController, IControllerAsync } from "../../../domain/contracts/i-controller";
 import { InputFeedbackTextArea } from "../../../domain/helpers/input-feedback";
 import { SpinnerButton } from "../../../domain/helpers/spinner-button";
 import { Guid } from "../../../domain/types/aliases";
@@ -17,7 +17,7 @@ export const PostContentFormElements = {
     EditingClass: 'editing',
 }
 
-export class PostContentForm implements IControllerAsync
+export class PostContentForm implements IController
 {
     private _container: HTMLDivElement;
     private _form: HTMLFormElement | null;
@@ -67,7 +67,7 @@ export class PostContentForm implements IControllerAsync
 
 
 
-    public async control()
+    public control()
     {
         this.addListeners();
     }

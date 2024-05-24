@@ -55,4 +55,15 @@ public sealed class CommentRepositoryCommands
         WHERE
             id = @comment_id;";
 
+
+    public const string SaveModerate = @"
+        UPDATE
+            Comment
+        SET
+            locked_on = @locked_on,
+            removed_on = @removed_on
+        WHERE
+            id = @comment_id;";
+
+
 }

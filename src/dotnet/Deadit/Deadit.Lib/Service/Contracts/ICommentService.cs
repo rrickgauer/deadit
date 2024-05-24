@@ -12,4 +12,6 @@ public interface ICommentService
     public Task<ServiceDataResponse<ViewComment>> GetCommentAsync(Guid commentId);
     public Task<ServiceDataResponse<ViewComment>> SaveCommentAsync(Comment comment);
     public Task<ServiceResponse> DeleteCommentAsync(Guid commentId);
+
+    public Task<ServiceResponse> SaveModerateCommentAsync(Comment comment);
 }

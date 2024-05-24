@@ -1,7 +1,7 @@
 import { PostType } from "../enum/post-type";
 import { VoteType } from "../enum/vote-type";
 import { DateTimeString, Guid } from "../types/aliases";
-import { VoteScores } from "./common-api-response-types";
+import { VoteScores } from "./vote-scores";
 
 
 
@@ -37,4 +37,5 @@ export type PostVoteApiResponse = VoteScores & {
     votePostCommunityName?: string;
     votePostPostType?: PostType;
 }
+
 

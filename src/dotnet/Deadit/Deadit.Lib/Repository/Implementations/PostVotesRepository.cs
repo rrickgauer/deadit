@@ -66,7 +66,6 @@ public class PostVotesRepository(DatabaseConnection connection) : IPostVotesRepo
 
     public async Task<DataTable> SelectUserPostVotesAsync(uint userId, IEnumerable<Guid> postIds)
     {
-
         InClause<Guid> inClause = new(postIds);
 
         string sql = string.Format(PostVotesRepositoryCommands.SelectUserPostVotesLimit, inClause.GetSqlClause());

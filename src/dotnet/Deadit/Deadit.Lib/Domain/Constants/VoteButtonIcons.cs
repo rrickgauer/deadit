@@ -10,12 +10,12 @@ public interface IVoteButtonIcons
 
 public class VoteButtonIcons : IVoteButtonIcons
 {
-    public static string Upvote => @"<i class=""bx bx-upvote""></i>";
-    public static string Downvote => @"<i class=""bx bx-downvote""></i>";
+    public static string Upvote => Icons.Upvote;
+    public static string Downvote => Icons.Downvote;
 }
 
 public class VoteButtonIconsSolid : IVoteButtonIcons
 {
-    public static string Upvote => @"<i class=""bx bxs-upvote"" data-js-selected></i>";
-    public static string Downvote => @"<i class=""bx bxs-downvote"" data-js-selected></i>";
+    public static string Upvote => Icons.UpvoteSolid;
+    public static string Downvote => Icons.DownvoteSolid;
 }

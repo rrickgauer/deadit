@@ -56,6 +56,14 @@ public class ServiceResponse
 
 
 
+    public void ThrowIfError()
+    {
+        if (!Successful)
+        {
+            throw new ServiceResponseException(this);
+        }
+    }
+
     public static implicit operator ServiceResponse(RepositoryException ex)
     {
         return new ServiceResponse(ex);

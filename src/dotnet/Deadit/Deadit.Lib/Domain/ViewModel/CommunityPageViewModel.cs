@@ -1,12 +1,12 @@
-﻿using Deadit.Lib.Domain.Dto;
+﻿using Deadit.Lib.Domain.Contracts;
+using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.Other;
 using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Domain.TableView;
-using static Deadit.Lib.Domain.ViewModel.ViewModelContracts;
 
 namespace Deadit.Lib.Domain.ViewModel;
 
-public class CommunityPageViewModel : ILoggedIn
+public class CommunityPageViewModel : IClientLoggedIn
 {
     public required ViewCommunity Community { get; set; }
     public bool IsMember { get; set; } = false;

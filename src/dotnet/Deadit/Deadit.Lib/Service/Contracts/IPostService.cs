@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Domain.Response;
@@ -27,8 +28,12 @@ public interface IPostService
 
     public Task<ServiceDataResponse<ViewPostText>> SavePostTextAsync(PostText post);
 
-
     public Task<ServiceResponse> AuthorDeletePostAsync(Guid postId);
+
+    public Task<ServiceResponse> LockPostCommentsAsync(Guid postId);
+    public Task<ServiceResponse> UnlockPostCommentsAsync(Guid postId);
+
+    public Task<ServiceResponse> ModeratePostAsync(Guid postId, ModeratePostForm form);
 }
 
 

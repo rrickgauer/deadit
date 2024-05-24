@@ -2,7 +2,7 @@
 
 namespace Deadit.Lib.Domain.Parms;
 
-public class GetJoinedCommunitiesPageParms : IClientIdArg
+public class GetJoinedCommunitiesPageParms : IClientId
 {
     public required uint? ClientId { get; set; }
 }

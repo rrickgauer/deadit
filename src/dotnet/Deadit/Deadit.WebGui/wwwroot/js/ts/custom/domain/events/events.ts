@@ -1,7 +1,10 @@
+import { CommentModerationAction } from "../enum/comment-moderation-action";
 import { PostDropdownAction } from "../enum/post-dropdown-action";
+import { PostModerationDropdownAction } from "../enum/post-moderation-dropdown-action";
 import { SortOption } from "../enum/sort-option";
 import { TopPostSort } from "../enum/top-post-sort";
 import { CommentApiResponse } from "../model/comment-models";
+import { Guid } from "../types/aliases";
 import { CustomEmptyMessage, CustomMessage } from "./custom-events";
 
 
@@ -42,4 +45,31 @@ export type PostDropdownItemClickData = {
 }
 
 export const PostDropdownItemClickEvent = new CustomMessage<PostDropdownItemClickData>();
+
+
+
+export type PostModerationDropdownItemClickData = {
+    action: PostModerationDropdownAction,
+}
+
+export const PostModerationDropdownItemClickEvent = new CustomMessage<PostModerationDropdownItemClickData>();
+
+
+export type OpenModerateCommentModalData = {
+    commentId: Guid;
+}
+
+export const OpenModerateCommentModalEvent = new CustomMessage<OpenModerateCommentModalData>();
+
+
+
+
+export type CommentLockedData = {
+    comment: CommentApiResponse,
+}
+
+export const CommentLockedEvent = new CustomMessage<CommentLockedData>();
+
+
+
 

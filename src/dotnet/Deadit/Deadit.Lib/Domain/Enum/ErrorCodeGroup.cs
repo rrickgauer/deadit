@@ -7,4 +7,5 @@ public enum ErrorCodeGroup : uint
     AccountSignup	= 2,
     CreateCommunity	= 3,
     Voting          = 4,
+    Comment         = 5,
 }

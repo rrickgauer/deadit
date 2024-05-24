@@ -1,5 +1,5 @@
 import { VoteScore } from "../domain/helpers/vote-scores/vote-score";
-import { UserVoteScores, VoteScores } from "../domain/model/common-api-response-types";
+import { UserVoteScores, VoteScores } from "../domain/model/vote-scores";
 import { HtmlString } from "../domain/types/aliases";
 import { HtmlTemplate } from "./html-template";
 

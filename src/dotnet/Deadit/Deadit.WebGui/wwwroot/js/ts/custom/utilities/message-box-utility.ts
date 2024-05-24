@@ -3,7 +3,7 @@ import { MessageBoxError } from "../domain/helpers/message-box/MessageBoxError";
 import { MessageBoxStandard } from "../domain/helpers/message-box/MessageBoxStandard";
 import { MessageBoxSucccess } from "../domain/helpers/message-box/MessageBoxSucccess";
 import { MessageBoxType } from "../domain/helpers/message-box/MessageBoxType";
-import { ErrorMessage } from "../domain/model/api-response";
+import { ErrorMessage, ServiceResponse } from "../domain/model/api-response";
 import { ErrorMessageTemplate } from "../templates/error-message-template";
 import { ErrorUtility } from "./error-utility";
 
@@ -34,6 +34,11 @@ export class MessageBoxUtility
         }
 
         throw new Error('Invalid message box type');
+    }
+
+    public static showServiceResponseErrors(serviceResponse: ServiceResponse<any>)
+    {
+        MessageBoxUtility.showErrorList(serviceResponse.response.errors);
     }
 
     public static showErrorList = (errors: ErrorMessage[]) =>

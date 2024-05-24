@@ -39,4 +39,22 @@ public enum ErrorCode : uint
     VotingBothParmsGiven = 401,
 
     #endregion
+
+    #region - Comment -
+    [ErrorCodeGroup(ErrorCodeGroup.Comment)]
+    CommentInvalidParentId = 500,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Comment)]
+    CommentParentCommentIsLocked = 501,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Comment)]
+    CommentPostLocked = 502,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Comment)]
+    CommentPostRemoved = 503,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Comment)]
+    CommentPostDeleted = 504,
+
+    #endregion
 }
