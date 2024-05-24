@@ -2,7 +2,7 @@
 
 namespace Deadit.Lib.Domain.ViewModel;
 
-public class JoinedCommunitiesPageViewModel
+public class CommunitiesPageViewModel
 {
     public required List<ViewCommunity> Communities { get; set; }
 }

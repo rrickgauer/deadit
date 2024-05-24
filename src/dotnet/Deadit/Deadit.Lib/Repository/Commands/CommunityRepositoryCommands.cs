@@ -36,4 +36,19 @@ public sealed class CommunityRepositoryCommands
             Community (name, title, owner_id, description)
         VALUES
             (@name, @title, @owner_id, @description);";
+
+
+
+    public const string SelectUserCreatedCommunities = @"
+        SELECT
+            v.*
+        FROM
+            View_Community v
+        WHERE
+            v.community_owner_id = @user_id
+        ORDER BY
+            v.community_name ASC;";
+
+
+
 }

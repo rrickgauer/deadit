@@ -1,0 +1,13 @@
+﻿@using Deadit.Lib.Domain.ViewModel
+@using Deadit.Lib.Utility
+@model CommunityListItemViewModel;
+
+
+
+<li class="list-group-item community-list-group-item">
+    <div><a class="text-decoration-none fw-bold" href="/@Model.Community.CommunityUrlGui">@Model.Community.CommunityName</a></div>
+
+    <div class="text-secondary">@Model.Community.CommunityCountMembers members</div>
+
+    <div class="text-secondary">Created on @Model.Community.CommunityCreatedOn.ToDisplayDateOnly()</div>
+</li>
