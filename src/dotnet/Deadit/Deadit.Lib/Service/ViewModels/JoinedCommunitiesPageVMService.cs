@@ -10,11 +10,11 @@ using Deadit.Lib.Service.Contracts;
 namespace Deadit.Lib.Service.ViewModels;
 
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui)]
-public class JoinedCommunitiesPageVMService(ICommunityMemberService memberService) : IVMService<GetJoinedCommunitiesPageParms, JoinedCommunitiesPageViewModel>
+public class JoinedCommunitiesPageVMService(ICommunityMemberService memberService) : IVMService<GetJoinedCommunitiesPageParms, CommunitiesPageViewModel>
 {
     private readonly ICommunityMemberService _memberService = memberService;
 
-    public async Task<ServiceDataResponse<JoinedCommunitiesPageViewModel>> GetViewModelAsync(GetJoinedCommunitiesPageParms args)
+    public async Task<ServiceDataResponse<CommunitiesPageViewModel>> GetViewModelAsync(GetJoinedCommunitiesPageParms args)
     {
         if (args.ClientId is not uint userId)
         {
@@ -28,7 +28,7 @@ public class JoinedCommunitiesPageVMService(ICommunityMemberService memberServic
             return new(serviceResponse);
         }
 
-        JoinedCommunitiesPageViewModel viewModel = new()
+        CommunitiesPageViewModel viewModel = new()
         {
             Communities = serviceResponse.Data?.Select(m => (ViewCommunity)m)?.OrderBy(c => c.CommunityTitle?.ToLower()).ToList() ?? new(),
         };

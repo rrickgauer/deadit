@@ -9,13 +9,13 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/communities")]
-public class CommunitiesController(JoinedCommunitiesPageVMService joinedCommunitiesPageVMService) : GuiController, IControllerName
+public class CommunitiesController(JoinedCommunitiesPageVMService joinedCommunitiesPageVMService, CreatedCommunitiesPageVMService createdCommunitiesPageVMService) : GuiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunitiesController));
 
-
     private readonly JoinedCommunitiesPageVMService _joinedCommunitiesPageVM = joinedCommunitiesPageVMService;
+    private readonly CreatedCommunitiesPageVMService _createdCommunitiesPageVMService = createdCommunitiesPageVMService;
 
     /// <summary>
     /// GET: /communities
@@ -57,6 +57,25 @@ public class CommunitiesController(JoinedCommunitiesPageVMService joinedCommunit
         }
 
         return View(GuiPageViewFiles.JoinedCommunitiesPage, getViewModelResponse.Data);
+    }
+
+
+    [HttpGet("created")]
+    [ActionName(nameof(CreatedCommuntiesPageAsync))]
+    [ServiceFilter(typeof(LoginFirstRedirectFilter))]
+    public async Task<IActionResult> CreatedCommuntiesPageAsync()
+    {
+        var getViewModel = await _createdCommunitiesPageVMService.GetViewModelAsync(new()
+        {
+            UserId = ClientId!.Value,
+        });
+
+        if (!getViewModel.Successful)
+        {
+            return BadRequest(getViewModel);
+        }
+
+        return View(GuiPageViewFiles.CreatedCommunitiesPage, getViewModel.Data);
     }
 
 

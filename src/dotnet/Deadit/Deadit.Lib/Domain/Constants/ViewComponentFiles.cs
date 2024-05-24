@@ -4,4 +4,5 @@
 public class ViewComponentFiles
 {
     public const string PostListItemView = "PostListItemView";
+    public const string CommunityListItemView = "CommunityListItemView";
 }

@@ -2,6 +2,7 @@
 using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Repository.Commands;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Repository.Other;
@@ -25,6 +26,7 @@ public class CommunityRepository(DatabaseConnection dbConnection) : ICommunityRe
     public async Task<DataRow?> SelectCommunityAsync(uint communityId)
     {
         MySqlCommand command = new(CommunityRepositoryCommands.SelectCommunityById);
+        
         command.Parameters.AddWithValue("@id", communityId);
 
         return await _dbConnection.FetchAsync(command);
@@ -45,5 +47,14 @@ public class CommunityRepository(DatabaseConnection dbConnection) : ICommunityRe
         command.Parameters.AddWithValue("@owner_id", userId);
 
         return await _dbConnection.ModifyWithRowIdAsync(command);
+    }
+
+    public async Task<DataTable> SelectCreatedCommunitiesAsync(uint userId)
+    {
+        MySqlCommand command = new(CommunityRepositoryCommands.SelectUserCreatedCommunities);
+
+        command.Parameters.AddWithValue("@user_id", userId);
+
+        return await _dbConnection.FetchAllAsync(command);
     }
 }

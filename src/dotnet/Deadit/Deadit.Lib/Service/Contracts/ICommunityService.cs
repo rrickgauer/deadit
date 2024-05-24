@@ -9,4 +9,6 @@ public interface ICommunityService
     public Task<ServiceDataResponse<ViewCommunity>> CreateCommunityAsync(CreateCommunityRequestForm form, uint userId);
     public Task<ServiceDataResponse<ViewCommunity>> GetCommunityAsync(string communityName);
     public Task<ServiceDataResponse<ViewCommunity>> GetCommunityAsync(uint communityId);
+
+    public Task<ServiceDataResponse<List<ViewCommunity>>> GetCreatedCommunitiesAsync(uint userId);
 }

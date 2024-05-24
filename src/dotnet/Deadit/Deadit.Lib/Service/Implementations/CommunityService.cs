@@ -206,4 +206,22 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
         return community;
     }
 
+
+    public async Task<ServiceDataResponse<List<ViewCommunity>>> GetCreatedCommunitiesAsync(uint userId)
+    {
+        
+        try
+        {
+            var table = await _communityRepository.SelectCreatedCommunitiesAsync(userId);
+
+            var models = _tableMapperService.ToModels<ViewCommunity>(table);
+
+            return models;
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
 }
