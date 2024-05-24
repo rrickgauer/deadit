@@ -5,10 +5,7 @@ import { CommunityApiRequest, CreateCommunityApiRequest } from "../../../domain/
 import { ApiResponse, ApiValidationException, ErrorMessage } from "../../../domain/model/api-response";
 import { CommunityService } from "../../../services/community-service";
 import { ErrorService } from "../../../services/error-service";
-import { ServiceUtility } from "../../../utilities/service-utility";
 import { CreateCommunityElements } from "./create-community-elements";
-
-
 
 export class CreateCommunityController
 {
@@ -17,7 +14,7 @@ export class CreateCommunityController
     private _communityService = new CommunityService();
 
 
-    public control = () =>
+    public control()
     {
         this.addListeners();
     }
@@ -38,7 +35,7 @@ export class CreateCommunityController
     }
 
 
-    private onFormSubmit = async () =>
+    private async onFormSubmit()
     {
         this._elements.submitButtonSpinner.spin();
 
@@ -49,7 +46,7 @@ export class CreateCommunityController
 
             if (response.successful)
             {
-                window.location.href = `/communities/${response.response.data.communityId}`;
+                window.location.href = `/${response.response.data.communityUrlGui}`;
             }
             else
             {
@@ -78,7 +75,7 @@ export class CreateCommunityController
     }
 
 
-    private getCreateCommunityApiRequest = () : CreateCommunityApiRequest =>
+    private getCreateCommunityApiRequest(): CreateCommunityApiRequest
     {
         const result = new CreateCommunityApiRequest(this._elements.inputName.value, this._elements.inputTitle.value, this._elements.inputDescription.value);
 
@@ -86,13 +83,13 @@ export class CreateCommunityController
     }
 
 
-    private onSubmitBadRequest = (apiResponse: ApiResponse<CommunityApiRequest>) =>
+    private onSubmitBadRequest(apiResponse: ApiResponse<CommunityApiRequest>)
     {
         const nameErrorDisplayText = this.createDisplayApiErrorMessageForName(apiResponse.errors);
         this._elements.inputFeedbackName.showInvalid(nameErrorDisplayText);
     }
 
-    private createDisplayApiErrorMessageForName = (errors: ErrorMessage[]) =>
+    private createDisplayApiErrorMessageForName(errors: ErrorMessage[])
     {
         let nameErrorMessage: string = "";
 
