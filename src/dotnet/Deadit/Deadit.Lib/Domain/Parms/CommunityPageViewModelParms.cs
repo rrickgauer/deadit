@@ -4,7 +4,7 @@ using Deadit.Lib.Domain.Paging;
 
 namespace Deadit.Lib.Domain.Parms;
 
-public class CommunityPageViewModelParms : IClientIdArg, ICommunityNameArg
+public class CommunityPageViewModelParms : IClientId, ICommunityName
 {
     public required string CommunityName { get; set; }
     public required uint? ClientId { get; set; }

@@ -28,6 +28,8 @@ builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<HttpResponseExceptionFilter>();
     options.Filters.Add<ValidationErrorFilter>();
+    options.Filters.Add<AccessTokenFilter>();
+
     options.SuppressAsyncSuffixInActionNames = false;
 })
 

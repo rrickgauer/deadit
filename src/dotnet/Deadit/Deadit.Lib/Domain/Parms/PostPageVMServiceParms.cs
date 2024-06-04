@@ -3,7 +3,7 @@ using Deadit.Lib.Domain.Enum;
 
 namespace Deadit.Lib.Domain.Parms;
 
-public class PostPageVMServiceParms : IClientIdArg, IPostIdArg, ISortOptionArg
+public class PostPageVMServiceParms : IClientId, IPostId, ISortOption
 {
     public required Guid PostId { get; set; }
     public required PostType PostType { get; set; }

@@ -98,6 +98,12 @@ public class PostVotesService(IPostVotesRepository repo, ITableMapperService map
 
     public async Task<ServiceDataResponse<List<ViewVotePost>>> GetUserPostVotesAsync(uint userId, IEnumerable<Guid> postIds)
     {
+
+        if (postIds.ToList().Count == 0)
+        {
+            return new();
+        }
+
         try
         {
             var table = await _repo.SelectUserPostVotesAsync(userId, postIds);

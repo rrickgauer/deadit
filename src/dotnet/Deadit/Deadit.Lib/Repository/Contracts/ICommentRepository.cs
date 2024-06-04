@@ -10,4 +10,6 @@ public interface ICommentRepository
     public Task<DataRow?> SelectCommentAsync(Guid commentId);
     public Task<int> SaveCommentAsync(Comment comment);
     public Task<int> DeleteCommentAsync(Guid commentId);
+
+    public Task<int> SaveCommentModerateAsync(Comment comment);
 }

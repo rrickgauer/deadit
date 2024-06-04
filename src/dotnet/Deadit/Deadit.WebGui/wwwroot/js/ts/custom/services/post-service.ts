@@ -1,5 +1,9 @@
-import { ApiPosts, ApiPostsLink, ApiPostsText } from "../api/api-posts";
-import { CreateLinkPostApiRequest, LinkPostApiResponse, CreateTextPostApiRequest, TextPostApiResponse, UpdateTextPostApiRequest } from "../domain/model/post-models";
+import { ApiPostLock } from "../api/api-post-lock";
+import { ApiPosts } from "../api/api-posts";
+import { ApiPostsLink } from "../api/api-posts-link";
+import { ApiPostsText } from "../api/api-posts-text";
+import { ServiceResponse } from "../domain/model/api-response";
+import { CreateLinkPostApiRequest, LinkPostApiResponse, CreateTextPostApiRequest, TextPostApiResponse, UpdateTextPostApiRequest, GetPostPageApiResponse, GetPostApiRequest, ModeratePostForm } from "../domain/model/post-models";
 import { Guid } from "../domain/types/aliases";
 import { ServiceUtility } from "../utilities/service-utility";
 
@@ -47,4 +51,25 @@ export class PostService
 
         return await ServiceUtility.toServiceResponseNoContent(response);
     }
+
+    public async getPost(postData: GetPostApiRequest): Promise<ServiceResponse<GetPostPageApiResponse>>
+    {
+        const api = new ApiPosts(this._communityName);
+
+        const response = await api.get(postData);
+
+        return await ServiceUtility.toServiceResponse<GetPostPageApiResponse>(response);
+    }
+
+    public async moderatePost(postId: Guid, moderateForm: ModeratePostForm)
+    {
+        const api = new ApiPosts(this._communityName);
+
+        const response = await api.patch(postId, moderateForm);
+
+        return await ServiceUtility.toServiceResponseNoContent(response);
+    }
+
+
+
 }

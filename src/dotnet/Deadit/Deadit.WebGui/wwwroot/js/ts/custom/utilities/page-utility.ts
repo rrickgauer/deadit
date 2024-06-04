@@ -12,5 +12,10 @@ export class PageUtility {
             document.addEventListener('DOMContentLoaded', fn);
         }
     }
+
+    static refreshPage()
+    {
+        window.location.href = window.location.href;
+    }
 }
 

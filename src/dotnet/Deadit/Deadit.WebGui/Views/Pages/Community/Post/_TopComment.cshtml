@@ -10,6 +10,14 @@
             Sorry, this post was deleted by the person who originally posted it.
         </div>
     }
+    else if (Model.Post.PostIsLocked)
+    {
+        <div class="alert alert-light" role="alert">
+            Locked post. New comments cannot be posted.
+        </div>
+    }
+
+
     else
     {
         <div class="card">

@@ -71,13 +71,13 @@ public class PostPageVMService(IPostService postService, ICommentService comment
         PostPageViewModel viewModel = new()
         {
             Post = post,
-            IsAuthor = post.PostAuthorId == args.ClientId,
+            IsPostAuthor = post.PostAuthorId == args.ClientId,
             Comments = getComments.Data ?? new(),
             ClientId = args.ClientId,
             IsLoggedIn = args.ClientId != null,
             SortOption = args.SortOption,
             UserPostVote = userPostVote,
-
+            IsCommunityModerator = post.CommunityOwnerId == args.ClientId,
         };
 
         return new(viewModel);

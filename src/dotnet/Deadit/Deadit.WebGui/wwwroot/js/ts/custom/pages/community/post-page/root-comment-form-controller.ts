@@ -1,6 +1,6 @@
 import { LoginModal } from "../../../components/login-modal/login-modal";
 import { NativeEvents } from "../../../domain/constants/native-events";
-import { IControllerAsync } from "../../../domain/contracts/i-controller";
+import { IController, IControllerAsync } from "../../../domain/contracts/i-controller";
 import { RootCommentFormSubmittedEvent } from "../../../domain/events/events";
 import { SaveCommentRequest } from "../../../domain/model/comment-models";
 import { PostPageParms } from "../../../domain/model/post-models";
@@ -17,7 +17,7 @@ export type RootCommentFormControllerArgs = {
 }
 
 
-export class RootCommentFormController implements IControllerAsync
+export class RootCommentFormController implements IController
 {
     postPageArgs: PostPageParms;
     private readonly _isLoggedIn: boolean;
@@ -31,7 +31,7 @@ export class RootCommentFormController implements IControllerAsync
         this._commentService = new CommentsService(this.postPageArgs);
     }
 
-    public async control()
+    public control()
     {
         this.addListeners();
     }

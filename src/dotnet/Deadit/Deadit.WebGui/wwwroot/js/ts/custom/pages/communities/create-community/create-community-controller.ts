@@ -2,7 +2,7 @@ import { NativeEvents } from "../../../domain/constants/native-events";
 import { InputFeebackState } from "../../../domain/enum/input-feedback-state";
 import { ApiErrorCode } from "../../../domain/enum/api-error-codes";
 import { CommunityApiRequest, CreateCommunityApiRequest } from "../../../domain/model/api-community-models";
-import { ApiResponse, ApiValidationException, ErrorMessage } from "../../../domain/model/api-response";
+import { ApiResponse, ErrorMessage } from "../../../domain/model/api-response";
 import { CommunityService } from "../../../services/community-service";
 import { ErrorService } from "../../../services/error-service";
 import { CreateCommunityElements } from "./create-community-elements";

@@ -17,4 +17,12 @@ export class PageLoadingUtility
             PageLoadingUtility.loader.style.display = 'none';
         }
     }
+
+    public static showLoader()
+    {
+        if (Nullable.hasValue(PageLoadingUtility.loader))
+        {
+            PageLoadingUtility.loader.style.display = 'flex';
+        }
+    }
 }

@@ -1,4 +1,5 @@
-import { ApiNotFoundException, ApiValidationException, ErrorMessage } from "../domain/model/api-response";
+import { ErrorMessage } from "../domain/model/api-response";
+import { ApiNotFoundException, ApiValidationException } from "../domain/model/exceptions";
 import { HtmlString } from "../domain/types/aliases";
 import { ErrorMessageTemplate } from "../templates/error-message-template";
 

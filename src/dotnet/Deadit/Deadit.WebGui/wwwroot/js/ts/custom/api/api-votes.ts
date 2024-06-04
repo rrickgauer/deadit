@@ -1,12 +1,6 @@
 import { ApiEndpoints, HttpMethods } from "../domain/constants/api-constants";
 import { CommentVoteApiRequest, PostVoteApiRequest } from "../domain/model/vote-models";
 
-
-
-
-
-
-
 export class ApiVotes
 {
 

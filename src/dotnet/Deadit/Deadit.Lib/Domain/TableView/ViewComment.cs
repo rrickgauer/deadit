@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Dto;
+using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Other;
 using Deadit.Lib.Utility;
@@ -42,12 +43,20 @@ public class ViewComment : ICreatedOnDifference, IVoteScore,
     [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.CommentCreatedOn))]
     public DateTime? CommentCreatedOn { get; set; }
 
-
     [SqlColumn("comment_deleted_on")]
     [CopyToProperty<Comment>(nameof(Comment.DeletedOn))]
     [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.CommentDeletedOn))]
     public DateTime? CommentDeletedOn { get; set; }
 
+    [SqlColumn("comment_locked_on")]
+    [CopyToProperty<Comment>(nameof(Comment.LockedOn))]
+    [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.CommentLockedOn))]
+    public DateTime? CommentLockedOn { get; set; }
+
+    [SqlColumn("comment_removed_on")]
+    [CopyToProperty<Comment>(nameof(Comment.RemovedOn))]
+    [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.CommentRemovedOn))]
+    public DateTime? CommentRemovedOn { get; set; }
 
     [CopyToProperty<GetCommentDto>(nameof(GetCommentDto.CommentAuthorUsername))]
     [SqlColumn("comment_author_username")]
@@ -110,12 +119,38 @@ public class ViewComment : ICreatedOnDifference, IVoteScore,
         }
 
 
+        string text = string.Empty;
+
         if (IsDeleted)
         {
-            string deletedText = "[deleted]";
-            CommentAuthorUsername = deletedText;
-            CommentContent = deletedText;
-            CommentAuthorId = null;
+            text = "[deleted]";
+        }
+        else if (CommentRemovedOn.HasValue)
+        {
+            text = "[removed]";
+        }
+        else
+        {
+            return;
+        }
+
+
+        CommentAuthorUsername = text;
+        CommentContent = text;
+        CommentAuthorId = null;
+    }
+
+
+    public void SetPatchFields(ModerateCommentForm patchForm)
+    {
+        if (patchForm.Locked is bool locked)
+        {
+            CommentLockedOn = locked ? DateTime.UtcNow : null;
+        }
+
+        if (patchForm.Removed is bool removed)
+        {
+            CommentRemovedOn = removed ? DateTime.UtcNow : null;
         }
     }
 

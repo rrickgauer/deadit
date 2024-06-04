@@ -1,5 +1,5 @@
 import { ApiEndpoints, HttpMethods } from "../domain/constants/api-constants";
-import { GetCommentsApiRequest, SaveCommentRequest } from "../domain/model/comment-models";
+import { ModerateCommentRequest, SaveCommentRequest } from "../domain/model/comment-models";
 import { PostPageParms } from "../domain/model/post-models";
 import { Guid } from "../domain/types/aliases";
 import { ApiUtility } from "./api-base";
@@ -20,25 +20,13 @@ export class ApiComments
         this._postId = args.postId;
     }
 
-
-    public getAll = async (request: GetCommentsApiRequest): Promise<Response> =>
-    {
-        const urlParms = new URLSearchParams();
-        urlParms.set('sort', request.sort);
-
-        const url = `${this._url}?${urlParms.toString()}`;
-
-        return await fetch(url);
-    }
-
-    public put = async (comment: SaveCommentRequest): Promise<Response> =>
+    public async put (comment: SaveCommentRequest): Promise<Response>
     {
         const url = `${this._url}/${comment.commentId}`;
 
         return await ApiUtility.fetchJson(url, {
             body: comment.toJson(),
             method: HttpMethods.PUT,
-       
         });
     }
 
@@ -48,6 +36,24 @@ export class ApiComments
 
         return await fetch(url, {
             method: HttpMethods.DELETE,
+        });
+    }
+
+    public async get(commentId: Guid): Promise<Response>
+    {
+        const url = `${this._url}/${commentId}`;
+
+        return await fetch(url);
+    }
+
+
+    public async patch(request: ModerateCommentRequest)
+    {
+        const url = `${this._url}/${request.commentId}`;
+
+        return await ApiUtility.fetchJson(url, {
+            body: request.toJson(),
+            method: HttpMethods.PATCH,
         });
     }
 }

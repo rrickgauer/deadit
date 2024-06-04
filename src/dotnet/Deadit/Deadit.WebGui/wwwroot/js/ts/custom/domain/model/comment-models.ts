@@ -1,9 +1,5 @@
-import { SortOption } from "../enum/sort-option";
 import { DateTimeString, Guid, JsonObject, Nullable } from "../types/aliases";
-import { UserVoteScores, UserVoteSelection, VoteScores } from "./common-api-response-types";
-
-
-
+import { UserVoteScores } from "./vote-scores";
 
 
 export type CommentApiResponse = UserVoteScores & {
@@ -16,20 +12,16 @@ export type CommentApiResponse = UserVoteScores & {
     commentCreatedOn?: DateTimeString;
     commentDeletedOn?: DateTimeString | null;
     commentAuthorUsername?: string;
+    commentIsLocked?: boolean;
+    commentIsRemoved?: boolean;
+    commentIsAuthor?: boolean;
     communityId?: number;
     communityName?: string;
-    commentIsAuthor?: boolean;
+
     createdOnDifferenceDisplay?: string;
     commentReplies?: CommentApiResponse[];
+    userIsCommunityModerator?: boolean;
 }
-
-
-export type GetCommentsApiResponse = {
-    comments?: CommentApiResponse[];
-    isLoggedIn?: boolean;
-    postIsDeleted?: boolean;
-}
-
 
 export type CommentApiRequestForm = {
     content: string;
@@ -63,6 +55,26 @@ export class SaveCommentRequest
 
 
 
-export type GetCommentsApiRequest = {
-    sort?: SortOption;
+export type PatchCommentApiRequest = {
+    locked: boolean;
+    removed: boolean;
 }
+
+export class ModerateCommentRequest
+{
+    public readonly commentId: string;
+    public readonly form: PatchCommentApiRequest;
+
+    constructor(commentId: Guid, form: PatchCommentApiRequest)
+    {
+        this.commentId = commentId;
+        this.form = form;
+    }
+
+    public toJson(): JsonObject
+    {
+        return JSON.stringify(this.form);
+    }
+}
+
+

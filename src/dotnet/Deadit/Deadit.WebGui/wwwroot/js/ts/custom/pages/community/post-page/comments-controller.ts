@@ -1,22 +1,26 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
-import { IControllerAsync } from "../../../domain/contracts/i-controller";
+import { IController, IControllerAsync } from "../../../domain/contracts/i-controller";
 import { SortOption } from "../../../domain/enum/sort-option";
-import { ItemsSortInputChangedEvent, RootCommentFormSubmittedEvent } from "../../../domain/events/events";
+import { CommentLockedData, CommentLockedEvent, ItemsSortInputChangedEvent, OpenModerateCommentModalEvent, RootCommentFormSubmittedEvent } from "../../../domain/events/events";
 import { MessageBoxConfirm } from "../../../domain/helpers/message-box/MessageBoxConfirm";
-import { CommentApiResponse, GetCommentsApiResponse, SaveCommentRequest } from "../../../domain/model/comment-models";
-import { PostPageParms } from "../../../domain/model/post-models";
+import { ServiceResponse } from "../../../domain/model/api-response";
+import { CommentApiResponse, SaveCommentRequest } from "../../../domain/model/comment-models";
+import { GetPostPageApiResponse, PostPageParms } from "../../../domain/model/post-models";
+import { Guid } from "../../../domain/types/aliases";
 import { CommentsService } from "../../../services/comments-service";
 import { VoteService } from "../../../services/vote-service";
 import { CommentTemplate } from "../../../templates/comment-template";
 import { ErrorUtility } from "../../../utilities/error-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
+import { Nullable } from "../../../utilities/nullable";
 import { CommentForm } from "./comment-form";
 import { CommentListItem } from "./comment-list-item";
+import { CommentModModal } from "./comment-moderation-modal";
 
 
 export type CommentsControllerArgs = {
-    getCommentsResponse: GetCommentsApiResponse;
-    postPageArgs: PostPageParms;
+    pageArgs: PostPageParms;
+    data: GetPostPageApiResponse;
 }
 
 
@@ -26,10 +30,11 @@ export enum CommentActionButtons
     DELETE = 'btn-comment-action-delete',
     TOGGLE = 'btn-comment-action-toggle',
     REPLY = 'btn-comment-action-reply',
+    MODERATE = 'btn-comment-action-moderate',
 }
 
 
-export class CommentsController implements IControllerAsync
+export class CommentsController implements IController
 {
     private readonly _args: PostPageParms;
     private readonly _isLoggedIn: boolean;
@@ -38,20 +43,29 @@ export class CommentsController implements IControllerAsync
     private readonly _commentService: CommentsService;
     private _comments: CommentApiResponse[];
     private _postIsDeleted: boolean;
+    private _postPageData: GetPostPageApiResponse;
+    private _postIsLocked: boolean;
 
     constructor(args: CommentsControllerArgs)
     {
-        this._args = args.postPageArgs;
-        this._comments = args.getCommentsResponse.comments;
-        this._isLoggedIn = args.getCommentsResponse.isLoggedIn;
+        this._args = args.pageArgs;
+        this._postPageData = args.data;
+
+        this._comments = this._postPageData.comments;
+
+        this._isLoggedIn = this._postPageData.isLoggedIn;
+
         this._commentService = new CommentsService(this._args);
         this._templateEngine = new CommentTemplate();
         this._rootListElement = document.querySelector('.comment-list.root') as HTMLUListElement;
-        this._postIsDeleted = args.getCommentsResponse.postIsDeleted;
+        this._postIsDeleted = this._postPageData.postIsDeleted;
+        this._postIsLocked = this._postPageData.postIsLocked;
+
+        
     }
 
 
-    public async control()
+    public control()
     {
         this.initCommentsListHtml();
         this.addListeners();
@@ -122,7 +136,6 @@ export class CommentsController implements IControllerAsync
                 return;
             }
 
-
             if (this.isAuth())
             {
                 this.onVoteButtonClick(buttonElement);
@@ -135,9 +148,17 @@ export class CommentsController implements IControllerAsync
         {
             this.sortComments(message.data.selectedValue);
         });
+
+        CommentModModal.init(this._args);
+
+
+        CommentLockedEvent.addListener((message) =>
+        {
+            this.onCommentLockedEvent(message.data);
+        });
     }
 
-    private onBtnCommentActionClick = async (button: HTMLAnchorElement) =>
+    private async onBtnCommentActionClick(button: HTMLAnchorElement)
     {
         const listItem = new CommentListItem(button);
 
@@ -164,11 +185,33 @@ export class CommentsController implements IControllerAsync
 
         else if (button.classList.contains(CommentActionButtons.REPLY))
         {
-            if (this.isAuth())
+
+            if (!this.isAuth())
+            {
+                return;
+            }
+
+            if (this.checkPostLocked())
+            {
+                return;
+            }
+
+            if (this.isAuth() && !this._postIsLocked && !listItem.isLocked)
             {
                 listItem.showReplyForm();
             }
         }
+
+        else if (button.classList.contains(CommentActionButtons.MODERATE))
+        {
+            if (this.isAuth())
+            {
+                OpenModerateCommentModalEvent.invoke(this, {
+                    commentId: listItem.commentId,
+                });
+            }
+        }
+
         else
         {
             alert('unknown action button');
@@ -197,23 +240,28 @@ export class CommentsController implements IControllerAsync
     {
         const form = new CommentForm(target);
 
+        form.showLoading();
+
         if (form.isInvalid())
         {
+            form.showNormal();
             return;
         }
 
         const listItem = form.getParentListItem();
 
-        const savedSuccessfully = await this.saveComment(form);
+        const saveResponse = await this.saveComment(form);
 
-        if (!savedSuccessfully)
+        form.showNormal();
+
+        if (!saveResponse?.successful ?? false)
         {
             return;
         }
 
         if (form.isNew)
         {
-            listItem.addReply(form.commentId, form.contentValue);
+            listItem.addReply(saveResponse.response.data);
         }
         else 
         {
@@ -223,7 +271,7 @@ export class CommentsController implements IControllerAsync
     }
 
 
-    private async saveComment(form: CommentForm): Promise<boolean>
+    private async saveComment(form: CommentForm): Promise<ServiceResponse<CommentApiResponse>> | null
     {
         try
         {
@@ -232,12 +280,34 @@ export class CommentsController implements IControllerAsync
                 parentId: form.parentCommentId,
             }));
 
-            return saveResult.successful;
+            if (!saveResult.successful)
+            {
+                MessageBoxUtility.showErrorList(saveResult.response.errors);
+            }
+
+            return saveResult;
 
         }
         catch (error)
         {
-            return false;
+            ErrorUtility.onException(error, {
+                onApiNotFoundException: (e) =>
+                {
+                    MessageBoxUtility.showError({
+                        message: 'Comment not found',
+                    });
+                },
+
+                onOther: (e) =>
+                {
+                    MessageBoxUtility.showError({
+                        message: 'Your comment was not saved. Please try again later.',
+                        title: 'Unexpected Error',
+                    });
+                },
+            });
+
+            return null;
         }
     }
 
@@ -350,13 +420,79 @@ export class CommentsController implements IControllerAsync
             return false;
         }
 
-        else if (this._postIsDeleted)
-        {
-            return false;
-        }
-
-
         return true;
     }
+
+
+    private checkPostLocked(): boolean
+    {
+        if (this._postIsLocked)
+        {
+            MessageBoxUtility.showStandard({
+                title: 'Locked Post',
+                message: 'The post has been locked by a moderator.'
+            });
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private onCommentLockedEvent(message: CommentLockedData)
+    {
+        const comment = message.comment;
+
+        // get the existing children of the comment
+        comment.commentReplies = this.getCommentModel(message.comment.commentId)?.commentReplies ?? [];
+
+        const template = new CommentTemplate();
+        const html = template.toHtml(comment);
+
+        let listItem = CommentListItem.getItemById(message.comment.commentId);
+
+        if (Nullable.hasValue(listItem))
+        {
+            listItem.container.outerHTML = html;
+        }
+    }
+
+
+    private getCommentModel(commentId: Guid): CommentApiResponse | null
+    {
+        for (const comment of this._comments)
+        {
+            const c = this.searchChildren(commentId, comment);
+
+            if (Nullable.hasValue(c))
+            {
+                return c;
+            }
+        }
+
+        return null;
+    }
+
+    private searchChildren(commentId: Guid, comment: CommentApiResponse): CommentApiResponse | null
+    {
+        var childComment = comment.commentReplies.find(c => c.commentId === commentId);
+
+        if (Nullable.hasValue(childComment))
+        {
+            return childComment;
+        }
+
+        if (comment.commentId === commentId)
+        {
+            return comment;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
+
 
 }

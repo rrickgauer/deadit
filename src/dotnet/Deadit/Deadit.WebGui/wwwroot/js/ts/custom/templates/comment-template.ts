@@ -5,6 +5,7 @@ import { HtmlTemplate } from "./html-template";
 import { CommentFormTemplate } from "./comment-form-template";
 import { Nullable } from "../utilities/nullable";
 import { VoteScoreTemplate } from "./votes-score-template";
+import { Icons } from "../domain/constants/icons";
 
 
 export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
@@ -33,17 +34,29 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
         const votingTemplate = new VoteScoreTemplate();
         const voting = votingTemplate.toHtml(model);
 
+
+        let lockedDisplay = `
+            <div class="me-1 comment-list-item-locked">
+                ${model.commentIsLocked ? Icons.CommentLocked : ''}
+            </div>
+            `;
+
         let html = `
 
-            <hr />
-            <li class="comment-list-item ${model.commentIsAuthor ? 'comment-list-item-authored' : ''}" data-comment-id="${model.commentId}">
+            
+            <li class="comment-list-item ${model.commentIsLocked ? 'locked' : ''} ${model.commentIsAuthor ? 'comment-list-item-authored' : ''}" data-comment-id="${model.commentId}">
+            
                 
                     ${voting}
                 
                     <div class="w-100">
-                        <div class="comment-actions">
-                            ${actionButtons}
+                        <div class="comment-actions d-flex">
+                            ${lockedDisplay}
+                            <div>${actionButtons}</div>
+                            
                         </div>
+
+                        
 
                         <div class="form-post-comment-edit-container">
                             ${editCommentForm}
@@ -82,10 +95,21 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
             <a href="#" class="text-reset btn-comment-action btn-comment-action-delete">Delete</a>
         `;
 
+        let moderateButton = `&#183; <a href="#" class="text-reset btn-comment-action btn-comment-action-moderate">Moderate</a>`;
+
+        if (!model.userIsCommunityModerator)
+        {
+            moderateButton = '';
+        }
+
 
         let replyButton = `&#183; <a href="#" class="text-reset btn-comment-action btn-comment-action-reply">Reply</a>`;
 
         if (Nullable.hasValue(model.commentDeletedOn))
+        {
+            replyButton = '';
+        }
+        else if (model.commentIsLocked)
         {
             replyButton = '';
         }
@@ -98,6 +122,7 @@ export class CommentTemplate extends HtmlTemplate<CommentApiResponse>
                 <a href="#" class="text-reset btn-comment-action btn-comment-action-toggle">Hide</a> 
                 ${replyButton}
                 ${model.commentIsAuthor ? editActionButtons : ''}
+                ${moderateButton}
             </small>
         `;
 

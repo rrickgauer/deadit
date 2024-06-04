@@ -1,6 +1,6 @@
 import { VoteButtonIcons, VoteButtonIconsSolid, VoteButtonIconsType } from "../../constants/vote-button-icons";
 import { VoteType } from "../../enum/vote-type";
-import { UserVoteScores } from "../../model/common-api-response-types";
+import { UserVoteScores } from "../../model/vote-scores";
 import { DownvoteButton, UpvoteButton } from "./vote-button";
 
 export class VoteScore

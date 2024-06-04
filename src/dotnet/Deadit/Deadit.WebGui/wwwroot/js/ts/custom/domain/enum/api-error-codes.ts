@@ -28,5 +28,16 @@ export enum ApiErrorCode
 
     //#endregion
 
+
+    //#region - Comment -
+
+    CommentInvalidParentId = 500,
+    CommentParentCommentIsLocked = 501,
+    CommentPostLocked = 502,
+    CommentPostRemoved = 503,
+    CommentPostDeleted = 504,
+
+    //#endregion
+
 }
 

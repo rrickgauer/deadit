@@ -2,6 +2,7 @@
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Other;
 using Deadit.Lib.Domain.TableView;
+using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.Dto;
 
@@ -24,8 +25,20 @@ public class GetCommentDto : ICreatedOnDifference, IVoteScore
     public string CreatedOnDifferenceDisplay => DifferenceDisplayCalculator.FromNow(CommentCreatedOn ?? DateTime.UtcNow);
     public DateTime? CommentDeletedOn { get; set; }
     public VoteType UserVoteSelection { get; set; } = VoteType.Novote;
+    public bool UserIsCommunityModerator { get; set; } = false;
+
+    [JsonIgnore]
+    public DateTime? CommentLockedOn { get; set; }
+    public bool CommentIsLocked => CommentLockedOn.HasValue;
+    
+    [JsonIgnore]
+    public DateTime? CommentRemovedOn { get; set; }
+    public bool CommentIsRemoved => CommentRemovedOn.HasValue;
+
 
     public List<GetCommentDto> CommentReplies { get; set; } = new();
+
+    #region - Methods -
 
     public void SetIsAuthorRecursive(uint? clientId)
     {
@@ -59,12 +72,27 @@ public class GetCommentDto : ICreatedOnDifference, IVoteScore
             UserVoteSelection = voteType;
         }
     }
+
+    public void SetUserIsCommunityModeratorRecursive(uint? clientId, uint communityModeratorId)
+    {
+        CommentReplies.ForEach(c => c.SetUserIsCommunityModeratorRecursive(clientId, communityModeratorId));
+
+        if (!clientId.HasValue)
+        {
+            UserIsCommunityModerator = false;
+            return;
+        }
+
+        UserIsCommunityModerator = CommentAuthorId == communityModeratorId;
+    }
+
+    #endregion
 }
 
 
 public static class GetCommentDtoExtensions
 {
-    public static List<GetCommentDto> BuildGetCommentDtos(this List<ViewComment> comments, uint? clientId, IEnumerable<ViewVoteComment> userVotes)
+    public static List<GetCommentDto> BuildGetCommentDtos(this List<ViewComment> comments, uint? clientId, IEnumerable<ViewVoteComment> userVotes, uint communityModeratorId)
     {
         // need to put this into a function
         comments.ForEach(c => c.MaskDeletedInfo());
@@ -76,6 +104,7 @@ public static class GetCommentDtoExtensions
             var dto = (GetCommentDto)c;
             dto.SetIsAuthorRecursive(clientId);
             dto.SetVoteTypeRecursive(votes);
+            dto.SetUserIsCommunityModeratorRecursive(clientId, communityModeratorId);
 
             return dto;
         });

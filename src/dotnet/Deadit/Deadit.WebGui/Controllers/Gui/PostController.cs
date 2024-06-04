@@ -28,7 +28,6 @@ public class PostController(PostPageVMService postPageVMService) : GuiController
     /// <exception cref="ArgumentNullException"></exception>
     [HttpGet]
     [ActionName(nameof(GetPostPageAsync))]
-    //[ServiceFilter(typeof(LoginFirstRedirectFilter))]
     [ServiceFilter(typeof(PostExistsFilter))]
     public async Task<IActionResult> GetPostPageAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromQuery] SortOption? sort)
     {

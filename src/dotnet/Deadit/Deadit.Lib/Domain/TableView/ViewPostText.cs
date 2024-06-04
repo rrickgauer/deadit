@@ -3,6 +3,7 @@ using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Utility;
+using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.TableView;
 
@@ -16,16 +17,21 @@ public class ViewPostText : ViewPost,
     public string? PostContent { get; set; }
 
 
-    public override string PostBodyContent => MarkdownUtility.ToHtmlString(PostContent ?? string.Empty);
+    [JsonIgnore]
+    public override string? PostBodyContent => PostContent;
 
 
     public override void HandlePostDeleted()
     {
         base.HandlePostDeleted();
 
-        if (PostDeletedOn.HasValue)
+        if (PostIsRemoved)
         {
-            PostContent = "[Post deleted by author]";
+            PostContent = RemovedContentText;
+        }
+        else if (PostDeletedOn.HasValue)
+        {
+            PostContent = DeletedContentText;
         }
     }
 

@@ -165,4 +165,22 @@ public sealed class PostRepositoryCommands
             id = @post_id;";
 
 
+    public const string SetPostLocked = @"
+        UPDATE
+            Post
+        SET
+            locked_on = @locked_on
+        WHERE
+            id = @post_id;";
+
+
+    public const string UpdateModerationFields = @"
+        UPDATE
+            Post
+        SET
+            mod_removed_on = {0},
+            locked_on = {1}
+        WHERE
+            id = @post_id;";
+
 }

@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Paging;
 using System.Data;
@@ -28,4 +29,8 @@ public interface IPostRepository
     public Task<int> UpdatePostAsync(PostText post);
 
     public Task<int> MarkPostDeletedAsync(Guid postId);
+
+    public Task<int> UpdatePostLockedAsync(Guid postId, bool isLocked);
+
+    public Task<int> UpdatePostModerationFieldsAsync(Guid postId, ModeratePostForm form);
 }

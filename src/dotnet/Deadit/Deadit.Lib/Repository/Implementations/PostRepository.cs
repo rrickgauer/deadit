@@ -1,5 +1,6 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Repository.Commands;
@@ -58,7 +59,7 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
         return await _connection.FetchAsync(command);
     }
 
-    
+
     public async Task<DataRow?> SelectPostTextAsync(Guid postId)
     {
         MySqlCommand command = new(PostRepositoryCommands.SelectPostText);
@@ -120,7 +121,7 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
         return await SelectTopCommunityPostsAsync(command, communityName, createdAfter);
     }
 
-    private async Task<DataTable> SelectTopCommunityPostsAsync(MySqlCommand command, string communityName, DateTime createdAfter, PaginationPosts? pagination=null)
+    private async Task<DataTable> SelectTopCommunityPostsAsync(MySqlCommand command, string communityName, DateTime createdAfter, PaginationPosts? pagination = null)
     {
         command.Parameters.AddWithValue("@community_name", communityName);
         command.Parameters.AddWithValue("@created_on", createdAfter);
@@ -145,13 +146,13 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
 
         // insert the post base record
         int numRecords1 = await InsertPostBaseAsync(post, _transactionConnection);
-        
+
         // insert the post text record
         int numRecords2 = await InsertPostTextAsync(post, _transactionConnection);
 
         // commit the commands
         await _transactionConnection.CommitAsync();
-        
+
         // combine the results
         return new() { numRecords1, numRecords2 };
     }
@@ -221,8 +222,6 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
 
     #endregion
 
-
-
     #region - Delete -
 
     public async Task<int> MarkPostDeletedAsync(Guid postId)
@@ -237,5 +236,65 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
 
     #endregion
 
+    #region - Lock post -
+
+    public async Task<int> UpdatePostLockedAsync(Guid postId, bool isLocked)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SetPostLocked);
+
+        DateTime? lockedOn = isLocked ? DateTime.UtcNow : null;
+
+        command.Parameters.AddWithValue("@locked_on", lockedOn);
+        command.Parameters.AddWithValue("@post_id", postId);
+
+        return await _connection.ModifyAsync(command);
+    }
+
+
+    #endregion
+
+
+
+    public async Task<int> UpdatePostModerationFieldsAsync(Guid postId, ModeratePostForm form)
+    {
+
+
+        string removedOnClause = "mod_removed_on";
+
+        if (form.Removed.HasValue)
+        {
+            removedOnClause = "@removed_on";
+        }
+
+
+        string lockedOnClause = "locked_on";
+
+        if (form.Locked.HasValue)
+        {
+            lockedOnClause = "@locked_on";
+        }
+
+        string sql = string.Format(PostRepositoryCommands.UpdateModerationFields, removedOnClause, lockedOnClause);
+
+
+
+        MySqlCommand command = new(sql);
+
+        if (form.Locked is bool isLocked)
+        {
+            command.Parameters.AddWithValue("@locked_on", isLocked ? DateTime.UtcNow : null);
+        }
+
+
+        if (form.Removed is bool isRemoved)
+        {
+            command.Parameters.AddWithValue("@removed_on", isRemoved ? DateTime.UtcNow : null);
+        }
+
+        command.Parameters.AddWithValue("@post_id", postId);
+
+
+        return await _connection.ModifyAsync(command);
+    }
 
 }

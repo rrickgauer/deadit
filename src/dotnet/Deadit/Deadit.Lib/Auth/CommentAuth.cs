@@ -20,18 +20,13 @@ public class CommentAuth(ICommentService commentService, IPostService postServic
     {
         try
         {
-            var getComment = await _commentService.GetCommentAsync(data.CommentId);
-
-            if (!getComment.Successful)
-            {
-                return new(getComment);
-            }
+            var comment = await GetCommentAsync(data.CommentId);
 
             return data.AuthPermissionType switch
             {
-                AuthPermissionType.Delete => await ValidateDelete(data, getComment),
-                AuthPermissionType.Upsert => await ValidateUpsert(data, getComment),
-                AuthPermissionType.Get    => await ValidateGet(data, getComment),
+                AuthPermissionType.Delete => await ValidateDelete(data, comment),
+                AuthPermissionType.Upsert => await ValidateUpsert(data, comment),
+                AuthPermissionType.Get    => await ValidateGet(data, comment),
                 _                         => throw new NotImplementedException(),
             };
         }
@@ -43,30 +38,10 @@ public class CommentAuth(ICommentService commentService, IPostService postServic
 
 
 
-    private async Task<ServiceResponse> ValidateDelete(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
+    private async Task<ServiceResponse> ValidateDelete(CommentAuthData data, ViewComment? comment)
     {
-        var comment = NotFoundHttpResponseException.ThrowIfNot<ViewComment>(getCommet.Data);
 
-        if (comment.CommentAuthorId != data.UserId)
-        {
-            throw new ForbiddenHttpResponseException();
-        }
-
-        var post = await GetPostAsync(data);
-
-        if (post.PostDeletedOn.HasValue)
-        {
-            throw new ForbiddenHttpResponseException();
-        }
-
-        return new();
-    }
-
-
-
-    private static ServiceResponse ValidateSave(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
-    {
-        if (getCommet.Data is not ViewComment comment)
+        if (comment == null)
         {
             throw new NotFoundHttpResponseException();
         }
@@ -76,32 +51,6 @@ public class CommentAuth(ICommentService commentService, IPostService postServic
             throw new ForbiddenHttpResponseException();
         }
 
-        return new();
-    }
-
-    private static ServiceResponse ValidateCreate(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
-    {
-        if (getCommet.Data is ViewComment)
-        {
-            throw new ForbiddenHttpResponseException();
-        }
-
-        return new();
-    }
-
-
-    private async Task<ServiceResponse> ValidateUpsert(CommentAuthData data, ServiceDataResponse<ViewComment> getCommet)
-    {
-        if (getCommet.Data is not ViewComment comment)
-        {
-            return new();
-        }
-
-        if (comment.CommentAuthorId != data.UserId)
-        {
-            throw new ForbiddenHttpResponseException();
-        }
-
         var post = await GetPostAsync(data);
 
         if (post.PostDeletedOn.HasValue)
@@ -113,10 +62,68 @@ public class CommentAuth(ICommentService commentService, IPostService postServic
     }
 
 
-
-    private async Task<ServiceResponse> ValidateGet(CommentAuthData data, ServiceDataResponse<ViewComment> getComment)
+    private async Task<ServiceResponse> ValidateUpsert(CommentAuthData data, ViewComment? comment)
     {
-        if (getComment.Data is not ViewComment comment)
+        // ensure the post exists
+        var post = await GetPostAsync(data);
+
+        // can't comment on deleted posts
+        if (post.PostDeletedOn.HasValue)
+        {
+            return new(ErrorCode.CommentPostDeleted);
+        }
+
+        // can't comment on locked posts
+        if (post.PostIsLocked)
+        {
+            return new(ErrorCode.CommentPostLocked);
+        }
+
+        // can't comment on removed posts
+        if (post.PostIsRemoved)
+        {
+            return new(ErrorCode.CommentPostRemoved);
+        }
+
+        // comment is a new one so we don't have to check anything further
+        if (comment == null)
+        {
+            return new();
+        }
+
+        // comment exists, so we are updating it
+        // make sure that the comment's author id is the same as the client's
+        if (comment.CommentAuthorId != data.UserId)
+        {
+            throw new ForbiddenHttpResponseException();
+        }
+
+        // if this comment is a reply to another comment
+        if (comment.CommentParentId is Guid parentId)
+        {
+            // make sure the parent exists
+            var parentComment = await GetCommentAsync(parentId);
+
+            if (parentComment == null)
+            {
+                return new(ErrorCode.CommentInvalidParentId);
+            }
+
+            // check if the parent comment is locked
+            if (parentComment.CommentLockedOn.HasValue)
+            {
+                return new(ErrorCode.CommentParentCommentIsLocked);
+            }
+        }
+
+        return new();
+    }
+
+
+
+    private async Task<ServiceResponse> ValidateGet(CommentAuthData data, ViewComment? comment)
+    {
+        if (comment == null)
         {
             throw new NotFoundHttpResponseException();
         }
@@ -126,7 +133,7 @@ public class CommentAuth(ICommentService commentService, IPostService postServic
             throw new NotFoundHttpResponseException();
         }
 
-        var post = await GetPostAsync(data);
+        //var post = await GetPostAsync(data);
 
         return new();
     }
@@ -152,6 +159,16 @@ public class CommentAuth(ICommentService commentService, IPostService postServic
         }
 
         return post;
+    }
+
+
+    private async Task<ViewComment?> GetCommentAsync(Guid commentId)
+    {
+        var getComment = await _commentService.GetCommentAsync(commentId);
+
+        getComment.ThrowIfError();
+
+        return getComment.Data;
     }
 
 }

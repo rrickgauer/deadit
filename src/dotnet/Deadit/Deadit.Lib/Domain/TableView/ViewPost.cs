@@ -13,6 +13,12 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     ITableView<ViewPost, PostLink>
 {
 
+    protected const string DeletedContentText = "[Post deleted by author]";
+    protected const string RemovedContentText = "[Post removed by moderator]";
+
+    protected const string RemovedTitleText = "[Removed]";
+
+
     [SqlColumn("post_id")]
     [CopyToProperty<PostText>(nameof(PostText.Id))]
     [CopyToProperty<PostLink>(nameof(PostLink.Id))]
@@ -44,17 +50,27 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     [SqlColumn("post_deleted_on")]
     [CopyToProperty<PostText>(nameof(PostText.DeletedOn))]
     [CopyToProperty<PostLink>(nameof(PostLink.DeletedOn))]
+    [JsonIgnore]
     public DateTime? PostDeletedOn { get; set; }
 
     [SqlColumn("post_archived_on")]
     [CopyToProperty<PostText>(nameof(PostText.ArchivedOn))]
     [CopyToProperty<PostLink>(nameof(PostLink.ArchivedOn))]
+    [JsonIgnore]
     public DateTime? PostArchivedOn { get; set; }
 
     [SqlColumn("post_mod_removed_on")]
     [CopyToProperty<PostText>(nameof(PostText.ModRemovedOn))]
     [CopyToProperty<PostLink>(nameof(PostLink.ModRemovedOn))]
+    [JsonIgnore]
     public DateTime? PostModRemovedOn { get; set; }
+
+
+    [SqlColumn("post_locked_on")]
+    [CopyToProperty<PostText>(nameof(PostText.LockedOn))]
+    [CopyToProperty<PostLink>(nameof(PostLink.LockedOn))]
+    [JsonIgnore]
+    public DateTime? PostLockedOn { get; set; }
 
 
     [SqlColumn("post_count_comments")]
@@ -77,16 +93,21 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
 
     #endregion
 
-    [JsonIgnore]
-    public virtual string PostBodyContent => string.Empty;
+    //[JsonIgnore]
+    public virtual string? PostBodyContent => null;
 
+
+    public bool PostIsArchived => PostArchivedOn.HasValue;
+    public bool PostIsRemoved => PostModRemovedOn.HasValue;
+    public bool PostIsDeleted => PostDeletedOn.HasValue;
+    public bool PostIsLocked => PostLockedOn.HasValue;
 
 
     public virtual void HandlePostDeleted()
     {
-        if (PostDeletedOn.HasValue)
+        if (PostIsRemoved)
         {
-            //PostTitle = "[Post deleted by author]";
+            PostTitle = RemovedTitleText;
         }
     }
 

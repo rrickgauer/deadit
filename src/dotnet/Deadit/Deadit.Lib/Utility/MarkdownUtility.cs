@@ -12,7 +12,7 @@ public static class MarkdownUtility
         return Markdown.ToHtml(markdown, _markdownPipeline);
     }
 
-    public static HtmlString ToHtml(string markdown)
+    public static HtmlString ToHtmlContent(string markdown)
     {
         return new(ToHtmlString(markdown));
     }

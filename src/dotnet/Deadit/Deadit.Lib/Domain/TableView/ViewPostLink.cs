@@ -14,7 +14,7 @@ public class ViewPostLink : ViewPost, ITableView<ViewPostLink, PostLink>
     public string? PostUrl { get; set; }
 
 
-    public override string PostBodyContent => PostUrl ?? string.Empty;
+    public override string? PostBodyContent => PostUrl;
 
 
     public override void HandlePostDeleted()
@@ -25,6 +25,11 @@ public class ViewPostLink : ViewPost, ITableView<ViewPostLink, PostLink>
         {   
             PostUrl = null;
         }
+        else if (PostIsRemoved)
+        {
+            PostUrl = null;
+        }
+        
     }
 
     #region - ITableView -

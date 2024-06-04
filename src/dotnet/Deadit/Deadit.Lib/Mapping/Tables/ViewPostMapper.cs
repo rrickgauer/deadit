@@ -20,6 +20,7 @@ public class ViewPostMapper : TableMapper<ViewPost>
         result.PostDeletedOn     = row.Field<DateTime?>(GetColumnName(nameof(result.PostDeletedOn)));
         result.PostArchivedOn    = row.Field<DateTime?>(GetColumnName(nameof(result.PostArchivedOn)));
         result.PostModRemovedOn  = row.Field<DateTime?>(GetColumnName(nameof(result.PostModRemovedOn)));
+        result.PostLockedOn      = row.Field<DateTime?>(GetColumnName(nameof(result.PostLockedOn)));
         result.PostCountComments = Convert.ToUInt32(row.Field<object?>(GetColumnName(nameof(result.PostCountComments))));
 
         row.SetVotingValues(result);

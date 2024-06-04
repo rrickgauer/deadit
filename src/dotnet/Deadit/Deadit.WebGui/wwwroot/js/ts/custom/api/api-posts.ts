@@ -1,7 +1,8 @@
 import { ApiEndpoints, HttpMethods } from "../domain/constants/api-constants";
-import { ApplicationTypes } from "../domain/constants/application-types";
-import { CreateLinkPostApiRequest, CreateTextPostApiRequest, UpdateTextPostApiRequest } from "../domain/model/post-models";
+import { GetPostApiRequest, ModeratePostForm } from "../domain/model/post-models";
 import { Guid } from "../domain/types/aliases";
+import { UrlUtility } from "../utilities/url-utility";
+import { ApiUtility } from "./api-base";
 
 
 
@@ -22,58 +23,26 @@ export class ApiPosts
             method: HttpMethods.DELETE,
         });
     }
-}
 
-export class ApiPostsText 
-{
-    protected readonly _url: string;
-
-    constructor(communityName: string)
+    public async get(postData: GetPostApiRequest): Promise<Response>
     {
-        this._url = `${ApiEndpoints.COMMUNITY}/${communityName}/posts/text`;
-    }
-
-    public post = async (textPost: CreateTextPostApiRequest) =>
-    {
-        const url = this._url;
-
-        return await fetch(url, {
-            body: JSON.stringify(textPost),
-            method: HttpMethods.POST,
-            headers: ApplicationTypes.GetJsonHeaders(),
+        const query = UrlUtility.getQueryParmsString({
+            sort: postData.commentsSort,
         });
+
+        const url = `${this._url}/${postData.postId}?${query}`;
+
+        return await fetch(url);
     }
 
-    public async put(postId: Guid, request: UpdateTextPostApiRequest)
+    public async patch(postId: Guid, form: ModeratePostForm)
     {
         const url = `${this._url}/${postId}`;
 
-        return await fetch(url, {
-            body: JSON.stringify(request),
-            method: HttpMethods.PUT,
-            headers: ApplicationTypes.GetJsonHeaders(),
+        return await ApiUtility.fetchJson(url, {
+            body: JSON.stringify(form),
+            method: HttpMethods.PATCH,
         });
     }
 }
 
-
-export class ApiPostsLink
-{
-    protected readonly _url: string;
-
-    constructor(communityName: string)
-    {
-        this._url = `${ApiEndpoints.COMMUNITY}/${communityName}/posts/link`;
-    }
-
-    public post = async (textPost: CreateLinkPostApiRequest) =>
-    {
-        const url = this._url;
-
-        return await fetch(url, {
-            body: JSON.stringify(textPost),
-            method: HttpMethods.POST,
-            headers: ApplicationTypes.GetJsonHeaders(),
-        });
-    }
-}
