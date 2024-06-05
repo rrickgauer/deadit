@@ -22,7 +22,6 @@ public class ModerateCommentAuth(ICommentService commentService, ICommunityServi
 
         try
         {
-
             var comment = await GetCommentAsync(data);
 
             if (comment.CommunityName is not string communityName)
@@ -31,16 +30,6 @@ public class ModerateCommentAuth(ICommentService commentService, ICommunityServi
             }
 
             var community = await GetCommunityAsync(communityName);
-
-            if (communityName != data.CommunityName)
-            {
-                throw new NotFoundHttpResponseException();
-            }
-
-            if (comment.CommentPostId != data.PostId)
-            {
-                throw new NotFoundHttpResponseException();
-            }
 
             if (community.CommunityOwnerId != data.ClientId)
             {
@@ -54,9 +43,6 @@ public class ModerateCommentAuth(ICommentService commentService, ICommunityServi
         {
             return ex;
         }
-
-
-        throw new NotImplementedException();
     }
 
 

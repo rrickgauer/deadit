@@ -9,7 +9,6 @@ namespace Deadit.Lib.Filter;
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui)]
 public class ModerateCommentFilter(ModerateCommentAuth auth) : IAsyncActionFilter
 {
-
     private readonly ModerateCommentAuth _auth = auth;
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -18,8 +17,6 @@ public class ModerateCommentFilter(ModerateCommentAuth auth) : IAsyncActionFilte
         {
             ClientId = context.GetSessionClientId(),
             CommentId = context.GetCommentIdRouteValue(),
-            CommunityName = context.GetCommunityNameRouteValue(),
-            PostId = context.GetPostIdRouteValue(),
         });
 
         if (!hasPermission.Successful)

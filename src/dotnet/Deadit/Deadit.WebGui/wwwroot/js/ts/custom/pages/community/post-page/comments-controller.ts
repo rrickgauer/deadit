@@ -55,7 +55,7 @@ export class CommentsController implements IController
 
         this._isLoggedIn = this._postPageData.isLoggedIn;
 
-        this._commentService = new CommentsService(this._args);
+        this._commentService = new CommentsService();
         this._templateEngine = new CommentTemplate();
         this._rootListElement = document.querySelector('.comment-list.root') as HTMLUListElement;
         this._postIsDeleted = this._postPageData.postIsDeleted;
@@ -149,7 +149,7 @@ export class CommentsController implements IController
             this.sortComments(message.data.selectedValue);
         });
 
-        CommentModModal.init(this._args);
+        CommentModModal.init();
 
 
         CommentLockedEvent.addListener((message) =>
@@ -278,6 +278,7 @@ export class CommentsController implements IController
             const saveResult = await this._commentService.saveComment(new SaveCommentRequest(form.commentId, {
                 content: form.contentValue,
                 parentId: form.parentCommentId,
+                postId: this._args.postId,
             }));
 
             if (!saveResult.successful)

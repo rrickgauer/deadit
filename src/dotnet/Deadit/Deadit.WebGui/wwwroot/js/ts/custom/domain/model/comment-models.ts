@@ -26,6 +26,7 @@ export type CommentApiResponse = UserVoteScores & {
 export type CommentApiRequestForm = {
     content: string;
     parentId: Guid | null;
+    postId: Guid;
 }
 
 export type CommentApiRequestUrlFields = {

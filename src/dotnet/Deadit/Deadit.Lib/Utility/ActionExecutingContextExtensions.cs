@@ -28,18 +28,6 @@ public static class ActionExecutingContextExtensions
         return GetRequestRouteValue<Guid>(context, "commentId");
     }
 
-    public static CreateVoteForm GetRequestCreateVoteForm(this ActionExecutingContext context)
-    {
-        return (CreateVoteForm)context.ActionArguments.Values.First(a => a is CreateVoteForm)!;
-    }
-
-    public static CreatePostForm GetCreatePostForm(this ActionExecutingContext context)
-    {
-        return (CreatePostForm)context.ActionArguments.Values.First(a => a is CreatePostForm)!;
-    }
-
-
-
     /// <summary>
     /// Get the specified request value with the matching key.
     /// </summary>
@@ -52,6 +40,26 @@ public static class ActionExecutingContextExtensions
         var value = (T)context.ActionArguments[key]!;
 
         return value;
+    }
+
+    public static CreateVoteForm GetRequestCreateVoteForm(this ActionExecutingContext context)
+    {
+        return (CreateVoteForm)context.ActionArguments.Values.First(a => a is CreateVoteForm)!;
+    }
+
+    public static CreatePostForm GetCreatePostForm(this ActionExecutingContext context)
+    {
+        return (CreatePostForm)context.ActionArguments.Values.First(a => a is CreatePostForm)!;
+    }
+
+    public static CommentForm GetCommentForm(this ActionExecutingContext context)
+    {
+        return (CommentForm)context.ActionArguments.Values.First(a => a is CommentForm)!;
+    }
+
+    public static T GetForm<T>(this ActionExecutingContext context)
+    {
+        return (T)context.ActionArguments.Values.First(a => a is T)!;
     }
 
 

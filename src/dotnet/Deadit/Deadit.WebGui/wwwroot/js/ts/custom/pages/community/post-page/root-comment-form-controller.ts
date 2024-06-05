@@ -5,6 +5,7 @@ import { RootCommentFormSubmittedEvent } from "../../../domain/events/events";
 import { SaveCommentRequest } from "../../../domain/model/comment-models";
 import { PostPageParms } from "../../../domain/model/post-models";
 import { CommentsService } from "../../../services/comments-service";
+import { ErrorUtility } from "../../../utilities/error-utility";
 import { GuidUtility } from "../../../utilities/guid-utility";
 import { MessageBoxUtility } from "../../../utilities/message-box-utility";
 import { CommentForm } from "./comment-form";
@@ -28,7 +29,7 @@ export class RootCommentFormController implements IController
         this._isLoggedIn = args.isLoggedIn;
         this.postPageArgs = args.postPageArgs;
 
-        this._commentService = new CommentsService(this.postPageArgs);
+        this._commentService = new CommentsService();
     }
 
     public control()
@@ -72,6 +73,7 @@ export class RootCommentFormController implements IController
             const response = await this._commentService.saveComment(new SaveCommentRequest(form.commentId, {
                 content: form.contentValue,
                 parentId: null,
+                postId: this.postPageArgs.postId,
             }));
 
             if (!response.successful)
@@ -93,8 +95,18 @@ export class RootCommentFormController implements IController
         }
         catch (error)
         {
-            MessageBoxUtility.showError({
-                message: 'There was an error saving your comment',
+
+            ErrorUtility.onException(error, {
+                onApiValidationException: (e) =>
+                {
+                    console.log({ e });
+                },
+                onOther: (e) =>
+                {
+                    MessageBoxUtility.showError({
+                        message: 'There was an error saving your comment',
+                    });
+                },
             });
 
             form.showNormal();

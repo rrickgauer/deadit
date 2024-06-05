@@ -75,14 +75,14 @@ export class CommentModModal
 
 
 
-    public static init = (args: PostPageParms) =>
+    public static init = () =>
     {
         OpenModerateCommentModalEvent.addListener(async (message) =>
         {
             await this.show(message.data.commentId);
         });
 
-        this._commentsService = new CommentsService(args);
+        this._commentsService = new CommentsService();
 
         this._form?.addEventListener(NativeEvents.Submit, async (e) =>
         {

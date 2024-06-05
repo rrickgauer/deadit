@@ -1,28 +1,19 @@
 import { ApiEndpoints, HttpMethods } from "../domain/constants/api-constants";
 import { ModerateCommentRequest, SaveCommentRequest } from "../domain/model/comment-models";
-import { PostPageParms } from "../domain/model/post-models";
 import { Guid } from "../domain/types/aliases";
 import { ApiUtility } from "./api-base";
 
 export class ApiComments
 {
-    private readonly _postId: string;
-    private readonly _communityName: string;
 
-    private get _url(): string
+    private get _urlNew(): string
     {
-        return `${ApiEndpoints.COMMUNITY}/${this._communityName}/posts/${this._postId}/comments`;
-    }
-
-    constructor(args: PostPageParms)
-    {
-        this._communityName = args.communityName;
-        this._postId = args.postId;
+        return `${ApiEndpoints.COMMENTS}`;
     }
 
     public async put (comment: SaveCommentRequest): Promise<Response>
     {
-        const url = `${this._url}/${comment.commentId}`;
+        const url = `${this._urlNew}/${comment.commentId}`;
 
         return await ApiUtility.fetchJson(url, {
             body: comment.toJson(),
@@ -32,7 +23,7 @@ export class ApiComments
 
     public async delete(commentId: Guid): Promise<Response>
     {
-        const url = `${this._url}/${commentId}`;
+        const url = `${this._urlNew}/${commentId}`;
 
         return await fetch(url, {
             method: HttpMethods.DELETE,
@@ -41,7 +32,7 @@ export class ApiComments
 
     public async get(commentId: Guid): Promise<Response>
     {
-        const url = `${this._url}/${commentId}`;
+        const url = `${this._urlNew}/${commentId}`;
 
         return await fetch(url);
     }
@@ -49,7 +40,7 @@ export class ApiComments
 
     public async patch(request: ModerateCommentRequest)
     {
-        const url = `${this._url}/${request.commentId}`;
+        const url = `${this._urlNew}/${request.commentId}`;
 
         return await ApiUtility.fetchJson(url, {
             body: request.toJson(),
