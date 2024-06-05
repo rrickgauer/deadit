@@ -60,8 +60,8 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     public DateTime? PostArchivedOn { get; set; }
 
     [SqlColumn("post_mod_removed_on")]
-    [CopyToProperty<PostText>(nameof(PostText.ModRemovedOn))]
-    [CopyToProperty<PostLink>(nameof(PostLink.ModRemovedOn))]
+    [CopyToProperty<PostText>(nameof(PostText.RemovedOn))]
+    [CopyToProperty<PostLink>(nameof(PostLink.RemovedOn))]
     [JsonIgnore]
     public DateTime? PostModRemovedOn { get; set; }
 

@@ -8,16 +8,16 @@ import { ApiUtility } from "./api-base";
 
 export class ApiPosts
 {
-    protected readonly _url: string;
+    private _urlNew: string;
 
-    constructor(communityName: string)
+    constructor()
     {
-        this._url = `${ApiEndpoints.COMMUNITY}/${communityName}/posts`;
+        this._urlNew = `${ApiEndpoints.POSTS}`;
     }
 
     public async delete(postId: Guid): Promise<Response>
     {
-        const url = `${this._url}/${postId}`;
+        const url = `${this._urlNew}/${postId}`;
 
         return await fetch(url, {
             method: HttpMethods.DELETE,
@@ -30,14 +30,14 @@ export class ApiPosts
             sort: postData.commentsSort,
         });
 
-        const url = `${this._url}/${postData.postId}?${query}`;
+        const url = `${this._urlNew}/${postData.postId}?${query}`;
 
         return await fetch(url);
     }
 
     public async patch(postId: Guid, form: ModeratePostForm)
     {
-        const url = `${this._url}/${postId}`;
+        const url = `${this._urlNew}/${postId}`;
 
         return await ApiUtility.fetchJson(url, {
             body: JSON.stringify(form),

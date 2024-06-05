@@ -1,42 +1,35 @@
-import { ApiPostLock } from "../api/api-post-lock";
 import { ApiPosts } from "../api/api-posts";
 import { ApiPostsLink } from "../api/api-posts-link";
 import { ApiPostsText } from "../api/api-posts-text";
 import { ServiceResponse } from "../domain/model/api-response";
-import { CreateLinkPostApiRequest, LinkPostApiResponse, CreateTextPostApiRequest, TextPostApiResponse, UpdateTextPostApiRequest, GetPostPageApiResponse, GetPostApiRequest, ModeratePostForm } from "../domain/model/post-models";
+import { CreateLinkPostApiRequest, CreateTextPostApiRequest, TextPostApiResponse, UpdateTextPostApiRequest, GetPostPageApiResponse, GetPostApiRequest, ModeratePostForm } from "../domain/model/post-models";
 import { Guid } from "../domain/types/aliases";
 import { ServiceUtility } from "../utilities/service-utility";
 
 export class PostService
-{
-    private readonly _communityName: string;
-    
-    constructor(communityName: string)
-    {
-        this._communityName = communityName;        
-    }
+{    
 
     public createTextPost = async (textPost: CreateTextPostApiRequest) =>
     {
-        const api = new ApiPostsText(this._communityName);
+        const api = new ApiPostsText();
 
         const apiResponse = await api.post(textPost);
 
-        return await ServiceUtility.toServiceResponse<TextPostApiResponse>(apiResponse);
+        return await ServiceUtility.toServiceResponse<GetPostPageApiResponse>(apiResponse);
     }
 
     public createLinkPost = async (linkPost: CreateLinkPostApiRequest) =>
     {
-        const api = new ApiPostsLink(this._communityName);
+        const api = new ApiPostsLink();
 
         const apiResponse = await api.post(linkPost);
 
-        return await ServiceUtility.toServiceResponse<LinkPostApiResponse>(apiResponse);
+        return await ServiceUtility.toServiceResponse<GetPostPageApiResponse>(apiResponse);
     }
 
     public async updateTextPost(postId: Guid, request: UpdateTextPostApiRequest)
     {
-        const api = new ApiPostsText(this._communityName);
+        const api = new ApiPostsText();
 
         const apiResponse = await api.put(postId, request);
 
@@ -45,7 +38,7 @@ export class PostService
 
     public async deletePost(postId: Guid)
     {
-        const api = new ApiPosts(this._communityName);
+        const api = new ApiPosts();
 
         const response = await api.delete(postId);
 
@@ -54,7 +47,7 @@ export class PostService
 
     public async getPost(postData: GetPostApiRequest): Promise<ServiceResponse<GetPostPageApiResponse>>
     {
-        const api = new ApiPosts(this._communityName);
+        const api = new ApiPosts();
 
         const response = await api.get(postData);
 
@@ -63,7 +56,7 @@ export class PostService
 
     public async moderatePost(postId: Guid, moderateForm: ModeratePostForm)
     {
-        const api = new ApiPosts(this._communityName);
+        const api = new ApiPosts();
 
         const response = await api.patch(postId, moderateForm);
 

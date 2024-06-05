@@ -13,15 +13,16 @@ export type PostPageParms = {
 }
 
 
-export type PostApiRequest = {
+export type CreatePostApiRequest = {
     title: string;
+    communityName: string;
 }
 
-export type CreateTextPostApiRequest = PostApiRequest & {
+export type CreateTextPostApiRequest = CreatePostApiRequest & {
     content?: string;
 }
 
-export type CreateLinkPostApiRequest = PostApiRequest & {
+export type CreateLinkPostApiRequest = CreatePostApiRequest & {
     url: string;
 }
 
@@ -62,7 +63,7 @@ export type LinkPostApiResponse = PostApiResponse & {
     postUrl?: string;
 }
 
-export type PostContentApiResponse = PostApiRequest & {
+export type PostContentApiResponse = PostApiResponse & {
     postBodyContent?: string;
 
 }

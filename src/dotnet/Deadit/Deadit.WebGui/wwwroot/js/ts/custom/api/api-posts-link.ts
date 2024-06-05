@@ -6,8 +6,9 @@ import { CreateLinkPostApiRequest } from "../domain/model/post-models";
 export class ApiPostsLink {
     protected readonly _url: string;
 
-    constructor(communityName: string) {
-        this._url = `${ApiEndpoints.COMMUNITY}/${communityName}/posts/link`;
+    constructor() 
+    {
+        this._url = `${ApiEndpoints.POSTS}/link`;
     }
 
     public post = async (textPost: CreateLinkPostApiRequest) => {

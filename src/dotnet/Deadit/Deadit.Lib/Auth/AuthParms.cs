@@ -28,7 +28,6 @@ public class AuthParms
     {
         public required Guid PostId { get; set; }
         public required uint ClientId { get; set; }
-        public required string CommunityName { get; set; }
     }
 
     public class PostVoteAuthData

@@ -54,7 +54,7 @@ export class PostContentForm implements IController
         this._container = document.querySelector(`.card-post-content .${PostContentFormElements.ContainerClass}`) as HTMLDivElement;
         this._displayContainer = this._container.querySelector(`.${PostContentFormElements.DisplayContainerClass}`) as HTMLDivElement;
         this._form = this._container.querySelector(`.${PostContentFormElements.EditFormClass}`) as HTMLFormElement;
-        this._postService = new PostService(this._communityName);
+        this._postService = new PostService();
 
         if (Nullable.hasValue(this._form))
         {
