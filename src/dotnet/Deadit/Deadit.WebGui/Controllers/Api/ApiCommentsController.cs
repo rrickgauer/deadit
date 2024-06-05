@@ -13,9 +13,8 @@ using static Deadit.Lib.Filter.CommentFilters;
 
 namespace Deadit.WebGui.Controllers.Api;
 
-
 [ApiController]
-[Route("api/communities/{communityName}/posts/{postId:guid}/comments")]
+[Route("api/comments")]
 public class ApiCommentsController(ICommentService commentService, GetCommentDtoVMService getCommentDtoVMService) : InternalApiController, IControllerName
 {
     // IControllerName
@@ -24,23 +23,22 @@ public class ApiCommentsController(ICommentService commentService, GetCommentDto
     private readonly ICommentService _commentService = commentService;
     private readonly GetCommentDtoVMService _getCommentDtoVMService = getCommentDtoVMService;
 
+
     /// <summary>
-    /// PUT: /api/communities/:communityName/posts/:postId/comments/:commentId
+    /// PUT: /api/comments/:commentId
     /// </summary>
-    /// <param name="communityName"></param>
-    /// <param name="postId"></param>
     /// <param name="commentId"></param>
+    /// <param name="commentForm"></param>
     /// <returns></returns>
     [HttpPut("{commentId:guid}")]
     [ActionName(nameof(PutCommentAsync))]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
-    [ServiceFilter(typeof(CommunityMemberFilter))]
     [ServiceFilter(typeof(CommentSaveFilter))]
-    public async Task<ActionResult<ServiceDataResponse<GetCommentDto>>> PutCommentAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId, [FromBody] CommentForm commentForm)
+    public async Task<ActionResult<ServiceDataResponse<GetCommentDto>>> PutCommentAsync([FromRoute] Guid commentId, [FromBody] CommentForm commentForm)
     {
         Comment comment = new()
         {
-            PostId = postId,
+            PostId = commentForm.PostId,
             AuthorId = ClientId,
             Content = commentForm.Content,
             CreatedOn = DateTime.UtcNow,
@@ -70,13 +68,42 @@ public class ApiCommentsController(ICommentService commentService, GetCommentDto
     }
 
 
+    /// <summary>
+    /// GET: /api/comments/:commentId
+    /// </summary>
+    /// <param name="commentId"></param>
+    /// <returns></returns>
+    [HttpGet("{commentId:guid}")]
+    [ActionName(nameof(GetCommentAsync))]
+    [ServiceFilter(typeof(CommentExistsFilter))]
+    public async Task<IActionResult> GetCommentAsync([FromRoute] Guid commentId)
+    {
+        var getComment = await _getCommentDtoVMService.GetViewModelAsync(new()
+        {
+            ClientId = ClientId,
+            CommentId = commentId,
+        });
 
+
+        if (!getComment.Successful)
+        {
+            return BadRequest(getComment);
+        }
+
+        return Ok(getComment);
+    }
+
+
+    /// <summary>
+    /// DELETE: /api/comments/:commentId
+    /// </summary>
+    /// <param name="commentId"></param>
+    /// <returns></returns>
     [HttpDelete("{commentId:guid}")]
     [ActionName(nameof(DeleteCommentAsync))]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
-    [ServiceFilter(typeof(CommunityMemberFilter))]
     [ServiceFilter(typeof(CommentDeleteFilter))]
-    public async Task<ActionResult<ServiceResponse>> DeleteCommentAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId)
+    public async Task<ActionResult<ServiceResponse>> DeleteCommentAsync([FromRoute] Guid commentId)
     {
         var deleteComment = await _commentService.DeleteCommentAsync(commentId);
 
@@ -88,33 +115,17 @@ public class ApiCommentsController(ICommentService commentService, GetCommentDto
         return NoContent();
     }
 
-
-    [HttpGet("{commentId:guid}")]
-    [ActionName(nameof(GetCommentAsync))]
-    [ServiceFilter(typeof(CommentExistsFilter))]    
-    public async Task<IActionResult> GetCommentAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId)
-    {
-        var getComment = await _getCommentDtoVMService.GetViewModelAsync(new()
-        {
-            ClientId = ClientId,
-            CommentId = commentId,
-        });
-
-
-        if (!getComment.Successful) 
-        { 
-            return BadRequest(getComment);
-        }
-
-        return Ok(getComment);
-    }
-
-
+    /// <summary>
+    /// PATCH: /api/comments/:commentId
+    /// </summary>
+    /// <param name="commentId"></param>
+    /// <param name="patchForm"></param>
+    /// <returns></returns>
     [HttpPatch("{commentId:guid}")]
     [ActionName(nameof(ModerateCommentAsync))]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
     [ServiceFilter(typeof(ModerateCommentFilter))]
-    public async Task<IActionResult> ModerateCommentAsync([FromRoute] string communityName, [FromRoute] Guid postId, [FromRoute] Guid commentId, [FromBody] ModerateCommentForm? patchForm)
+    public async Task<IActionResult> ModerateCommentAsync([FromRoute] Guid commentId, [FromBody] ModerateCommentForm? patchForm)
     {
         var getComment = await _commentService.GetCommentAsync(commentId);
 
@@ -153,4 +164,7 @@ public class ApiCommentsController(ICommentService commentService, GetCommentDto
 
         return Ok(getCommentViewModel);
     }
+
+
+
 }

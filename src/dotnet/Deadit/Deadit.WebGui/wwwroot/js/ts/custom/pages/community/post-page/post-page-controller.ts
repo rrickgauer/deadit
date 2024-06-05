@@ -28,7 +28,7 @@ export class PostPageController implements IController, ILoginModalPage
         this._args = args;
         this._sortInput = new ItemsSortInput(document.querySelector('.items-sort'));
 
-        this._postService = new PostService(this._args.communityName);
+        this._postService = new PostService();
     }
 
     public control = async () =>

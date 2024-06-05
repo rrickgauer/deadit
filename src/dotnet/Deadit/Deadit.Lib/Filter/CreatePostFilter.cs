@@ -2,32 +2,32 @@
 using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Utility;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using static Deadit.Lib.Domain.Forms.CreatePostForms;
 
 namespace Deadit.Lib.Filter;
 
-[AutoInject(AutoInjectionType.Scoped, InjectionProject.Always)]
-public class CommunityMemberFilter(CreatePostAuth auth) : IAsyncActionFilter
+[AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui)]
+public class CreatePostFilter(CreatePostAuth auth) : IAsyncActionFilter
 {
     private readonly CreatePostAuth _auth = auth;
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
+        CreatePostForm form = context.GetCreatePostForm();
 
-        int x = 10;
-
-        var authResponse = await _auth.HasPermissionAsync(new()
+        var hasAuth = await _auth.HasPermissionAsync(new()
         {
-            CommunityName = context.GetCommunityNameRouteValue(),
+            CommunityName = form.CommunityName,
             UserId = context.GetSessionClientId(),
         });
 
-        if (!authResponse.Successful)
+        if (!hasAuth.Successful)
         {
-            context.Result = new BadRequestObjectResult(authResponse);
+            context.ReturnBadServiceResponse(hasAuth);
             return;
         }
+
 
         await next();
     }

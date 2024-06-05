@@ -24,6 +24,7 @@ public abstract class InternalApiController : ControllerBase, IDeaditController
         return Ok(response);
     
     }
+
 }
 
 

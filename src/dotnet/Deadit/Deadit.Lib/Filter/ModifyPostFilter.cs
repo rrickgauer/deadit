@@ -19,7 +19,6 @@ public class ModifyPostFilter(ModifyPostAuth auth) : IAsyncActionFilter
             var authResponse = await _auth.HasPermissionAsync(new()
             {
                 ClientId = context.GetSessionClientId(),
-                CommunityName = context.GetCommunityNameRouteValue(),
                 PostId = context.GetPostIdRouteValue(),
             });
 
@@ -28,14 +27,14 @@ public class ModifyPostFilter(ModifyPostAuth auth) : IAsyncActionFilter
                 context.ReturnBadServiceResponse(authResponse);
                 return;
             }
+
+            await next();
         }
         catch(ServiceResponseException ex)
         {
             context.ReturnBadServiceResponse(ex);
             return;
         }
-
-        await next();
     }
 }
 

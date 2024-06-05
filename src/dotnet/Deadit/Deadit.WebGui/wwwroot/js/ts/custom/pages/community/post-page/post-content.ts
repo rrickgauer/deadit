@@ -71,7 +71,7 @@ export class PostContent implements IController, IVoted
         this._dropdownMenu = this._container.querySelector(`.${PostContentElements.DropdownMenuClass}`) as HTMLDivElement;
         this._editForm = new PostContentForm(this._communityName, this._postId);
         this._voteService = new VoteService();
-        this._postService = new PostService(this._communityName);
+        this._postService = new PostService();
         this._postModerationDropdownMenu = document.querySelector(`.dropdown-post-moderation`) as HTMLDivElement;
     }
 

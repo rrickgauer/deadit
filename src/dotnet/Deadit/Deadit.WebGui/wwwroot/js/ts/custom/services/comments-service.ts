@@ -1,7 +1,6 @@
 
 import { ApiComments } from "../api/api-comments";
 import { CommentApiResponse, ModerateCommentRequest, SaveCommentRequest } from "../domain/model/comment-models";
-import { PostPageParms } from "../domain/model/post-models";
 import { Guid } from "../domain/types/aliases";
 import { ServiceUtility } from "../utilities/service-utility";
 
@@ -9,11 +8,10 @@ export class CommentsService
 {
     private readonly _api: ApiComments;
 
-    constructor(args: PostPageParms)
+    constructor()
     {
-        this._api = new ApiComments(args);
+        this._api = new ApiComments();
     }
-
 
     public saveComment = async (comment: SaveCommentRequest) =>
     {

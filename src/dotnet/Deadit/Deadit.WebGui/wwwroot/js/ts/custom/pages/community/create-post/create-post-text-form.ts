@@ -28,7 +28,7 @@ export abstract class CreatePostFormBase implements IController
 
         this._communityName = args.communityName;
 
-        this._postService = new PostService(this._communityName);
+        this._postService = new PostService();
     }
 
     public control = () =>
@@ -104,7 +104,7 @@ export class CreatePostTextForm extends CreatePostFormBase
         {
             const response = await this._postService.createTextPost(formData);
 
-            const url = `/c/${this._communityName}/posts/${response.response.data.postId}`;
+            const url = `/c/${this._communityName}/posts/${response.response.data.post.postId}`;
             window.location.href = url;
 
             return true;
@@ -137,6 +137,7 @@ export class CreatePostTextForm extends CreatePostFormBase
         const formData: CreateTextPostApiRequest = {
             title: model.title,
             content: model.content,
+            communityName: this._communityName,
         };
 
         return formData;
@@ -155,7 +156,7 @@ export class CreatePostLinkForm extends CreatePostFormBase
         {
             const response = await this._postService.createLinkPost(formData);
 
-            const url = `/c/${this._communityName}/posts/${response.response.data.postId}`;
+            const url = `/c/${this._communityName}/posts/${response.response.data.post.postId}`;
             window.location.href = url;
 
             return true;
@@ -188,6 +189,7 @@ export class CreatePostLinkForm extends CreatePostFormBase
         const formData: CreateLinkPostApiRequest = {
             title: model.title,
             url: model.content,
+            communityName: this._communityName,
         };
 
         return formData;

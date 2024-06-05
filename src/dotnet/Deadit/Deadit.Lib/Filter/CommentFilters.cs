@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Auth;
 using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -35,13 +36,25 @@ public class CommentFilters
         {
             context.TryGetSessionClientId(out var clientId);
 
+
+            CommentForm? form = null;
+
+            try
+            {
+                form = context.GetCommentForm();
+            }
+            catch(Exception)
+            {
+
+            }
+
             CommentAuthData result = new()
             {
                 CommentId = context.GetCommentIdRouteValue(),
                 AuthPermissionType = PermissionType,
                 UserId = clientId,
-                PostId = context.GetPostIdRouteValue(),
-                CommunityName = context.GetCommunityNameRouteValue(), 
+                PostId = form?.PostId,
+                ParentCommentId = form?.ParentId,
             };
 
             return result;

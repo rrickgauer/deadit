@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.TableView;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,32 @@ public class HttpRequestItems(IDictionary<object, object?> requestDict)
     {
         _requestDict.Add(key, value);
     }
+    
 
+    public static void StorePost(HttpContext? context, ViewPost? post)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        HttpRequestItems items = new(context)
+        {
+            Post = post,
+        };
+    }
+
+    public static void StoreCommunityId(HttpContext? context, uint? communityId)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        HttpRequestItems items = new(context)
+        {
+            CommunityId = communityId,
+        };
+    }
 
 }
