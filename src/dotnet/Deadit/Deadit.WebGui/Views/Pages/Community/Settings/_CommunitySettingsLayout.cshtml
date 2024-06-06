@@ -1,0 +1,27 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Deadit.Lib.Domain.ViewModel
+@using Microsoft.AspNetCore.Http.Extensions;
+@model CommunitySettingsLayoutModel;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="~/Views/Includes/_Header.cshtml" />
+    @RenderSection("Header", required: false)
+    <title>@Model.PageTitle</title>
+</head>
+
+<body>
+    <partial name="~/Views/Includes/_Navbar.cshtml" />
+    <partial name="~/Views/Includes/_LoginModal.cshtml" />
+    <partial name="~/Views/Components/MessageBoxes/_MessageBoxes.cshtml" />
+
+    @RenderSection("Body", required: false)
+
+
+    <partial name="~/Views/Includes/_Footer.cshtml" />
+    @RenderSection("Footer", required: false)
+</body>
+</html>
+
+

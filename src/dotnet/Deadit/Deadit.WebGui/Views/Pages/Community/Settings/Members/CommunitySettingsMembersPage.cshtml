@@ -1,0 +1,23 @@
+﻿@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.ViewModel
+@model CommunitySettingsLayoutModel<MembersCommunitySettingsPageModel>
+
+@{
+    Layout = $"~/{GuiPageViewFiles.CommunitySettingsLayout}";
+}
+
+
+@section Body {
+
+    <div class="container my-5">
+        <h1>Members Settings</h1>
+
+    </div>
+
+}
+
+
+
+@section Footer {
+    <script src="~/js/dist/community-settings-members.bundle.js"></script>
+}
