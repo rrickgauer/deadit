@@ -2,6 +2,7 @@
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
@@ -72,7 +73,7 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
             // ensure no invalid characters
             if (DoesCommunityNameContainInvalidCharacters(form.Name))
             {
-                response.AddError(ErrorCode.CreateCommunityInvalidNameCharacter);
+                response.AddError(ErrorCode.CommunitySettingsInvalidNameCharacter);
             }
 
             // check if the name already exists
@@ -80,7 +81,7 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
 
             if (communityNameTaken)
             {
-                response.AddError(ErrorCode.CreateCommunityNameTaken);
+                response.AddError(ErrorCode.CommunitySettingsNameTaken);
             }
 
             // ensure the name isn't banned
@@ -88,7 +89,7 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
 
             if (communityNameIsBanned)
             {
-                response.AddError(ErrorCode.CreateCommunityNameBanned);
+                response.AddError(ErrorCode.CommunitySettingsNameBanned);
             }
 
             return response;
@@ -222,6 +223,26 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
         {
             return ex;
         }
+    }
+
+
+    public async Task<ServiceDataResponse<ViewCommunity>> SaveCommunityAsync(Community community)
+    {
+        if (community.Id is not uint communityId)
+        {
+            throw new Exception($"{nameof(community.Id)} is required");
+        }
+
+        try
+        {
+            await _communityRepository.UpdateCommunityAsync(community);
+        }
+        catch(RepositoryException ex)
+        {
+            return ex;
+        }
+
+        return await GetCommunityAsync(communityId);
     }
 
 }

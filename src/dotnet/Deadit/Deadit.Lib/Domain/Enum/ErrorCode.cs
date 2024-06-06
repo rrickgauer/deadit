@@ -17,16 +17,16 @@ public enum ErrorCode : uint
 
     #endregion
 
-    #region - Create Community -
+    #region - CommunitySettings -
 
-    [ErrorCodeGroup(ErrorCodeGroup.CreateCommunity)]
-    CreateCommunityInvalidNameCharacter = 300,
+    [ErrorCodeGroup(ErrorCodeGroup.CommunitySettings)]
+    CommunitySettingsInvalidNameCharacter = 300,
 
-    [ErrorCodeGroup(ErrorCodeGroup.CreateCommunity)]
-    CreateCommunityNameTaken = 301,
+    [ErrorCodeGroup(ErrorCodeGroup.CommunitySettings)]
+    CommunitySettingsNameTaken = 301,
 
-    [ErrorCodeGroup(ErrorCodeGroup.CreateCommunity)]
-    CreateCommunityNameBanned = 302,
+    [ErrorCodeGroup(ErrorCodeGroup.CommunitySettings)]
+    CommunitySettingsNameBanned = 302,
 
     #endregion
 

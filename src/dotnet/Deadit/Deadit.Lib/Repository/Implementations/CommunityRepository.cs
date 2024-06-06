@@ -41,6 +41,7 @@ public class CommunityRepository(DatabaseConnection dbConnection) : ICommunityRe
     public async Task<uint?> InsertCommunityAsync(CreateCommunityRequestForm createCommunity, uint userId)
     {
         MySqlCommand command = new(CommunityRepositoryCommands.InsertCommunity);
+
         command.Parameters.AddWithValue("@name", createCommunity.Name);
         command.Parameters.AddWithValue("@title", createCommunity.Title);
         command.Parameters.AddWithValue("@description", createCommunity.Description);
@@ -56,5 +57,20 @@ public class CommunityRepository(DatabaseConnection dbConnection) : ICommunityRe
         command.Parameters.AddWithValue("@user_id", userId);
 
         return await _dbConnection.FetchAllAsync(command);
+    }
+
+
+    public async Task<int> UpdateCommunityAsync(Community community)
+    {
+        MySqlCommand command = new(CommunityRepositoryCommands.UpdateCommunity);
+
+        command.Parameters.AddWithValue("@title", community.Title);
+        command.Parameters.AddWithValue("@description", community.Description);
+        command.Parameters.AddWithValue("@community_type", community.CommunityType);
+        command.Parameters.AddWithValue("@text_post_body_rule", community.TextPostBodyRule);
+        command.Parameters.AddWithValue("@membership_closed_on", community.MembershipClosedOn);
+        command.Parameters.AddWithValue("@id", community.Id);
+
+        return await _dbConnection.ModifyAsync(command);
     }
 }

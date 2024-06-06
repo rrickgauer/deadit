@@ -1,4 +1,6 @@
 ﻿using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Filter;
 using Deadit.Lib.Service.Contracts;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
@@ -32,6 +34,31 @@ public class ApiCommunityController(ICommunityService communityService) : Intern
         }
 
         return BadRequest(community);
+    }
+
+
+    [HttpPut("{communityName}")]
+    [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(ModifyCommunityFilter))]
+    [ActionName(nameof(PutCommunityAsync))]
+    public async Task<IActionResult> PutCommunityAsync([FromRoute] string communityName, [FromBody] UpdateCommunityRequestForm data)
+    {
+        Community community = new()
+        {
+            Id = RequestItems.CommunityId,
+            Name = communityName,
+        };
+
+        data.SetCommunityData(community);
+
+        var updateResult = await _communityService.SaveCommunityAsync(community);
+
+        if (!updateResult.Successful)
+        {
+            return BadRequest(updateResult);
+        }
+
+        return Ok(updateResult);
     }
 
 }

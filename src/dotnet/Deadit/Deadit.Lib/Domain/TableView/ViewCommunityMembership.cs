@@ -1,6 +1,7 @@
 ﻿using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Dto;
+using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
 using System.Text.Json.Serialization;
 
@@ -46,10 +47,28 @@ public class ViewCommunityMembership :
     [CopyToPropertyAttribute<GetJoinedCommunity>(nameof(GetJoinedCommunity.CommunityCreatedOn))]
     public DateTime CommunityCreatedOn { get; set; } = DateTime.Now;
 
+    [SqlColumn("community_community_type")]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityType))]
+    [CopyToPropertyAttribute<GetJoinedCommunity>(nameof(GetJoinedCommunity.CommunityType))]
+    public CommunityType CommunityType { get; set; } = CommunityType.Private;
+
+    [SqlColumn("community_text_post_body_rule")]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityTextPostBodyRule))]
+    [CopyToPropertyAttribute<GetJoinedCommunity>(nameof(GetJoinedCommunity.CommunityTextPostBodyRule))]
+    public TextPostBodyRule CommunityTextPostBodyRule { get; set; } = TextPostBodyRule.Optional;
+
+    [SqlColumn("community_membership_closed_on")]
+    [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityMembershipClosedOn))]
+    [CopyToPropertyAttribute<GetJoinedCommunity>(nameof(GetJoinedCommunity.CommunityMembershipClosedOn))]
+    public DateTime? CommunityMembershipClosedOn { get; set; }
+
+
     [SqlColumn("community_count_members")]
     [CopyToPropertyAttribute<ViewCommunity>(nameof(ViewCommunity.CommunityCountMembers))]
     [CopyToPropertyAttribute<GetJoinedCommunity>(nameof(GetJoinedCommunity.CommunityCountMembers))]
     public long CommunityCountMembers { get; set; } = 0;
+
+
 
     #endregion
 

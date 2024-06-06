@@ -30,13 +30,15 @@ public class GeneralCommunitySettingsVMService(ICommunityService communityServic
 
         GeneralCommunitySettingsPageModel pageModel = new()
         {
-            Community = community,
+            //Community = community,
         };
 
         ViewModel viewModel = new()
         {
             PageTitle = "General fucking settings",
             PageModel = pageModel,
+            Community = community,
+            ActivePage = ActiveCommunitySettingsPage.General,
         };
 
 

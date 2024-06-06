@@ -3,6 +3,7 @@ import { PostDropdownAction } from "../enum/post-dropdown-action";
 import { PostModerationDropdownAction } from "../enum/post-moderation-dropdown-action";
 import { SortOption } from "../enum/sort-option";
 import { TopPostSort } from "../enum/top-post-sort";
+import { UpdateCommunityApiRequest } from "../model/api-community-models";
 import { CommentApiResponse } from "../model/comment-models";
 import { Guid } from "../types/aliases";
 import { CustomEmptyMessage, CustomMessage } from "./custom-events";
@@ -69,7 +70,3 @@ export type CommentLockedData = {
 }
 
 export const CommentLockedEvent = new CustomMessage<CommentLockedData>();
-
-
-
-

@@ -30,13 +30,15 @@ public class ContentCommunitySettingsVMService(ICommunityService communityServic
 
         ContentCommunitySettingsPageModel pageModel = new()
         {
-            Community = community,
+            
         };
 
         ViewModel viewModel = new()
         {
             PageTitle = "Content Settings",
             PageModel = pageModel,
+            Community = community,
+            ActivePage = ActiveCommunitySettingsPage.Content,
         };
 
 

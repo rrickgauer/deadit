@@ -37,6 +37,8 @@ public class MembersCommunitySettingsVMService(ICommunityService communityServic
         {
             PageTitle = "Member Settings",
             PageModel = pageModel,
+            Community = community,
+            ActivePage = ActiveCommunitySettingsPage.Members,
         };
 
 
