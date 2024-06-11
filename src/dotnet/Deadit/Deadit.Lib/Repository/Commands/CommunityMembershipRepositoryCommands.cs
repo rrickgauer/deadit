@@ -38,25 +38,37 @@ public sealed class CommunityMembershipRepositoryCommands
         LIMIT
             1;";
 
+
+    public const string SelectByUsernameCommunityName = @"
+        SELECT
+            v.*
+        FROM
+            View_Community_Membership v
+        WHERE
+            v.user_username = @username
+            AND v.community_name = @community_name
+        LIMIT
+            1;";
+
     /// <summary>
     /// @user_id
     /// @community_name
     /// </summary>
     public const string DeleteByUserIdAndCommunityName = @"
-    DELETE FROM
-        Community_Membership
-    WHERE
-        user_id = @user_id
-        AND community_id = (
-            SELECT
-                c.id
-            FROM
-                Community c
-            WHERE
-                c.name = @community_name
-            LIMIT
-                1
-        );";
+        DELETE FROM
+            Community_Membership
+        WHERE
+            user_id = @user_id
+            AND community_id = (
+                SELECT
+                    c.id
+                FROM
+                    Community c
+                WHERE
+                    c.name = @community_name
+                LIMIT
+                    1
+            );";
 
 
     /// <summary>
@@ -75,5 +87,28 @@ public sealed class CommunityMembershipRepositoryCommands
             LIMIT
                 1
         );";
+
+
+    public const string SelectAllCommunityMembers = @"
+        SELECT
+            *
+        FROM
+            View_Community_Membership m
+        WHERE
+            m.community_name = @community_name;";
+
+
+
+    public const string SelectCommunityMembersSortedTemplate = @"
+        SELECT
+            *
+        FROM
+            View_Community_Membership m
+        WHERE
+            m.community_name = @community_name
+        ORDER BY
+            {0}
+        {1};";
+    
 
 }

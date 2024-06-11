@@ -4,3 +4,4 @@ public class GeneralCommunitySettingsPageParms
 {
     public required string CommunityName { get; set; }
 }
+

@@ -1,0 +1,42 @@
+﻿@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.Enum
+@using Deadit.Lib.Domain.ViewModel
+@using Deadit.Lib.Utility
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http.Extensions;
+@model CommunitySettingsLayoutModel<MembersCommunitySettingsPageModel>
+
+
+@{
+    
+    var currentUrl = HttpContextAccessor.HttpContext!.Request.GetEncodedUrl();
+}
+
+
+<div class="members-pagination my-5">
+    <nav aria-label="Page navigation example">
+
+        <ul class="pagination justify-content-center">
+
+            @if (Model.PageModel.Pagination.IsFirstPage)
+            {
+                <li class="page-item disabled"><a class="page-link" href="@Model.PageModel.Pagination.GetPreviousPageUrl(currentUrl)">Previous</a></li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" href="@Model.PageModel.Pagination.GetPreviousPageUrl(currentUrl)">Previous</a></li>
+            }
+
+
+            @if (Model.PageModel.Memberships.Count < Model.PageModel.Pagination.Limit)
+            {
+                <li class="page-item disabled"><a class="page-link" href="@Model.PageModel.Pagination.GetNextPageUrl(currentUrl)">Next</a></li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" href="@Model.PageModel.Pagination.GetNextPageUrl(currentUrl)">Next</a></li>
+            }
+
+        </ul>
+    </nav>
+</div>

@@ -1,4 +1,8 @@
 ﻿using Deadit.Lib.Domain.Constants;
+using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Forms;
+using Deadit.Lib.Domain.Other;
+using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.ViewModels;
 using Deadit.WebGui.Controllers.Contracts;
@@ -33,50 +37,52 @@ public class CommunitySettingsController : GuiController, IControllerName
     [ActionName(nameof(GetGeneralSettingsPageAsync))]
     public async Task<IActionResult> GetGeneralSettingsPageAsync([FromRoute] string communityName)
     {
-        var getVm = await _generalVMService.GetViewModelAsync(new()
+        var getViewModel = await _generalVMService.GetViewModelAsync(new()
         {
             CommunityName = communityName,
         });
 
-        if (!getVm.Successful)
+        if (!getViewModel.Successful)
         {
-            return BadRequest(getVm);
+            return BadRequest(getViewModel);
         }
 
-        return View(GuiPageViewFiles.CommunitySettingsGeneralPage, getVm.Data);
+        return View(GuiPageViewFiles.CommunitySettingsGeneralPage, getViewModel.Data);
     }
 
     [HttpGet("members")]
     [ActionName(nameof(GetMembersSettingsPageAsync))]
-    public async Task<IActionResult> GetMembersSettingsPageAsync([FromRoute] string communityName)
+    public async Task<IActionResult> GetMembersSettingsPageAsync([FromRoute] string communityName, [FromQuery] GetMembersSettingsPageQueryParms? queryParms)
     {
-        var getVm = await _memberVMService.GetViewModelAsync(new()
+        var getViewModel = await _memberVMService.GetViewModelAsync(new()
         {
             CommunityName = communityName,
+            CommunityMembersSorting = new(queryParms?.Sort, queryParms?.SortDirection),
+            Pagination = new(queryParms?.Page),
         });
 
-        if (!getVm.Successful)
+        if (!getViewModel.Successful)
         {
-            return BadRequest(getVm);
+            return BadRequest(getViewModel);
         }
 
-        return View(GuiPageViewFiles.CommunitySettingsMembersPage, getVm.Data);
+        return View(GuiPageViewFiles.CommunitySettingsMembersPage, getViewModel.Data);
     }
 
     [HttpGet("content")]
     [ActionName(nameof(GetContentSettingsPageAsync))]
     public async Task<IActionResult> GetContentSettingsPageAsync([FromRoute] string communityName)
     {
-        var getVm = await _contentVMService.GetViewModelAsync(new()
+        var getViewModel = await _contentVMService.GetViewModelAsync(new()
         {
             CommunityName = communityName,
         });
 
-        if (!getVm.Successful)
+        if (!getViewModel.Successful)
         {
-            return BadRequest(getVm);
+            return BadRequest(getViewModel);
         }
 
-        return View(GuiPageViewFiles.CommunitySettingsContentPage, getVm.Data);
+        return View(GuiPageViewFiles.CommunitySettingsContentPage, getViewModel.Data);
     }
 }

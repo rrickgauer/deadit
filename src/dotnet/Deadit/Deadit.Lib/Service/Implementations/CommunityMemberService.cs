@@ -2,6 +2,9 @@
 using Deadit.Lib.Domain.Dto;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.Other;
+using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Repository.Contracts;
@@ -63,6 +66,64 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
 
     }
 
+
+
+    public async Task<ServiceResponse> RemoveMemberAsync(string username, string communityName)
+    {
+        try
+        {
+            // check if the user is a member
+            var getMembership = await GetMembershipAsync(username, communityName);
+
+            if (!getMembership.Successful)
+            {
+                return getMembership;
+            }
+
+            if (getMembership.Data?.UserId is not uint userId)
+            {
+                throw new NotFoundHttpResponseException();
+            }
+
+            // remove them
+            var leaveResult = await LeaveCommunityAsync(userId, communityName);
+
+            if (!leaveResult.Successful)
+            {
+                return leaveResult;
+            }
+
+            return new();
+
+        }
+        catch(ServiceResponseException ex)
+        {
+            return ex;
+        }
+    }
+
+    public async Task<ServiceDataResponse<ViewCommunityMembership>> GetMembershipAsync(string username, string communityName)
+    {
+        try
+        {
+            ServiceDataResponse<ViewCommunityMembership> response = new();
+
+            var datarow = await _repo.SelectCommunityMembershipAsync(username, communityName);
+
+            if (datarow != null)
+            {
+                response.Data = _tableMapperService.ToModel<ViewCommunityMembership>(datarow);
+            }
+
+            return response;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
+
     /// <summary>
     /// Get the specified community membership
     /// </summary>
@@ -101,7 +162,6 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
 
         try
         {
-
             ServiceDataResponse<ViewCommunityMembership> response = new();
 
             var datarow = await _repo.SelectCommunityMembershipAsync(userId, communityName);
@@ -117,10 +177,13 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
         {
             return ex;
         }
-
-
-
     }
+
+
+
+
+
+
 
 
     /// <summary>
@@ -211,9 +274,6 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
         {
             return ex;
         }
-
-
-
     }
 
     /// <summary>
@@ -227,6 +287,24 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
         ServiceResponse response = new();
 
         return response;
+    }
+
+
+    public async Task<ServiceDataResponse<List<ViewCommunityMembership>>> GetCommunityMembersAsync(string communityName, CommunityMembersSorting sorting, PaginationCommunityMembers pagination)
+    {
+        try
+        {
+            var table = await _repo.SelectCommunityMembersAsync(communityName, sorting, pagination);
+
+            var models = _tableMapperService.ToModels<ViewCommunityMembership>(table);
+
+            return new(models);
+
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
     }
 
 }

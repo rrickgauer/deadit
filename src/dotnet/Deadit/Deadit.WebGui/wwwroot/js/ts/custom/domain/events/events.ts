@@ -1,4 +1,5 @@
 import { CommentModerationAction } from "../enum/comment-moderation-action";
+import { CommunityMembershipDropdownAction } from "../enum/community-membership-dropdown-action";
 import { PostDropdownAction } from "../enum/post-dropdown-action";
 import { PostModerationDropdownAction } from "../enum/post-moderation-dropdown-action";
 import { SortOption } from "../enum/sort-option";
@@ -70,3 +71,13 @@ export type CommentLockedData = {
 }
 
 export const CommentLockedEvent = new CustomMessage<CommentLockedData>();
+
+
+
+export type CommunityMembershipDropdownClickedData = {
+    action: CommunityMembershipDropdownAction,
+    username: string,
+}
+
+export const CommunityMembershipDropdownClickedEvent = new CustomMessage<CommunityMembershipDropdownClickedData>();
+

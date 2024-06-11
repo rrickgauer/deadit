@@ -1,0 +1,56 @@
+﻿@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.Enum
+@using Deadit.Lib.Domain.ViewModel
+@using Deadit.Lib.Utility
+@model CommunitySettingsLayoutModel<MembersCommunitySettingsPageModel>
+
+@* Members List *@
+<div class="container community-members-container">
+    <div class="messages-container"></div>
+
+    <ul class="list-group community-members-list">
+
+        @* Header *@
+        <li class="list-group-item list-group-item-secondary">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                    <div class="lead">Members</div>
+                </div>
+
+                <div>
+                    <select class="form-select community-members-sorting-options">
+                        @CommunityMembersSortOptions.UsernameAsc.GetOptionHtml(Model.PageModel.Sorting)
+                        @CommunityMembersSortOptions.UsernameDesc.GetOptionHtml(Model.PageModel.Sorting)
+                        @CommunityMembersSortOptions.JoinedOnAsc.GetOptionHtml(Model.PageModel.Sorting)
+                        @CommunityMembersSortOptions.JoinedOnDesc.GetOptionHtml(Model.PageModel.Sorting)
+                    </select>
+                </div>
+            </div>
+        </li>
+
+        @foreach (var membership in Model.PageModel.Memberships)
+        {
+            <li class="list-group-item community-members-list-item py-0" data-username="@membership.UserUsername">
+
+                <div class="row align-items-baseline">
+                    <div class="col-lg-6">@membership.UserUsername</div>
+                    <div class="col-lg-4 d-flex justify-content-md-end" title="Joined on">@membership.UserJoinedOn.ToDisplayDateOnly()  </div>
+
+                    <div class="col-lg-2 d-flex justify-content-md-end">
+                        <div class="dropdown">
+                            <button class="btn btn-reset" type="button" data-bs-toggle="dropdown" aria-expanded="false">@HtmlUtility.ToHtml(Icons.DotsMore)</button>
+                            <ul class="dropdown-menu community-members-item-list-item-dropdown-menu">
+                                <li><button class="dropdown-item" type="button" data-js-action="Remove">Remove</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+            </li>
+        }
+
+    </ul>
+
+
+</div>

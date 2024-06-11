@@ -1,5 +1,7 @@
 ﻿@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.Enum
 @using Deadit.Lib.Domain.ViewModel
+@using Deadit.Lib.Utility
 @model CommunitySettingsLayoutModel<MembersCommunitySettingsPageModel>
 
 @{
@@ -11,7 +13,16 @@
 
     <div class="container">
         <h1>Members Settings</h1>
+    </div>
 
+    @* Members List *@
+    <div class="mt-5">
+        <partial name="~/Views/Pages/Community/Settings/Members/_MembersList.cshtml" />
+    </div>
+
+
+    <div class="container mt-5">
+        <partial name="~/Views/Pages/Community/Settings/Members/_Pagination.cshtml" />
     </div>
 
 }

@@ -1,11 +1,10 @@
 import { ApiEndpoints, HttpMethods } from "../domain/constants/api-constants";
+import { Nullable } from "../utilities/nullable";
 
 
 
 export class ApiCommunityMembership
 {
-    /*    private readonly _urlPrefix = ApiEndpoints.COMMUNITY;*/
-
     private readonly _communityName: string;
     private readonly _url: string;
 
@@ -25,9 +24,14 @@ export class ApiCommunityMembership
         });
     }
 
-    public delete = async () =>
+    public delete = async (username?: string) =>
     {
-        const url = this._url;
+        let url = this._url;
+
+        if (Nullable.hasValue(username))
+        {
+            url = `${this._url}/${username}`;
+        }
 
         return await fetch(url, {
             method: HttpMethods.DELETE,

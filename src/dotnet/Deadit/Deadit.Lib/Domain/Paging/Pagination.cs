@@ -1,4 +1,5 @@
-﻿using Deadit.Lib.Utility;
+﻿using Deadit.Lib.Domain.Errors;
+using Deadit.Lib.Utility;
 
 namespace Deadit.Lib.Domain.Paging;
 
@@ -22,7 +23,7 @@ public abstract class Pagination
         {
             if (value == 0)
             {
-                throw new Exception($"Page cannot be 0. Did you mean 1?");
+                throw new NotFoundHttpResponseException();
             }
 
             _page = value;

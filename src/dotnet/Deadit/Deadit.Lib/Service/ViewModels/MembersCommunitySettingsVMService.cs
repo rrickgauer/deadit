@@ -13,37 +13,76 @@ using ViewModel = Deadit.Lib.Domain.ViewModel.CommunitySettingsLayoutModel<Deadi
 namespace Deadit.Lib.Service.ViewModels;
 
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui)]
-public class MembersCommunitySettingsVMService(ICommunityService communityService) : IVMService<GeneralCommunitySettingsPageParms, ViewModel>
+public class MembersCommunitySettingsVMService : IVMService<MembersCommunitySettingsPageParms, ViewModel>
 {
-    private readonly ICommunityService _communityService = communityService;
+    private readonly ICommunityService _communityService;
+    private readonly ICommunityMemberService _communityMemberService;
 
-    public async Task<ServiceDataResponse<ViewModel>> GetViewModelAsync(GeneralCommunitySettingsPageParms args)
+    public MembersCommunitySettingsVMService(ICommunityService communityService, ICommunityMemberService communityMemberService)
     {
-        var getCommunity = await _communityService.GetCommunityAsync(args.CommunityName);
+        _communityService = communityService;
+        _communityMemberService = communityMemberService;
+    }
 
-        if (!getCommunity.Successful)
+    public async Task<ServiceDataResponse<ViewModel>> GetViewModelAsync(MembersCommunitySettingsPageParms args)
+    {
+        try
         {
-            return new(getCommunity);
+            var community = await GetCommunityAsync(args.CommunityName);
+            var memberships = await GetMembershipsAsync(args);
+
+            MembersCommunitySettingsPageModel pageModel = new()
+            {
+                Memberships = memberships,
+                Sorting = args.CommunityMembersSorting,
+                Pagination = args.Pagination,
+            };
+
+            ViewModel viewModel = new()
+            {
+                PageTitle = "Member Settings",
+                PageModel = pageModel,
+                Community = community,
+                ActivePage = ActiveCommunitySettingsPage.Members,
+            };
+
+
+            return new(viewModel);
+        }
+        catch(ServiceResponseException ex)
+        {
+            return new(ex.Response);
+        }
+    }
+
+
+    private async Task<ViewCommunity> GetCommunityAsync(string communityName)
+    {
+        var getCommunity = await _communityService.GetCommunityAsync(communityName);
+
+        getCommunity.ThrowIfError();
+
+        if (getCommunity.Data is not ViewCommunity community)
+        {
+            throw new NotFoundHttpResponseException();
         }
 
-        var community = NotFoundHttpResponseException.ThrowIfNot<ViewCommunity>(getCommunity.Data);
-
-        MembersCommunitySettingsPageModel pageModel = new()
-        {
-            //Community = community,
-        };
-
-        ViewModel viewModel = new()
-        {
-            PageTitle = "Member Settings",
-            PageModel = pageModel,
-            Community = community,
-            ActivePage = ActiveCommunitySettingsPage.Members,
-        };
-
-
-        return new(viewModel);
+        return community;
     }
+
+
+    private async Task<List<ViewCommunityMembership>> GetMembershipsAsync(MembersCommunitySettingsPageParms args)
+    {
+        var getMemberships = await _communityMemberService.GetCommunityMembersAsync(args.CommunityName, args.CommunityMembersSorting, args.Pagination);
+
+        getMemberships.ThrowIfError();
+
+        return getMemberships.Data ?? new();
+    }
+
+
+
+
 }
 
 

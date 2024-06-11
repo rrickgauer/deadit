@@ -25,7 +25,6 @@ public class ModifyCommunityFilter(ModifyCommunityAuth auth) : IAsyncActionFilte
             return;
         }
 
-
         await next();
     }
 }

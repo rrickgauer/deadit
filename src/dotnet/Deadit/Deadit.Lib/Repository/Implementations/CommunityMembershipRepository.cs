@@ -1,6 +1,10 @@
 ﻿using System.Data;
 using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Model;
+using Deadit.Lib.Domain.Other;
+using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Repository.Commands;
 using Deadit.Lib.Repository.Contracts;
 using Deadit.Lib.Repository.Other;
@@ -41,6 +45,16 @@ public class CommunityMembershipRepository(DatabaseConnection connection) : ICom
         return await _dbConnection.FetchAsync(command);
     }
 
+    public async Task<DataRow?> SelectCommunityMembershipAsync(string username, string communityName)
+    {
+        MySqlCommand command = new(CommunityMembershipRepositoryCommands.SelectByUsernameCommunityName);
+
+        command.Parameters.AddWithValue("@username", username);
+        command.Parameters.AddWithValue("@community_name", communityName);
+
+        return await _dbConnection.FetchAsync(command);
+    }
+
     /// <summary>
     /// Delete the membership record
     /// </summary>
@@ -65,6 +79,27 @@ public class CommunityMembershipRepository(DatabaseConnection connection) : ICom
         command.Parameters.AddWithValue("@community_name", communityName);
 
         return await _dbConnection.ModifyAsync(command);
+    }
+
+
+    public async Task<DataTable> SelectCommunityMembersAsync(string communityName)
+    {
+        MySqlCommand command = new(CommunityMembershipRepositoryCommands.SelectAllCommunityMembers);
+
+        command.Parameters.AddWithValue("@community_name", communityName);
+
+        return await _dbConnection.FetchAllAsync(command);
+    }
+
+    public async Task<DataTable> SelectCommunityMembersAsync(string communityName, CommunityMembersSorting sorting, PaginationCommunityMembers pagination)
+    {
+        string sql = string.Format(CommunityMembershipRepositoryCommands.SelectCommunityMembersSortedTemplate, sorting.GetSqlOrderClause(), RepositoryConstants.PAGINATION_CLAUSE);
+        MySqlCommand command = new(sql);
+
+        command.Parameters.AddWithValue("@community_name", communityName);
+        command.AddPaginationParamters(pagination);
+
+        return await _dbConnection.FetchAllAsync(command);
     }
 
 

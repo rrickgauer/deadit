@@ -7,7 +7,7 @@ import { ServiceUtility } from "../utilities/service-utility";
 export class CommunityMembershipService
 {
 
-    public joinCommunity = async (communityName: string): Promise<ServiceResponse<GetJoinedCommunityApiRequest>> =>
+    public async joinCommunity (communityName: string): Promise<ServiceResponse<GetJoinedCommunityApiRequest>>
     {
         const api = new ApiCommunityMembership(communityName);
         const response = await api.put();
@@ -15,11 +15,20 @@ export class CommunityMembershipService
         return await ServiceUtility.toServiceResponse<GetJoinedCommunityApiRequest>(response);
     }
 
-    public leaveCommunity = async (communityName: string): Promise<ServiceResponse<any>> =>
+    public async leaveCommunity (communityName: string): Promise<ServiceResponse<any>>
     {
         const api = new ApiCommunityMembership(communityName);
         const response = await api.delete();
 
         return await ServiceUtility.toServiceResponseNoContent(response);
     }
+
+    public async removeMember(communityName: string, username: string)
+    {
+        const api = new ApiCommunityMembership(communityName);
+        const response = await api.delete();
+
+        return await ServiceUtility.toServiceResponseNoContent(response);
+    }
+
 }

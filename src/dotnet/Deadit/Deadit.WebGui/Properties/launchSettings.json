@@ -28,7 +28,7 @@
     "Profile 1": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:7013/c/Community1/settings",
+      "launchUrl": "https://localhost:7013/c/rmr/settings/members",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
