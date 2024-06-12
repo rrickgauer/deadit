@@ -1,6 +1,6 @@
 import { HttpStatusCode } from "../domain/enum/http-status-code";
 import { ApiResponse, ApiResponseNoContent, ServiceResponse, ValidationErrorsApiResponse } from "../domain/model/api-response";
-import { ApiNotFoundException, ApiValidationException } from "../domain/model/exceptions";
+import { ApiForbiddenException, ApiNotFoundException, ApiValidationException } from "../domain/model/exceptions";
 
 
 
@@ -39,10 +39,17 @@ export class ServiceUtility
         else if (response.status === HttpStatusCode.UnprocessableEntity)
         {
             await ServiceUtility.handleUnprocessableEntityApiResponse(response);
+            return;
         }
         else if (response.status === HttpStatusCode.NotFound)
         {
             ServiceUtility.handleNotFoundApiResponse(response);
+            return;
+        }
+        else if (response.status === HttpStatusCode.Forbidden)
+        {
+            ServiceUtility.handleForbiddenApiResponse(response);
+            return;
         }
 
         const responseText = await response.text();
@@ -58,6 +65,11 @@ export class ServiceUtility
     private static handleNotFoundApiResponse = (response: Response) =>
     {
         throw new ApiNotFoundException();
+    }
+
+    private static handleForbiddenApiResponse(response: Response)
+    {
+        throw new ApiForbiddenException();
     }
 
 }

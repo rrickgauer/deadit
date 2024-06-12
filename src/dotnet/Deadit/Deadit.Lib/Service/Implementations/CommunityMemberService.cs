@@ -215,7 +215,6 @@ public class CommunityMemberService(ICommunityMembershipRepository repo, ITableM
     /// <returns></returns>
     public async Task<ServiceDataResponse<GetJoinedCommunity>> JoinCommunityAsync(uint userId, string communityName)
     {
-
         try
         {
             ServiceDataResponse<GetJoinedCommunity> response = new();

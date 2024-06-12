@@ -20,3 +20,11 @@ export class ApiNotFoundException extends Error
     }
 }
 
+export class ApiForbiddenException extends Error
+{
+    constructor(message?: string)
+    {
+        super(message);
+    }
+}
+
