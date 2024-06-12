@@ -15,4 +15,6 @@ public class Icons
     public const string DownvoteSolid = @"<i class=""bx bxs-downvote"" data-js-selected></i>";
 
     public const string Lock = @"<i class=""bx bxs-lock-alt"" style=""color:#ffc300"" title=""Locked""></i>";
+
+    public const string DotsMore = @"<i class=""bx bx-dots-horizontal-rounded""></i>";
 }

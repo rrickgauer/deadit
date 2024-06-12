@@ -1,23 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Deadit.Lib.Domain.Constants;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 namespace Deadit.Lib.Domain.Forms;
 
 public class CreateCommunityRequestForm
-{
-    public const int MaxCommunityNameLength        = 50;
-    public const int MaxCommunitTitleLength        = 100;
-    public const int MaxCommunityDescriptionLength = 200;
+{ 
+
 
     [BindRequired]
-    [StringLength(MaxCommunityNameLength)]
-    [MinLength(3)]
-    public required string Name { get; set; }
+    [StringLength(CommunityConstants.MaxNameLength)]
+    [MinLength(CommunityConstants.MinimumNameLength)]
+    public virtual required string Name { get; set; }
 
     [BindRequired]
-    [StringLength(MaxCommunitTitleLength)]
+    [StringLength(CommunityConstants.MaxTitleLength)]
     public required string Title { get; set; }
 
-    [StringLength(MaxCommunityDescriptionLength)]
+    [StringLength(CommunityConstants.MaxDescriptionLength)]
     public string? Description { get; set; }
 }

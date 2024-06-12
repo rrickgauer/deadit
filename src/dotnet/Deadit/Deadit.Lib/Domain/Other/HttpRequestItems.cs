@@ -3,6 +3,7 @@ using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.TableView;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ZstdSharp.Unsafe;
 
 namespace Deadit.Lib.Domain.Other;
 
@@ -44,7 +45,14 @@ public class HttpRequestItems(IDictionary<object, object?> requestDict)
 
     private void SetValue(HttpRequestStorageKey key, object? value) 
     {
-        _requestDict.Add(key, value);
+        if (_requestDict.ContainsKey(key))
+        {
+            _requestDict[key] = value;
+        }
+        else
+        {
+            _requestDict.Add(key, value);
+        }
     }
     
 

@@ -35,4 +35,10 @@ public abstract class TableMapper<T>
 
         return prop.Attribute.ColumnName;
     }
+
+
+    protected TRsult TestName<TRsult>(DataRow row, string propertyName)
+    {
+        return row.Field<TRsult>(GetColumnName(propertyName))!;
+    }
 }

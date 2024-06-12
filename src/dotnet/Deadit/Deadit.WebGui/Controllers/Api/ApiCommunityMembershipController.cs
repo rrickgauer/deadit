@@ -11,7 +11,6 @@ namespace Deadit.WebGui.Controllers.Api;
 
 [ApiController]
 [Route("api/communities/{communityName}/members")]
-[ServiceFilter(typeof(CommunityNameExistsFilter))]
 public class ApiCommunityMembershipController(ICommunityMemberService communityMemberService) : InternalApiController, IControllerName
 {
     // IControllerName
@@ -26,6 +25,7 @@ public class ApiCommunityMembershipController(ICommunityMemberService communityM
     /// <returns></returns>
     [HttpPut]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(CommunityNameExistsFilter))]
     [ActionName(nameof(JoinCommunityAsync))]
     public async Task<ActionResult<ApiResponse<GetJoinedCommunity>>> JoinCommunityAsync([FromRoute] string communityName)
     {        
@@ -40,8 +40,14 @@ public class ApiCommunityMembershipController(ICommunityMemberService communityM
         return Created(uri, newCommunityMembership);
     }
 
+    /// <summary>
+    /// DELETE: /api/communities/:communityName
+    /// </summary>
+    /// <param name="communityName"></param>
+    /// <returns></returns>
     [HttpDelete]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(CommunityNameExistsFilter))]
     [ActionName(nameof(LeaveCommunityAsync))]
     public async Task<IActionResult> LeaveCommunityAsync([FromRoute] string communityName)
     { 
@@ -52,6 +58,31 @@ public class ApiCommunityMembershipController(ICommunityMemberService communityM
             return BadRequest(serviceResponse);
         }
         
+        return NoContent();
+    }
+
+
+    /// <summary>
+    /// DELETE: /api/communities/:communityName/:username
+    /// 
+    /// Only community moderators can call this endpoint
+    /// </summary>
+    /// <param name="communityName"></param>
+    /// <param name="username"></param>
+    /// <returns></returns>
+    [HttpDelete("{username}")]
+    [ServiceFilter(typeof(InternalApiAuthFilter))]
+    [ServiceFilter(typeof(ModifyCommunityFilter))]
+    [ActionName(nameof(RemoveMemberAsync))]
+    public async Task<IActionResult> RemoveMemberAsync([FromRoute] string communityName, [FromRoute] string username)
+    {
+        var result = await _communityMemberService.RemoveMemberAsync(username, communityName);
+
+        if (!result.Successful)
+        {
+            return BadRequest(result);
+        }
+
         return NoContent();
     }
 

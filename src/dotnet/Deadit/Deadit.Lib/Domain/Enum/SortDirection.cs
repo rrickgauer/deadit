@@ -1,5 +1,8 @@
-﻿namespace Deadit.Lib.Domain.Enum;
+﻿using System.Text.Json.Serialization;
 
+namespace Deadit.Lib.Domain.Enum;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum SortDirection
 {
     Ascending,

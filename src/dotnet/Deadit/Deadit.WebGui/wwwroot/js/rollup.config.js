@@ -52,6 +52,11 @@ const configs = [
     new RollupConfig('ts/custom/pages/community/post-page/index.ts', 'dist/post-page.bundle.js'),
     new RollupConfig('ts/custom/pages/communities/communities-page/index.ts', 'dist/communities-page.bundle.js'),
     new RollupConfig('ts/custom/pages/communities/create-community/index.ts', 'dist/create-community.bundle.js'),
+
+
+    new RollupConfig('ts/custom/pages/community/settings/general/index.ts', 'dist/community-settings-general.bundle.js'),
+    new RollupConfig('ts/custom/pages/community/settings/content/index.ts', 'dist/community-settings-content.bundle.js'),
+    new RollupConfig('ts/custom/pages/community/settings/members/index.ts', 'dist/community-settings-members.bundle.js'),
 ];
 
 

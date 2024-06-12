@@ -1,3 +1,5 @@
+import { CommunityType } from "../enum/community-type";
+import { TextPostBodyRule } from "../enum/text-post-body-rule";
 
 
 export class CreateCommunityApiRequest
@@ -25,4 +27,29 @@ export type CommunityApiRequest = {
     communityCountMembers?: number;
     communityUrlGui?: string;
 }
+
+
+
+export type UpdateCommunityApiRequest = {
+    title: string;
+    description: string | null;
+    communityType: CommunityType;
+    textPostBodyRule: TextPostBodyRule;
+    acceptingNewMembers: boolean;
+}
+
+export class UpdateCommunityRequest
+{
+    public readonly communityName: string;
+    public readonly data: UpdateCommunityApiRequest;
+
+    constructor(communityName: string, data: UpdateCommunityApiRequest)
+    {
+        this.communityName = communityName;
+        this.data = data;
+    }
+}
+
+
+
 

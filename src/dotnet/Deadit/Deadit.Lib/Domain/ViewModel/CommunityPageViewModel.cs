@@ -14,5 +14,7 @@ public class CommunityPageViewModel : IClientLoggedIn
     public required List<GetPostUserVoteDto> PostDtos { get; set; } = new();
     public required PostSorting PostSort { get; set; }
     public required PaginationPosts Pagination { get; set; }
+
+    public required bool IsModerator { get; set; }
 }
 

@@ -51,4 +51,17 @@ public sealed class CommunityRepositoryCommands
 
 
 
+    public const string UpdateCommunity = @"
+        UPDATE
+            Community
+        SET
+            title = @title,
+            description = @description,
+            community_type = @community_type,
+            text_post_body_rule = @text_post_body_rule,
+            membership_closed_on = @membership_closed_on
+        WHERE
+            id = @id;";
+
+
 }

@@ -1,0 +1,143 @@
+﻿@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.Enum
+@using Deadit.Lib.Domain.TableView
+@using Deadit.Lib.Domain.ViewModel
+@using Deadit.Lib.Utility
+
+@model CommunitySettingsLayoutModel<GeneralCommunitySettingsPageModel>
+
+@{
+    Layout = $"~/{GuiPageViewFiles.CommunitySettingsLayout}";
+}
+
+@functions{
+    
+    public void GetCommunityTypeInput(ViewCommunity community, CommunityType communityType)
+    {
+
+        var typeName = communityType.GetName();
+        var id = $"community-type-{typeName.ToLower()}";
+
+        var isChecked = community.CommunityType == communityType;
+        var checkedText = isChecked ? "checked" : string.Empty;
+
+        <div class="form-check">
+            <input type="radio" class="form-check-input" id="@id" name="community-type-input" value="@typeName" @checkedText>
+            <label class="form-check-label" for="@id">@typeName</label>
+            <div class="invalid-feedback"></div>
+        </div>
+    }
+
+    public void GetTextPostContentRadio(ViewCommunity community, TextPostBodyRule rule)
+    {
+        var id = $"text-post-content-${rule.GetName().ToLower()}";
+        var checkedText = community.CommunityTextPostBodyRule == rule ? "checked" : string.Empty;
+
+        var name = rule == TextPostBodyRule.NotAllowed ? "Not Allowed" : rule.GetName();
+
+        <div class="form-check">
+            <input type="radio" class="form-check-input" id="@id" name="text-post-content-input" value="@rule.GetName()" @checkedText />
+            <label class="form-check-label" for="@id">@name</label>
+            <div class="invalid-feedback"></div>
+        </div>
+    }
+}
+
+
+@section Body {
+    
+    <div class="container">
+        <h1>General Settings</h1>
+    </div>
+
+
+    <div class="container mt-5">
+
+        <div class="community-settings-form-container">
+
+            <form class="community-settings-form">
+
+                <div class="form-feedback"></div>
+
+                <fieldset>
+
+                    @* Title *@
+                    <div class="input-feedback">
+                        <label class="form-label-container">
+                            <div class="form-label">Title</div>
+                            <input type="text" class="form-control input-feedback-input" name="title" required maxlength="@CommunityConstants.MaxTitleLength" value="@Model.Community.CommunityTitle" />
+                            <div class="valid-feedback"></div>
+                            <div class="invalid-feedback"></div>
+                        </label>
+                    </div>
+
+                    @* Description *@
+                    <div class="input-feedback mt-5">
+                        <label class="form-label-container">
+                            <div class="form-label">Description</div>
+                            <textarea class="form-control input-feedback-input" name="description" rows="8" maxlength="@CommunityConstants.MaxDescriptionLength">@Model.Community.CommunityDescription</textarea>
+                            <div class="valid-feedback"></div>
+                            <div class="invalid-feedback"></div>
+                        </label>
+                    </div>
+
+
+                    @* Accepting new members *@
+                    <div class="form-check mt-5">
+                        @{
+                            var membershipChecked = Model.Community.CommunityAcceptingNewMembers ? "checked" : string.Empty;
+                        }
+
+                        <input type="checkbox" class="form-check-input" id="community-settings-form-membership-checkbox" @membershipChecked>
+                        <label class="form-check-label" for="community-settings-form-membership-checkbox">Accepting new members</label>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+
+                    @* Community Type *@
+                    <div class="mt-5 radio-group community-type-input-radios" data-radio-group-name="community-type-input">
+                        <p class="mb-0">Community Type</p>
+
+                        @{
+                            GetCommunityTypeInput(Model.Community, CommunityType.Private);
+                            GetCommunityTypeInput(Model.Community, CommunityType.Public);
+                        }
+
+                    </div>
+
+
+                    @* Text post content rule *@
+                    <div class="mt-5 radio-group text-post-content-input-radios" data-radio-group-name="text-post-content-input">
+                        <p class="mb-0">Text Post Content</p>
+
+                        @{
+                            GetTextPostContentRadio(Model.Community, TextPostBodyRule.Optional);
+                            GetTextPostContentRadio(Model.Community, TextPostBodyRule.Required);
+                            GetTextPostContentRadio(Model.Community, TextPostBodyRule.NotAllowed);
+                        }
+                    </div>
+
+
+                    @* Submit buttom *@
+                    <div class="d-flex mt-5">
+                        <button type="submit" class="btn btn-success btn-submit">Save changes</button>
+                    </div>
+
+
+                </fieldset>
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+}
+
+
+
+@section Footer {
+    <script src="~/js/dist/community-settings-general.bundle.js"></script>
+}

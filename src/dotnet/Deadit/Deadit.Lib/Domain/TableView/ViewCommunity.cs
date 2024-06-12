@@ -2,6 +2,7 @@
 using Deadit.Lib.Domain.Contracts;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Model;
+using System.Text.Json.Serialization;
 
 namespace Deadit.Lib.Domain.TableView;
 
@@ -31,8 +32,41 @@ public class ViewCommunity : ITableView<ViewCommunity, Community>
     [CopyToProperty<Community>(nameof(Community.CreatedOn))]
     public DateTime CommunityCreatedOn { get; set; } = DateTime.Now;
 
+
+    [SqlColumn("community_community_type")]
+    [CopyToProperty<Community>(nameof(Community.CommunityType))]
+    public CommunityType CommunityType { get; set; } = CommunityType.Private;
+
+    [SqlColumn("community_text_post_body_rule")]
+    [CopyToProperty<Community>(nameof(Community.TextPostBodyRule))]
+    public TextPostBodyRule CommunityTextPostBodyRule { get; set; } = TextPostBodyRule.Optional;
+
+    [JsonIgnore]
+    [SqlColumn("community_membership_closed_on")]
+    [CopyToProperty<Community>(nameof(Community.MembershipClosedOn))]
+    public DateTime? CommunityMembershipClosedOn { get; set; }
+
+
+    public bool CommunityAcceptingNewMembers
+    {
+        get => !CommunityMembershipClosedOn.HasValue;
+        set
+        {
+            if (value)
+            {
+                CommunityMembershipClosedOn = null;
+            }
+            else
+            {
+                CommunityMembershipClosedOn = DateTime.UtcNow;
+            }
+        }
+    }
+
+
     [SqlColumn("community_count_members")]
     public long CommunityCountMembers { get; set; } = 0;
+
 
     public string CommunityUrlGui => $"c/{CommunityName}";
 

@@ -14,9 +14,9 @@ export enum ApiErrorCode
     
     //#region - Create Community -
 
-    CreateCommunityInvalidNameCharacter = 300,
-    CreateCommunityNameTaken = 301,
-    CreateCommunityNameBanned = 302,
+    CommunitySettingsInvalidNameCharacter = 300,
+    CommunitySettingsNameTaken = 301,
+    CommunitySettingsNameBanned = 302,
 
     //#endregion
 

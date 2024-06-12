@@ -57,6 +57,7 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
                 PostDtos = getPostDtos.ToList(),
                 PostSort = args.PostSorting,
                 Pagination = args.Pagination,
+                IsModerator = args.ClientId == community.CommunityOwnerId,
             };
 
             return new(viewModel);

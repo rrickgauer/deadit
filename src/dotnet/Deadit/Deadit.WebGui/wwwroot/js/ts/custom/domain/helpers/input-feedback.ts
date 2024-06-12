@@ -18,7 +18,7 @@ export class InputFeedback
      * Helper class for interfacing with an input's valid feedback text/display
      * @param container
      */
-    constructor(container: HTMLElement, autoClear: boolean=false)
+    constructor(container: Element, autoClear: boolean=false)
     {
         this._container = container.closest('.input-feedback');
 
@@ -150,7 +150,7 @@ export class InputFeedbackTextArea extends InputFeedback
 {
     public inputElement: HTMLTextAreaElement;
 
-    constructor(container: HTMLElement, autoClear: boolean = false)
+    constructor(container: Element, autoClear: boolean = false)
     {
         super(container, autoClear);
     }

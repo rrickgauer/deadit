@@ -4,7 +4,6 @@ namespace Deadit.Lib.Utility;
 
 public static class AttributeUtility
 {
-
     public static TAttr GetEnumAttribute<TEnum, TAttr>(TEnum value) where TEnum : struct, Enum where TAttr : Attribute
     {
         var enumName = Enum.GetName(value);

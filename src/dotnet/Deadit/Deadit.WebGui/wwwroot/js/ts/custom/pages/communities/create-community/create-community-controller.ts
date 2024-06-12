@@ -97,15 +97,15 @@ export class CreateCommunityController
         {
             switch (errorMessage.id)
             {
-                case ApiErrorCode.CreateCommunityNameTaken:
+                case ApiErrorCode.CommunitySettingsNameTaken:
                     nameErrorMessage += errorMessage.message;
                     break;
 
-                case ApiErrorCode.CreateCommunityInvalidNameCharacter:
+                case ApiErrorCode.CommunitySettingsInvalidNameCharacter:
                     nameErrorMessage += errorMessage.message;
                     break;
 
-                case ApiErrorCode.CreateCommunityNameBanned:
+                case ApiErrorCode.CommunitySettingsNameBanned:
                     nameErrorMessage += errorMessage.message;
                     break;
             }

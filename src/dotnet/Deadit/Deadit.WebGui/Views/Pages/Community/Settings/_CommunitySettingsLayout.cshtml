@@ -1,0 +1,77 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Deadit.Lib.Domain.Enum
+@using Deadit.Lib.Domain.ViewModel
+@using Microsoft.AspNetCore.Http.Extensions
+@model CommunitySettingsLayoutModel
+
+@{
+    var baseUrl = $"{Model.Community.CommunityUrlGui}/settings";
+    var generalUrl = $"/{baseUrl}/general";
+    var membersUrl = $"/{baseUrl}/members";
+    var contentUrl = $"/{baseUrl}/content";
+
+}
+
+@functions {
+
+    public void GetNavLink(string url, string display, bool isActive)
+    {
+        @if (isActive)
+        {
+            <a class="nav-link text-start active" href="@url" aria-current="page">@display</a>
+        }
+        else
+        {
+            <a class="nav-link text-start" href="@url">@display</a>
+        }
+    }
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="~/Views/Includes/_Header.cshtml" />
+    @RenderSection("Header", required: false)
+    <title>@Model.PageTitle</title>
+</head>
+
+<body>
+    <partial name="~/Views/Includes/_Navbar.cshtml" />
+    <partial name="~/Views/Includes/_LoginModal.cshtml" />
+    <partial name="~/Views/Components/MessageBoxes/_MessageBoxes.cshtml" />
+
+    <div class="container mt-5">
+        <div class="row">
+
+            @* Sidebar nav *@
+            <div class="col-lg-3">
+                <div class="card card-body">
+                    <nav class="nav nav-pills nav-fill flex-column">
+                        @{
+                            GetNavLink(generalUrl, "General", Model.ActivePage == ActiveCommunitySettingsPage.General);
+                            GetNavLink(membersUrl, "Members", Model.ActivePage == ActiveCommunitySettingsPage.Members);
+                            GetNavLink(contentUrl, "Content", Model.ActivePage == ActiveCommunitySettingsPage.Content);
+                        }
+                    </nav>
+                </div>
+            </div>
+
+
+            @* Main body content *@
+            <div class="col-lg-9">
+                @RenderSection("Body", required: false)
+            </div>
+
+        </div>
+    </div>
+
+    <div class="page-bottom"></div>
+
+    <partial name="~/Views/Includes/_Footer.cshtml" />
+    @RenderSection("Footer", required: false)
+</body>
+</html>
+
+
+
