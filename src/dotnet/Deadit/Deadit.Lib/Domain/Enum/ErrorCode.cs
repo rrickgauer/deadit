@@ -57,4 +57,14 @@ public enum ErrorCode : uint
     CommentPostDeleted = 504,
 
     #endregion
+
+
+    #region - Post -
+    [ErrorCodeGroup(ErrorCodeGroup.Post)]
+    PostTextPostContentNotAllowed = 600,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Post)]
+    PostTextPostContentRequired = 601,
+
+    #endregion
 }

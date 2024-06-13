@@ -39,5 +39,12 @@ export enum ApiErrorCode
 
     //#endregion
 
+    //#region - Post -
+
+    PostTextPostContentNotAllowed = 600,
+    PostTextPostContentRequired = 601,
+
+    //#endregion
+
 }
 

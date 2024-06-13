@@ -14,9 +14,6 @@ public class CommunityMemberFilter(CreatePostAuth auth) : IAsyncActionFilter
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-
-        int x = 10;
-
         var authResponse = await _auth.HasPermissionAsync(new()
         {
             CommunityName = context.GetCommunityNameRouteValue(),

@@ -104,6 +104,12 @@ export class CreatePostTextForm extends CreatePostFormBase
         {
             const response = await this._postService.createTextPost(formData);
 
+            if (!response.successful)
+            {
+                this._form.showErrors(response.response.errors);
+                return false;
+            }
+
             const url = `/c/${this._communityName}/posts/${response.response.data.post.postId}`;
             window.location.href = url;
 
@@ -112,17 +118,13 @@ export class CreatePostTextForm extends CreatePostFormBase
         catch (error)
         {
             ErrorUtility.onException(error, {
-                onApiNotFoundException: (e) =>
+                onApiForbiddenException: (e) =>
                 {
-                    alert('not found');
-                },
-                onApiValidationException: (e) =>
-                {
-                    alert('validation error');
+                    this._form.showErrorAlert('Currently, new posts are not being allowed right now. Please try again later.');
                 },
                 onOther: (e) =>
                 {
-                    alert('unknown error');
+                    this._form.showErrorAlert('We encountered an unexpected error, and your post was not created. Please try again later.');
                 },
             });
 

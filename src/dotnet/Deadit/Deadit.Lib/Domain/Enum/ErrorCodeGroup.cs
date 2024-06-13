@@ -8,4 +8,5 @@ public enum ErrorCodeGroup : uint
     CommunitySettings = 3,
     Voting            = 4,
     Comment           = 5,
+    Post              = 6,
 }

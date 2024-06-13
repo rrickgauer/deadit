@@ -164,7 +164,7 @@ CREATE TABLE `Error_Message` (
   UNIQUE KEY `id` (`id`),
   KEY `error_message_group_id` (`error_message_group_id`),
   CONSTRAINT `Error_Message_ibfk_1` FOREIGN KEY (`error_message_group_id`) REFERENCES `Error_Message_Group` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=601 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=602 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -181,7 +181,7 @@ CREATE TABLE `Error_Message_Group` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -981,7 +981,7 @@ USE `Deadit_Dev`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-10 19:43:33
+-- Dump completed on 2024-06-12 20:50:01
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
@@ -1028,7 +1028,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Error_Message` WRITE;
 /*!40000 ALTER TABLE `Error_Message` DISABLE KEYS */;
-REPLACE INTO `Error_Message` VALUES (200,2,'The email is already registered with another account.','2024-05-07 14:11:22'),(201,2,'The username is already taken.','2024-05-07 14:11:22'),(202,2,'The password does not meet the criteria.','2024-05-07 14:11:23'),(300,3,'The community name contains an invalid character.','2024-05-07 14:12:27'),(301,3,'The community name already exists.','2024-05-07 14:12:27'),(302,3,'The community name is banned.','2024-05-07 14:12:27'),(400,4,'Either \'commentId\' or \'postId\' must be provided.','2024-05-15 20:54:03'),(401,4,'Only \'commentId\' or \'postId\' can have a value, not both.','2024-05-15 20:54:03'),(500,5,'The parent comment does not exist','2024-05-31 19:10:01'),(501,5,'The parent comment is locked.','2024-05-31 19:12:45'),(502,5,'The post has been locked by a moderator.','2024-05-31 19:21:32'),(503,5,'The post has been removed by a moderator.','2024-05-31 19:21:55'),(504,5,'The post has been deleted by its author.','2024-05-31 19:22:06');
+REPLACE INTO `Error_Message` VALUES (200,2,'The email is already registered with another account.','2024-05-07 14:11:22'),(201,2,'The username is already taken.','2024-05-07 14:11:22'),(202,2,'The password does not meet the criteria.','2024-05-07 14:11:23'),(300,3,'The community name contains an invalid character.','2024-05-07 14:12:27'),(301,3,'The community name already exists.','2024-05-07 14:12:27'),(302,3,'The community name is banned.','2024-05-07 14:12:27'),(400,4,'Either \'commentId\' or \'postId\' must be provided.','2024-05-15 20:54:03'),(401,4,'Only \'commentId\' or \'postId\' can have a value, not both.','2024-05-15 20:54:03'),(500,5,'The parent comment does not exist','2024-05-31 19:10:01'),(501,5,'The parent comment is locked.','2024-05-31 19:12:45'),(502,5,'The post has been locked by a moderator.','2024-05-31 19:21:32'),(503,5,'The post has been removed by a moderator.','2024-05-31 19:21:55'),(504,5,'The post has been deleted by its author.','2024-05-31 19:22:06'),(600,6,'Text post content is not allowed.','2024-06-13 01:12:45'),(601,6,'Text post content is required.','2024-06-13 01:26:40');
 /*!40000 ALTER TABLE `Error_Message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1050,7 +1050,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Error_Message_Group` WRITE;
 /*!40000 ALTER TABLE `Error_Message_Group` DISABLE KEYS */;
-REPLACE INTO `Error_Message_Group` VALUES (1,'Misc','2024-05-07 14:07:53'),(2,'Account Signup','2024-05-07 14:08:56'),(3,'Community Settings','2024-05-07 14:09:15'),(4,'Voting','2024-05-15 20:19:17'),(5,'Comment','2024-05-31 19:08:09');
+REPLACE INTO `Error_Message_Group` VALUES (1,'Misc','2024-05-07 14:07:53'),(2,'Account Signup','2024-05-07 14:08:56'),(3,'Community Settings','2024-05-07 14:09:15'),(4,'Voting','2024-05-15 20:19:17'),(5,'Comment','2024-05-31 19:08:09'),(6,'Post','2024-06-13 01:09:57');
 /*!40000 ALTER TABLE `Error_Message_Group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1085,4 +1085,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-10 19:43:39
+-- Dump completed on 2024-06-12 20:50:07

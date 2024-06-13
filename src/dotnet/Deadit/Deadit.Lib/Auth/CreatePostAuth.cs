@@ -22,41 +22,90 @@ public class CreatePostAuth(ICommunityMemberService communityMemberService, ICom
 
     public async Task<ServiceResponse> HasPermissionAsync(CreatePostAuthData data)
     {
-        // check if user is the owner
-        var getCommunity = await _communityService.GetCommunityAsync(data.CommunityName);
-
-        if (!getCommunity.Successful)
+        try
         {
-            return getCommunity;
+            // ensure the community exists
+            var community = await GetCommunityAsync(data);
+
+            // if this is a text post, make sure it doesn't violate the community text post rule
+            HandleTextPostRule(community, data);
+
+            // check if client is the owner
+            if (community.CommunityOwnerId == data.UserId)
+            {
+                return new();
+            }
+
+            // client is not the owner, so check if they are a community member
+            var membership = await GetMembershipAsync(data);
+
+            return new();
         }
+        catch(ServiceResponseException ex)
+        {
+            return ex;
+        }
+    }
+
+
+    private async Task<ViewCommunity> GetCommunityAsync(CreatePostAuthData args)
+    {
+        var getCommunity = await _communityService.GetCommunityAsync(args.CommunityName);
+
+        getCommunity.ThrowIfError();
 
         if (getCommunity.Data is not ViewCommunity community)
         {
             throw new NotFoundHttpResponseException();
         }
 
-        if (_context != null)
-        {
-            HttpRequestItems items = new(_context)
-            {
-                CommunityId = community.CommunityId,
-            };
-        }
+        HttpRequestItems.StoreCommunityId(_context, community.CommunityId);
 
-        if (community.CommunityOwnerId == data.UserId)
-        {
-            return getCommunity;
-        }
-        
+        return community;
+    }
 
+
+    private async Task<ViewCommunityMembership> GetMembershipAsync(CreatePostAuthData args)
+    {
         // check if the user is member
-        var getMembership = await _communityMemberService.GetMembershipAsync(data.UserId, data.CommunityName);
+        var getMembership = await _communityMemberService.GetMembershipAsync(args.UserId, args.CommunityName);
+
+        getMembership.ThrowIfError();
 
         if (getMembership.Data is not ViewCommunityMembership membership)
         {
             throw new ForbiddenHttpResponseException();
         }
 
-        return getMembership;
+        return membership;
+    }
+
+    private static void HandleTextPostRule(ViewCommunity community, CreatePostAuthData args)
+    {
+        if (args.PostType != PostType.Text)
+        {
+            return;
+        }
+
+        switch(community.CommunityTextPostBodyRule)
+        {
+            case TextPostBodyRule.Required:
+                if (string.IsNullOrWhiteSpace(args.TextPostContent))
+                {
+                    throw new ServiceResponseException(ErrorCode.PostTextPostContentRequired);
+                }
+
+                break;
+
+            case TextPostBodyRule.NotAllowed:
+
+                if (!string.IsNullOrEmpty(args.TextPostContent))
+                {
+                    throw new ServiceResponseException(ErrorCode.PostTextPostContentNotAllowed);
+                }
+
+                break;
+        }
+
     }
 }
