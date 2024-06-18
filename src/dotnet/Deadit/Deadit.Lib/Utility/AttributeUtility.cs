@@ -17,6 +17,4 @@ public static class AttributeUtility
 
         return validAttr;
     }
-
-
 }
