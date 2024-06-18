@@ -1,4 +1,5 @@
-﻿using Deadit.Lib.Domain.Attributes;
+﻿using Deadit.Lib.Auth.AuthParms;
+using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Other;
@@ -6,8 +7,6 @@ using Deadit.Lib.Domain.Response;
 using Deadit.Lib.Domain.TableView;
 using Deadit.Lib.Service.Contracts;
 using Microsoft.AspNetCore.Http;
-using static Deadit.Lib.Auth.AuthParms;
-using static Deadit.Lib.Auth.PermissionContracts;
 
 namespace Deadit.Lib.Auth;
 

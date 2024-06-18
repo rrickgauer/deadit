@@ -17,6 +17,7 @@ export enum ApiErrorCode
     CommunitySettingsInvalidNameCharacter = 300,
     CommunitySettingsNameTaken = 301,
     CommunitySettingsNameBanned = 302,
+    CommunitySettingsPrivateCommunityAccessAttempt = 303,
 
     //#endregion
 

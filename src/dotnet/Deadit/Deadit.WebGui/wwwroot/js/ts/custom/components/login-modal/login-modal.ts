@@ -55,4 +55,10 @@ export class LoginModal
 
         BootstrapUtility.showModal(elements.modalContainer);
     }
+
+
+    public static init()
+    {
+        const _modal = new LoginModal(true);
+    }
 }

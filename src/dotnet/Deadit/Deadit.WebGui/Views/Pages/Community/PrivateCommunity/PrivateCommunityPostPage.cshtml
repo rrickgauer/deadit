@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Http.Extensions;
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="~/Views/Includes/_Header.cshtml" />
+    <title>Private Community</title>
+</head>
+
+<body>
+    <partial name="~/Views/Includes/_Navbar.cshtml" />
+    <partial name="~/Views/Includes/_LoginModal.cshtml" />
+    <partial name="~/Views/Components/MessageBoxes/_MessageBoxes.cshtml" />
+
+
+    <div class="container mt-5">
+        <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">This is a private community</h1>
+                <p class="fs-4">The moderators of this community have set this community to private. Only approved members can view and take part in its discussions.</p>
+                <a class="btn btn-primary btn-lg" href="/">Browse other communities</a>
+            </div>
+        </div>
+    </div>
+
+    <partial name="~/Views/Includes/_PageBottom.cshtml" />
+    <partial name="~/Views/Includes/_Footer.cshtml" />
+    <script src="~/js/dist/private-community.bundle.js"></script>
+    
+</body>
+</html>

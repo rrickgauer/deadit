@@ -83,7 +83,14 @@ public static class ActionExecutingContextExtensions
         return clientId.Value;
     }
 
-    public static bool TryGetSessionClientId(this  ActionExecutingContext context, out uint? clientId)
+
+    public static uint? GetSessionsClientIdNull(this ActionExecutingContext context)
+    {
+        var sessionMgr = context.GetSessionManager();
+        return sessionMgr.ClientId;
+    }
+
+    public static bool TryGetSessionClientId(this ActionExecutingContext context, out uint? clientId)
     {
         var sessionMgr = context.GetSessionManager();
 

@@ -13,7 +13,7 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/c/{communityName}")]
-[ServiceFilter(typeof(CommunityNameExistsFilter))]
+[ServiceFilter(typeof(CanViewCommunityFilter))]
 public class CommunityController(CommunityPageVMService communityPageVMService, IPostService postService, NewPostPageVMService newPostVMService) : GuiController, IControllerName
 {
     // IControllerName
@@ -99,13 +99,4 @@ public class CommunityController(CommunityPageVMService communityPageVMService, 
 
         return View(GuiPageViewFiles.CommunityPage, serviceResponse.Data);
     }
-
-
-
-
-
-
-
-
-
 }

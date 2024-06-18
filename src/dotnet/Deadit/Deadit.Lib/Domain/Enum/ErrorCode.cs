@@ -28,6 +28,9 @@ public enum ErrorCode : uint
     [ErrorCodeGroup(ErrorCodeGroup.CommunitySettings)]
     CommunitySettingsNameBanned = 302,
 
+    [ErrorCodeGroup(ErrorCodeGroup.CommunitySettings)]
+    CommunitySettingsPrivateCommunityAccessAttempt = 303,
+
     #endregion
 
     #region - Voting -

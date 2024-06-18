@@ -3,14 +3,13 @@ using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Filter;
 using Deadit.Lib.Service.ViewModels;
 using Deadit.WebGui.Controllers.Contracts;
-using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/c/{communityName}/posts/{postId:guid}")]
-[ServiceFilter(typeof(CommunityNameExistsFilter))]
+[ServiceFilter(typeof(CanViewCommunityFilter))]
 public class PostController(PostPageVMService postPageVMService) : GuiController, IControllerName
 {
     // IControllerName
