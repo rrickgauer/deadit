@@ -1,6 +1,7 @@
-﻿
-
-
+﻿@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.Enum
+@using Microsoft.AspNetCore.Http.Extensions;
+@model Deadit.Lib.Domain.ViewModel.NewPostPageViewModel
 
 <form class="create-post-text-form">
 
@@ -12,7 +13,7 @@
         <div class="input-feedback standard-spacing">
             <label class="form-label-container">
                 <div class="form-label">Title</div>
-                <input type="text" class="form-control input-feedback-input" name="title" required maxlength="250" />
+                <input type="text" class="form-control input-feedback-input" name="title" required maxlength="@PostConstants.MaxTitleLength" />
                 <div class="valid-feedback"></div>
                 <div class="invalid-feedback"></div>
             </label>
@@ -22,7 +23,29 @@
         <div class="input-feedback standard-spacing">
             <label class="form-label-container">
                 <div class="form-label">Content</div>
-                <textarea class="form-control input-feedback-input" name="content" rows="8"></textarea>
+
+                @{
+                    var isContentDisabled = Model.Community.CommunityTextPostBodyRule == TextPostBodyRule.NotAllowed;
+
+                    var attrText = string.Empty;
+
+                    if (Model.Community.CommunityTextPostBodyRule == TextPostBodyRule.NotAllowed)
+                    {
+                        attrText = "disabled";
+                    }
+                    else if (Model.Community.CommunityTextPostBodyRule == TextPostBodyRule.Required)
+                    {
+                        attrText = "required";
+                    }
+                }
+
+                <textarea class="form-control input-feedback-input" name="content" rows="8" @attrText></textarea>
+
+                @if(isContentDisabled)
+                {
+                    <p class="form-text">This community is not allowing content for new text posts.</p>
+                }
+
                 <div class="valid-feedback"></div>
                 <div class="invalid-feedback"></div>
             </label>
@@ -34,10 +57,3 @@
     </fieldset>
 
 </form>
-
-
-
-
-
-
-

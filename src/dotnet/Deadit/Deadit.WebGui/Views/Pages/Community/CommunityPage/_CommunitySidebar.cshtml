@@ -25,20 +25,56 @@
     <hr />
 
     @{
-        if (Model.IsLoggedIn)
-        {
-            string toggleMembershipButtonText = Model.IsMember ? "Leave" : "Join";
-            string membershipStatus = Model.IsMember ? "data-js-is-member" : string.Empty;
-
-            <button type="button" class="btn btn-sm btn-secondary mb-1 btn-toggle-membership" @membershipStatus>@toggleMembershipButtonText</button>
-        }
-        else
+        @* Not logged in *@
+        if (!Model.IsLoggedIn)
         {
             <a href="@loginUrl" class="btn btn-sm btn-secondary mb-1">Log in to join</a>
         }
+        else
+        {
+            @* Not a member, but community membership is closed *@
+            if (!Model.IsMember)
+            {
+                if (!Model.Community.CommunityAcceptingNewMembers)
+                {
+                    <button type="button" class="btn btn-sm btn-secondary mb-1" data-bs-toggle="modal" data-bs-target="#modal-not-accepting-new-members">Join</button>
+
+                    <!-- Modal -->
+                    <div class="modal" tabindex="-1" id="modal-not-accepting-new-members">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5">Community Closed</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    This community is currently not accepting new members. Please try again later.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @* Not a member, and community membership is open *@
+                else if (!Model.IsModerator)
+                {
+                    <button type="button" class="btn btn-sm btn-secondary mb-1 btn-toggle-membership">Join</button>
+                }
+            }
+
+            else if (Model.IsMember)
+            {
+                <button type="button" class="btn btn-sm btn-secondary mb-1 btn-toggle-membership" data-js-is-member>Leave</button>
+            }
+        }
+
     }
 
-    <a href="@normalPath" class="btn btn-sm btn-secondary mb-1">Create Post</a>
+    @if(Model.IsMember || Model.IsModerator)
+    {
+        <a href="@normalPath" class="btn btn-sm btn-secondary mb-1">Create Post</a>
+    }
+    
 
     @if(Model.IsModerator)
     {

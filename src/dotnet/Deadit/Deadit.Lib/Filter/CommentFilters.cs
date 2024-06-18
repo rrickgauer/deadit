@@ -1,11 +1,12 @@
 ﻿using Deadit.Lib.Auth;
+using Deadit.Lib.Auth.AuthParms;
 using Deadit.Lib.Domain.Attributes;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Utility;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using static Deadit.Lib.Auth.AuthParms;
+
 
 namespace Deadit.Lib.Filter;
 

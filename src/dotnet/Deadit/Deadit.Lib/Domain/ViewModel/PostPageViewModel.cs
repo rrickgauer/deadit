@@ -14,6 +14,8 @@ public class PostPageViewModel : IPostAuthor, IClientId, IClientLoggedIn, ISortO
     public required SortOption SortOption { get; set; }
     public required VoteType UserPostVote { get; set; }
     public required bool IsCommunityModerator { get; set; }
+
+    //public required bool ShowPrivateCommunityPage { get; set; }
 }
 
 

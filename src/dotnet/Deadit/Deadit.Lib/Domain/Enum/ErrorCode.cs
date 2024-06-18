@@ -28,6 +28,9 @@ public enum ErrorCode : uint
     [ErrorCodeGroup(ErrorCodeGroup.CommunitySettings)]
     CommunitySettingsNameBanned = 302,
 
+    [ErrorCodeGroup(ErrorCodeGroup.CommunitySettings)]
+    CommunitySettingsPrivateCommunityAccessAttempt = 303,
+
     #endregion
 
     #region - Voting -
@@ -55,6 +58,16 @@ public enum ErrorCode : uint
 
     [ErrorCodeGroup(ErrorCodeGroup.Comment)]
     CommentPostDeleted = 504,
+
+    #endregion
+
+
+    #region - Post -
+    [ErrorCodeGroup(ErrorCodeGroup.Post)]
+    PostTextPostContentNotAllowed = 600,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Post)]
+    PostTextPostContentRequired = 601,
 
     #endregion
 }

@@ -1,6 +1,8 @@
 import { NativeEvents } from "../../../domain/constants/native-events";
 import { IController } from "../../../domain/contracts/i-controller";
 import { CommunityMembershipService } from "../../../services/community-membership-service";
+import { ErrorUtility } from "../../../utilities/error-utility";
+import { MessageBoxUtility } from "../../../utilities/message-box-utility";
 import { UrlUtility } from "../../../utilities/url-utility";
 import { CommunityPageElements } from "./community-page-elements";
 
@@ -53,17 +55,24 @@ export class ToggleMembershipController implements IController
             }
             else
             {
-                alert('not successful');
+                MessageBoxUtility.showErrorList(serviceResponse.response.errors);
             }
 
             this._elements.btnToggleMembership.reset();
         }
         catch (error)
         {
-            alert('Unknown error');
-            console.error(error);
+            ErrorUtility.onException(error, {
+                onOther: (e) =>
+                {
+                    MessageBoxUtility.showError({
+                        title: 'Error Leaving Community',
+                        message: 'There was an error trying to leave the community. Please try again later.',
+                    });
+                }
+            });
+
             this._elements.btnToggleMembership.reset();
-            throw error;
         }
     }
 
@@ -84,7 +93,7 @@ export class ToggleMembershipController implements IController
             }
             else
             {
-                alert('not successful');
+                MessageBoxUtility.showErrorList(serviceResponse.response.errors);
             }
 
             this._elements.btnToggleMembership.reset();
@@ -92,14 +101,34 @@ export class ToggleMembershipController implements IController
         catch (error)
         {
             this._elements.btnToggleMembership.reset();
-            console.log({ error });
-            alert('Unknow error');
+
+            ErrorUtility.onException(error, {
+                onApiForbiddenException: (e) =>
+                {
+                    this.showErrorMessage('This community is currently closed and is not accepting new members. Please try again later.');
+                },
+                onOther: (e) =>
+                {
+                    this.showErrorMessage('Unexpected error. Please try again later');
+                },
+            });
         }
         finally
         {
             this._elements.btnToggleMembership.reset();
         }
     }
+
+
+    private showErrorMessage(message: string)
+    {
+        MessageBoxUtility.showError({
+            message: message,
+            title: 'Error',
+        });
+    }
+
+
 
     /**
      * Checks if the the user has joined the current community

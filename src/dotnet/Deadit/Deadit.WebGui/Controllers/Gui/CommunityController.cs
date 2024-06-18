@@ -13,13 +13,14 @@ namespace Deadit.WebGui.Controllers.Gui;
 
 [Controller]
 [Route("/c/{communityName}")]
-[ServiceFilter(typeof(CommunityNameExistsFilter))]
-public class CommunityController(CommunityPageVMService communityPage, IPostService postService) : GuiController, IControllerName
+[ServiceFilter(typeof(CanViewCommunityFilter))]
+public class CommunityController(CommunityPageVMService communityPageVMService, IPostService postService, NewPostPageVMService newPostVMService) : GuiController, IControllerName
 {
     // IControllerName
     public static string ControllerRedirectName => IControllerName.RemoveControllerSuffix(nameof(CommunityController));
 
-    private readonly CommunityPageVMService _communityPage = communityPage;
+    private readonly CommunityPageVMService _communityPageVMService = communityPageVMService;
+    private readonly NewPostPageVMService _newPostVMService = newPostVMService;
 
     private readonly IPostService _postService = postService;
 
@@ -33,7 +34,17 @@ public class CommunityController(CommunityPageVMService communityPage, IPostServ
     [ActionName(nameof(GetNewPostCommunityPage))]
     public async Task<IActionResult> GetNewPostCommunityPage([FromRoute] string communityName)
     {
-        return View(GuiPageViewFiles.CreatePostPage);
+        var getVM = await _newPostVMService.GetViewModelAsync(new()
+        {
+            CommunityName = communityName,
+        });
+
+        if (!getVM.Successful)
+        {
+            return BadRequest(getVM);
+        }
+
+        return View(GuiPageViewFiles.CreatePostPage, getVM.Data);
     }
 
 
@@ -73,7 +84,7 @@ public class CommunityController(CommunityPageVMService communityPage, IPostServ
     {
         PaginationPosts pagination = new(page);
 
-        var serviceResponse = await _communityPage.GetViewModelAsync(new()
+        var serviceResponse = await _communityPageVMService.GetViewModelAsync(new()
         {
             ClientId = ClientId,
             CommunityName = communityName,
@@ -88,13 +99,4 @@ public class CommunityController(CommunityPageVMService communityPage, IPostServ
 
         return View(GuiPageViewFiles.CommunityPage, serviceResponse.Data);
     }
-
-
-
-
-
-
-
-
-
 }

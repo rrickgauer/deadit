@@ -16,10 +16,22 @@ public class CreatePostFilter(CreatePostAuth auth) : IAsyncActionFilter
     {
         CreatePostForm form = context.GetCreatePostForm();
 
+        PostType postType = PostType.Link;
+
+        string? content = null;
+
+        if (form is CreateTextPostForm textForm)
+        {
+            postType = PostType.Text;
+            content = textForm.Content;
+        }
+
         var hasAuth = await _auth.HasPermissionAsync(new()
         {
             CommunityName = form.CommunityName,
             UserId = context.GetSessionClientId(),
+            PostType = postType,
+            TextPostContent = content,
         });
 
         if (!hasAuth.Successful)

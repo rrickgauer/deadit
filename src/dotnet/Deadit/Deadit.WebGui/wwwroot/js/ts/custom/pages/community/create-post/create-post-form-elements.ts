@@ -1,6 +1,8 @@
 ﻿import { IModelForm } from "../../../domain/contracts/imodel-form";
 import { InputFeedbackText } from "../../../domain/helpers/input-feedback";
 import { SpinnerButton } from "../../../domain/helpers/spinner-button";
+import { ErrorMessage } from "../../../domain/model/api-response";
+import { AlertUtility } from "../../../utilities/alert-utility";
 import { Nullable } from "../../../utilities/nullable";
 
 
@@ -54,4 +56,27 @@ export class CreatePostFormElements implements IModelForm<CreatePostFormModel>
     };
 
 
+    public showErrors(errors: ErrorMessage[])
+    {
+        AlertUtility.showErrors({
+            container: this.formFeedback,
+            errors: errors,
+        });
+    }
+
+    public showErrorAlert(message: string)
+    {
+        AlertUtility.showDanger({
+            container: this.formFeedback,
+            message: message,
+        });
+    }
+
+    public showSuccessfulAlert(message: string)
+    {
+        AlertUtility.showSuccess({
+            container: this.formFeedback,
+            message: message,
+        });
+    }
 }

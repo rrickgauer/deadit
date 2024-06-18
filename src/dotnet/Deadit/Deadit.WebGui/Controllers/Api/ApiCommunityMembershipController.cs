@@ -25,7 +25,8 @@ public class ApiCommunityMembershipController(ICommunityMemberService communityM
     /// <returns></returns>
     [HttpPut]
     [ServiceFilter(typeof(InternalApiAuthFilter))]
-    [ServiceFilter(typeof(CommunityNameExistsFilter))]
+    //[ServiceFilter(typeof(CommunityNameExistsFilter))]
+    [ServiceFilter(typeof(JoinCommunityFilter))]
     [ActionName(nameof(JoinCommunityAsync))]
     public async Task<ActionResult<ApiResponse<GetJoinedCommunity>>> JoinCommunityAsync([FromRoute] string communityName)
     {        
