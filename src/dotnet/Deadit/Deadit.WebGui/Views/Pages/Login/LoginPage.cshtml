@@ -5,47 +5,63 @@
     <title>Log into your account</title>
 </head>
 <body>
-    @* <partial name="~/Views/Includes/_Navbar.cshtml" /> *@
-    @* <partial name="~/Views/Includes/_LoginModal.cshtml" /> *@
 
-    <div class="container mt-3">
-        <h1>Log in</h1>
-    </div>
+    <div class="container-fluid">
 
-
-    <div class="container main-content mt-3">
-        <!-- Nav tabs -->
-        <ul class="nav nav-underline mb-3" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login-tab-section-login" type="button" role="tab">Log in</button>
-            </li>
-
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#login-tab-section-signup" type="button" role="tab">Sign up</button>
-            </li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-
-            @* Log in *@
-            <div class="tab-pane active" id="login-tab-section-login" role="tabpanel" tabindex="0">
-                <div class="login-form-login-container">
-                    <partial name="~/Views/Components/_LoginForm.cshtml" />
+        <div class="row">
+            @* Left side *@
+            <div class="col-xxl-6 auth-bg d-none d-xxl-block">
+                <div class="container vertical-center">
+                    <div class="d-flex justify-content-center w-100">
+                        <h1 class="text-white">Deadit</h1>
+                    </div>
                 </div>
             </div>
 
-            @* Sign up *@
-            <div class="tab-pane" id="login-tab-section-signup" role="tabpanel" tabindex="0">
-                <div class="login-form-signup-container">
-                    <partial name="~/Views/Components/_SignupForm.cshtml" />
+            @* Right side *@
+            <div class="col-xxl-6">
+                <div class="container main-content vertical-center">
+                    <div class="d-flex justify-content-center w-100">
+                        <div class="w-50">
+                            <!-- Nav tabs -->
+                            <ul class="nav justify-content-center nav-underline mb-3" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login-tab-section-login" type="button" role="tab">Log in</button>
+                                </li>
+
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#login-tab-section-signup" type="button" role="tab">Sign up</button>
+                                </li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+
+                                @* Log in *@
+                                <div class="tab-pane active" id="login-tab-section-login" role="tabpanel" tabindex="0">
+                                    <div class="login-form-login-container">
+                                        <partial name="~/Views/Components/_LoginForm.cshtml" />
+                                    </div>
+                                </div>
+
+                                @* Sign up *@
+                                <div class="tab-pane" id="login-tab-section-signup" role="tabpanel" tabindex="0">
+                                    <div class="login-form-signup-container">
+                                        <partial name="~/Views/Components/_SignupForm.cshtml" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
                 </div>
             </div>
+
         </div>
 
     </div>
-
-
 
     <partial name="~/Views/Includes/_Footer.cshtml" />
     <script src="~/js/dist/login.bundle.js"></script>

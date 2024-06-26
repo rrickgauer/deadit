@@ -12,18 +12,18 @@
 
     <div class="card">
         <div class="card-header">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between align-items-center">
                 
                 @if(Model.Post.PostIsLocked)
                 {
-                    <h4>    
+                    <div>    
                         Comments
                         @HtmlUtility.ToHtml(Icons.Lock)
-                    </h4>
+                    </div>
                 }
                 else
                 {
-                    <h4>Comments</h4>
+                    <div>Comments</div>
                 }
 
                 <div class="d-flex align-items-center">

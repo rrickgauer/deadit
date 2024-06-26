@@ -2,21 +2,38 @@
 @import "bootstrap/_variables.scss";
 
 
-@mixin btn-standard-border {
+@mixin btn-standard-colors {
     background-color: $custom-color-gray-9;
     border: 1px solid $custom-color-gray-8;
 }
 
-@mixin btn-standard {
-    @include btn-standard-border;
+@mixin btn-standard-colors-dark {
+    background-color: $custom-color-gray-8;
+    border: 1px solid $custom-color-gray-7;
+}
+
+@mixin btn-standard-basics($useStandardColors: true) {
     transition: filter 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     box-shadow: rgba(27, 31, 36, 0.04) 0px 1px 0px 0px;
+    font-weight: 500;
+
+    @if $useStandardColors {
+        @include btn-standard-colors;
+    }
+    @else {
+        @include btn-standard-colors-dark;
+    }
 
     &:not(:disabled):not(.disabled) {
         &:hover,
         &:active,
         &:focus {
-            @include btn-standard-border;
+            @if $useStandardColors {
+                @include btn-standard-colors;
+            }
+            @else {
+                @include btn-standard-colors-dark;
+            }
         }
 
         &:hover {
@@ -37,14 +54,29 @@
     }
 }
 
+@mixin btn-standard {
+    @include btn-standard-basics(true);
+}
+
+@mixin btn-standard-darker {
+    @include btn-standard-basics(false);
+}
+
 .btn.btn-standard {
     @include btn-standard;
     color: $custom-color-gray-1;
 }
 
+.btn.btn-standard-darker {
+    @include btn-standard-darker;
+    color: $custom-color-gray-1;
+}
+
+
 .btn.btn-standard-success {
     @include btn-standard;
     color: $success;
+    /*color: $success-text-emphasis;*/
 }
 
 .btn.btn-standard-danger {

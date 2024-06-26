@@ -1,4 +1,19 @@
-﻿<!DOCTYPE html>
+﻿
+@functions {
+
+    public void DisplayCard(string title, string caption, string link)
+    {
+        <div class="col-md-4">
+            <div class="card card-body position-relative text-bg-primary mb-3 mb-md-0">
+                <h4>@title</h4>
+                <a href="@link" class="card-link stretched-link text-white text-decoration-none">@caption</a>
+            </div>
+        </div>
+    }
+
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <partial name="~/Views/Includes/_Header.cshtml" />
@@ -8,16 +23,24 @@
     <partial name="~/Views/Includes/_Navbar.cshtml" />
     <partial name="~/Views/Includes/_LoginModal.cshtml" />
 
-    <div class="container mt-3">
+    <div class="container mt-5">
         <h1>Communities</h1>
     </div>
 
-    <div class="container mt-3">
-        <a class="btn btn-primary" href="/communities/create">Create community</a>
-        <a class="btn btn-primary" href="/communities/joined">See joined communities</a>
-        <a class="btn btn-primary" href="/communities/created">See created communities</a>
+    <div class="container mt-5">
+        <div class="row">
+
+            @{
+                DisplayCard("Created Communities", "See communities you have created", "/communities/created");
+                DisplayCard("Joined Communities", "See communities you have joined", "/communities/joined");
+                DisplayCard("New Community", "Create a new community", "/communities/create");
+            }
+
+        </div>
+
     </div>
 
+    <div class="page-bottom"></div>
 
     <partial name="~/Views/Includes/_Footer.cshtml" />
     <script src="~/js/dist/communities-page.bundle.js"></script>

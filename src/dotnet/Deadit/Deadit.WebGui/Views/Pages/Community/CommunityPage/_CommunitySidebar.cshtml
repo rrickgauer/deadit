@@ -28,16 +28,22 @@
         @* Not logged in *@
         if (!Model.IsLoggedIn)
         {
-            <a href="@loginUrl" class="btn btn-sm btn-secondary mb-1">Log in to join</a>
+            <a href="@loginUrl" class="btn btn-sm btn-standard mb-1">Log in to join</a>
         }
+
         else
         {
+            @if (Model.IsMember || Model.IsModerator)
+            {
+                <a href="@normalPath" class="btn btn-sm btn-standard mb-1">Create Post</a>
+            }
+
             @* Not a member, but community membership is closed *@
             if (!Model.IsMember)
             {
                 if (!Model.Community.CommunityAcceptingNewMembers)
                 {
-                    <button type="button" class="btn btn-sm btn-secondary mb-1" data-bs-toggle="modal" data-bs-target="#modal-not-accepting-new-members">Join</button>
+                    <button type="button" class="btn btn-sm btn-standard mb-1" data-bs-toggle="modal" data-bs-target="#modal-not-accepting-new-members">Join</button>
 
                     <!-- Modal -->
                     <div class="modal" tabindex="-1" id="modal-not-accepting-new-members">
@@ -58,28 +64,25 @@
                 @* Not a member, and community membership is open *@
                 else if (!Model.IsModerator)
                 {
-                    <button type="button" class="btn btn-sm btn-secondary mb-1 btn-toggle-membership">Join</button>
+                    <button type="button" class="btn btn-sm btn-standard mb-1 btn-toggle-membership">Join</button>
                 }
             }
 
             else if (Model.IsMember)
             {
-                <button type="button" class="btn btn-sm btn-secondary mb-1 btn-toggle-membership" data-js-is-member>Leave</button>
+                <button type="button" class="btn btn-sm btn-standard mb-1 btn-toggle-membership" data-js-is-member>Leave</button>
             }
         }
 
     }
 
-    @if(Model.IsMember || Model.IsModerator)
-    {
-        <a href="@normalPath" class="btn btn-sm btn-secondary mb-1">Create Post</a>
-    }
+
     
 
     @if(Model.IsModerator)
     {
         <hr />
-        <a href="@settingsUrl" class="btn btn-sm btn-secondary">Settings</a>
+        <a href="@settingsUrl" class="btn btn-sm btn-standard">Settings</a>
     }
 
 
