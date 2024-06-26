@@ -1,0 +1,69 @@
+@import "_variables.scss";
+@import "bootstrap/_variables.scss";
+
+
+@mixin btn-standard-border {
+    background-color: $custom-color-gray-9;
+    border: 1px solid $custom-color-gray-8;
+}
+
+@mixin btn-standard {
+    @include btn-standard-border;
+    transition: filter 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: rgba(27, 31, 36, 0.04) 0px 1px 0px 0px;
+
+    &:not(:disabled):not(.disabled) {
+        &:hover,
+        &:active,
+        &:focus {
+            @include btn-standard-border;
+        }
+
+        &:hover {
+            filter: brightness(95%);
+        }
+
+        &:active {
+            filter: brightness(93%);
+        }
+
+        &:focus {
+            filter: brightness(93%);
+        }
+    }
+
+    &:disabled, &.disabled {
+        opacity: 0.65;
+    }
+}
+
+.btn.btn-standard {
+    @include btn-standard;
+    color: $custom-color-gray-1;
+}
+
+.btn.btn-standard-success {
+    @include btn-standard;
+    color: $success;
+}
+
+.btn.btn-standard-danger {
+    @include btn-standard;
+    color: $danger;
+}
+
+.btn.btn-standard-primary {
+    @include btn-standard;
+    color: $primary;
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,36 @@
+
+
+
+/*$color-primary-hue: 155; // green*/
+/*$color-primary-hue: 226; // blueish*/
+$color-primary-hue: 270; // purple
+
+$custom-color-primary-1: hsla($color-primary-hue, 99%, 9%, 1);
+$custom-color-primary-2: hsla($color-primary-hue, 93%, 18%, 1);
+$custom-color-primary-3: hsla($color-primary-hue, 85%, 30%, 1);
+$custom-color-primary-4: hsla($color-primary-hue, 78%, 40%, 1);
+$custom-color-primary-5: hsla($color-primary-hue, 70%, 52%, 1);
+$custom-color-primary-6: hsla($color-primary-hue, 77%, 64%, 1);
+$custom-color-primary-7: hsla($color-primary-hue, 84%, 74%, 1);
+$custom-color-primary-8: hsla($color-primary-hue, 91%, 86%, 1);
+$custom-color-primary-9: hsla($color-primary-hue, 98%, 98%, 1);
+
+
+
+$color-gray-hue: 211;
+
+$custom-color-gray-1: hsla($color-gray-hue, 38%, 4%, 1);
+$custom-color-gray-2: hsla($color-gray-hue, 32%, 20%, 1);
+$custom-color-gray-3: hsla($color-gray-hue, 26%, 36%, 1);
+$custom-color-gray-4: hsla($color-gray-hue, 20%, 52%, 1);
+$custom-color-gray-5: hsla($color-gray-hue, 14%, 68%, 1);
+$custom-color-gray-6: hsla($color-gray-hue, 20%, 76%, 1);
+$custom-color-gray-7: hsla($color-gray-hue, 26%, 83%, 1);
+$custom-color-gray-8: hsla($color-gray-hue, 32%, 91%, 1);
+$custom-color-gray-9: hsla($color-gray-hue, 38%, 98%, 1);
+
+
+
+// override bootstrap colors
+$primary: $custom-color-primary-5;
+$secondary: $custom-color-gray-5;

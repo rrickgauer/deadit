@@ -74,12 +74,6 @@ public class HomeController(IAuthService authService, HomePageVMService vmServic
     }
 
 
-
-
-
-
-
-
     [HttpGet("/logout")]
     [ActionName(nameof(LogoutPage))]
     public IActionResult LogoutPage()

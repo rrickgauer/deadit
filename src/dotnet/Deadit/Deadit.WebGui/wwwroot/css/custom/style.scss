@@ -1,4 +1,8 @@
 
+@import "_custom-bootstrap.scss";
+@import "_colors.scss";
+@import "_buttons.scss";
+
 #login-container {
     .login-form-input-section {
         margin-bottom: 20px;
@@ -171,6 +175,4 @@
 
 .community-settings-container-title {
     margin-bottom: 0;
-    
-    
 }
