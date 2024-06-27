@@ -2,7 +2,7 @@
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
 -- ------------------------------------------------------
--- Server version	8.0.36-0ubuntu0.20.04.1
+-- Server version	8.0.37-0ubuntu0.20.04.3
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -722,7 +722,7 @@ BEGIN
     END IF;
     
 
-	-- return the customer level
+	
 	RETURN (result);
     
 END ;;
@@ -981,12 +981,12 @@ USE `Deadit_Dev`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-12 20:50:01
+-- Dump completed on 2024-06-27 18:17:33
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
 -- ------------------------------------------------------
--- Server version	8.0.36-0ubuntu0.20.04.1
+-- Server version	8.0.37-0ubuntu0.20.04.3
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -1028,7 +1028,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Error_Message` WRITE;
 /*!40000 ALTER TABLE `Error_Message` DISABLE KEYS */;
-REPLACE INTO `Error_Message` VALUES (200,2,'The email is already registered with another account.','2024-05-07 14:11:22'),(201,2,'The username is already taken.','2024-05-07 14:11:22'),(202,2,'The password does not meet the criteria.','2024-05-07 14:11:23'),(300,3,'The community name contains an invalid character.','2024-05-07 14:12:27'),(301,3,'The community name already exists.','2024-05-07 14:12:27'),(302,3,'The community name is banned.','2024-05-07 14:12:27'),(400,4,'Either \'commentId\' or \'postId\' must be provided.','2024-05-15 20:54:03'),(401,4,'Only \'commentId\' or \'postId\' can have a value, not both.','2024-05-15 20:54:03'),(500,5,'The parent comment does not exist','2024-05-31 19:10:01'),(501,5,'The parent comment is locked.','2024-05-31 19:12:45'),(502,5,'The post has been locked by a moderator.','2024-05-31 19:21:32'),(503,5,'The post has been removed by a moderator.','2024-05-31 19:21:55'),(504,5,'The post has been deleted by its author.','2024-05-31 19:22:06'),(600,6,'Text post content is not allowed.','2024-06-13 01:12:45'),(601,6,'Text post content is required.','2024-06-13 01:26:40');
+REPLACE INTO `Error_Message` VALUES (200,2,'The email is already registered with another account.','2024-05-07 14:11:22'),(201,2,'The username is already taken.','2024-05-07 14:11:22'),(202,2,'The password does not meet the criteria.','2024-05-07 14:11:23'),(300,3,'The community name contains an invalid character.','2024-05-07 14:12:27'),(301,3,'The community name already exists.','2024-05-07 14:12:27'),(302,3,'The community name is banned.','2024-05-07 14:12:27'),(303,3,'Attempted to view a private community.','2024-06-18 16:09:26'),(400,4,'Either \'commentId\' or \'postId\' must be provided.','2024-05-15 20:54:03'),(401,4,'Only \'commentId\' or \'postId\' can have a value, not both.','2024-05-15 20:54:03'),(500,5,'The parent comment does not exist','2024-05-31 19:10:01'),(501,5,'The parent comment is locked.','2024-05-31 19:12:45'),(502,5,'The post has been locked by a moderator.','2024-05-31 19:21:32'),(503,5,'The post has been removed by a moderator.','2024-05-31 19:21:55'),(504,5,'The post has been deleted by its author.','2024-05-31 19:22:06'),(600,6,'Text post content is not allowed.','2024-06-13 01:12:45'),(601,6,'Text post content is required.','2024-06-13 01:26:40');
 /*!40000 ALTER TABLE `Error_Message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1085,4 +1085,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-12 20:50:07
+-- Dump completed on 2024-06-27 18:17:40
