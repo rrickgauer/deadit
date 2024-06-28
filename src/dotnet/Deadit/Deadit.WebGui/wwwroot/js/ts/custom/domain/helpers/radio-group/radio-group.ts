@@ -7,9 +7,9 @@ const RadioGroupElements = {
 
 export class RadioGroup<T>
 {
-    private readonly _container: HTMLDivElement;
+    protected readonly _container: HTMLDivElement;
 
-    private get _groupName(): string
+    protected get _groupName(): string
     {
         return this._container.getAttribute(`${RadioGroupElements.groupNameAttr}`);
     }
@@ -49,8 +49,40 @@ export class RadioGroup<T>
     }
 
 
-    private getSelectedInput(): HTMLInputElement | null
+    protected getSelectedInput(): HTMLInputElement | null
     {
         return this._container.querySelector<HTMLInputElement>(`input[name="${this._groupName}"]:checked`);        
+    }
+}
+
+
+export class RadioGroupNumber extends RadioGroup<number>
+{
+    public get selectedValue(): number | null
+    {
+        const selectedInput = this.getSelectedInput();
+
+        if (selectedInput)
+        {
+            const value = selectedInput.value;
+            return parseInt(value);
+        }
+
+        return null;
+    }
+
+    public set selectedValue(value: number | null)
+    {
+        this._container.querySelectorAll<HTMLInputElement>(`input[name="${this._groupName}"]`)?.forEach(e =>
+        {
+            if (e.value === `${value}`)
+            {
+                e.checked = true;
+            }
+            else
+            {
+                e.checked = false;
+            }
+        });
     }
 }

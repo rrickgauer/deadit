@@ -17,4 +17,6 @@ public class Icons
     public const string Lock = @"<i class=""bx bxs-lock-alt"" style=""color:#ffc300"" title=""Locked""></i>";
 
     public const string DotsMore = @"<i class=""bx bx-dots-horizontal-rounded""></i>";
+
+    public const string Filter = @"<i class=""bx bx-filter""></i>";
 }

@@ -21,7 +21,13 @@ public class ViewPostMapper : TableMapper<ViewPost>
         result.PostArchivedOn    = row.Field<DateTime?>(GetColumnName(nameof(result.PostArchivedOn)));
         result.PostModRemovedOn  = row.Field<DateTime?>(GetColumnName(nameof(result.PostModRemovedOn)));
         result.PostLockedOn      = row.Field<DateTime?>(GetColumnName(nameof(result.PostLockedOn)));
+        
         result.PostCountComments = Convert.ToUInt32(row.Field<object?>(GetColumnName(nameof(result.PostCountComments))));
+
+        result.FlairPostId = row.Field<uint?>(GetColumnName(nameof(result.FlairPostId)));
+        result.FlairPostName = row.Field<string>(GetColumnName(nameof(result.FlairPostName)));
+        result.FlairPostColor = row.Field<string>(GetColumnName(nameof(result.FlairPostColor)));
+        result.FlairPostCreatedOn = row.Field<DateTime?>(GetColumnName(nameof(result.FlairPostCreatedOn)));
 
         row.SetVotingValues(result);
 

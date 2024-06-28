@@ -46,6 +46,10 @@ public class ViewCommunity : ITableView<ViewCommunity, Community>
     [CopyToProperty<Community>(nameof(Community.MembershipClosedOn))]
     public DateTime? CommunityMembershipClosedOn { get; set; }
 
+    [SqlColumn("community_flair_post_rule")]
+    [CopyToProperty<Community>(nameof(Community.FlairPostRule))]
+    public FlairPostRule CommunityFlairPostRule { get; set; } = FlairPostRule.Optional;
+
 
     public bool CommunityAcceptingNewMembers
     {

@@ -6,6 +6,7 @@ import { TopPostSortOptions } from "../../../domain/helpers/top-post-sort/top-po
 import { UrlUtility } from "../../../utilities/url-utility";
 import { PostListController } from "../../../components/posts-list/post-list-controller";
 import { ToggleMembershipController } from "./toggle-membership-controller";
+import { FlairPostFilterModal } from "./flair-post-filter-modal";
 
 
 export class CommunityPageController implements IControllerAsync
@@ -28,6 +29,8 @@ export class CommunityPageController implements IControllerAsync
         TopPostSortOptions.initOptions(document.querySelector('.community-page-top-sort-options'));
 
         this.addListeners();
+
+        await FlairPostFilterModal.init();
     }
 
     private addListeners = () =>

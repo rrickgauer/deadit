@@ -1,0 +1,33 @@
+﻿@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.Enum
+@using Microsoft.AspNetCore.Http.Extensions;
+@model Deadit.Lib.Domain.ViewModel.NewPostPageViewModel
+
+<div class="input-feedback standard-spacing">
+    <label class="form-label-container">
+        <div class="form-label">Post Flair</div>
+        <div class="input-group">
+
+            @{
+                bool flairNotAllowed = Model.Community.CommunityFlairPostRule == FlairPostRule.NotAllowed;
+                string disabledText = flairNotAllowed ? "disabled" : "";
+            }
+
+            <select class="form-select input-feedback-input" name="flair" @disabledText>
+
+                <option value="-1" selected disabled data-js-null-flair>Select a flair...</option>
+
+                @foreach (var flair in Model.FlairPosts)
+                {
+                    <option value="@flair.FlairPostId">@flair.FlairPostName</option>
+                }
+
+
+            </select>
+
+            <button class="btn btn-outline-secondary btn-clear-flair-selection" type="button" title="Clear selection">Clear</button>
+        </div>
+        <div class="valid-feedback"></div>
+        <div class="invalid-feedback"></div>
+    </label>
+</div>

@@ -59,6 +59,22 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
     #region - Newest Community Posts -
 
+    public async Task<ServiceDataResponse<List<ViewPost>>> GetNewestCommunityPostsAsync(string communityName, PaginationPosts pagination, uint flairId)
+    {
+        try
+        {
+            var table = await _postRepository.SelectNewestCommunityPostsAsync(communityName, pagination, flairId);
+
+            var models = _tableMapperService.ToModels<ViewPost>(table);
+
+            return models;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+    }
+
     public async Task<ServiceDataResponse<List<ViewPost>>> GetNewestCommunityPostsAsync(string communityName, PaginationPosts pagination)
     {
         try
@@ -94,6 +110,22 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
     #endregion
 
     #region - Top Community Posts -
+
+    public async Task<ServiceDataResponse<List<ViewPost>>> GetTopCommunityPostsAsync(string communityName, TopPostSort sortedBy, PaginationPosts pagination, uint flairId)
+    {
+        try
+        {
+            var table = await _postRepository.SelectTopCommunityPostsAsync(communityName, sortedBy.GetStartingDate(), pagination, flairId);
+
+            var models = _tableMapperService.ToModels<ViewPost>(table);
+
+            return models;
+        }
+        catch (RepositoryException ex)
+        {
+            return ex;
+        }
+    }
 
     public async Task<ServiceDataResponse<List<ViewPost>>> GetTopCommunityPostsAsync(string communityName, TopPostSort sortedBy, PaginationPosts pagination)
     {
@@ -222,12 +254,6 @@ public class PostService(ITableMapperService tableMapperService, IPostRepository
 
         return await GetTextPostAsync(postId);
     }
-
-
-
-
-
-
 
 
     public async Task<ServiceDataResponse<ViewPostLink>> CreatePostLinkAsync(PostLink post)

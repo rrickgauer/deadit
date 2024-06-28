@@ -28,6 +28,23 @@ public static class ActionExecutingContextExtensions
         return GetRequestRouteValue<Guid>(context, "commentId");
     }
 
+    public static uint GetFlairPostIdRouteValue(this ActionExecutingContext context)
+    {
+        return GetRequestRouteValue<uint>(context, "flairId");
+    }
+
+    public static uint? GetFlairPostIdRouteValueNull(this ActionExecutingContext context)
+    {
+        if (context.ActionArguments.ContainsKey("flairId"))
+        {
+            return context.GetFlairPostIdRouteValue();
+        }
+
+        return null;
+    }
+
+
+
     /// <summary>
     /// Get the specified request value with the matching key.
     /// </summary>
@@ -57,11 +74,15 @@ public static class ActionExecutingContextExtensions
         return (CommentForm)context.ActionArguments.Values.First(a => a is CommentForm)!;
     }
 
+    public static FlairPostForm? GetFlairPostForm(this ActionExecutingContext context)
+    {
+        return context.ActionArguments.Values.FirstOrDefault(a => a is FlairPostForm) as FlairPostForm;
+    }
+
     public static T GetForm<T>(this ActionExecutingContext context)
     {
         return (T)context.ActionArguments.Values.First(a => a is T)!;
     }
-
 
 
     public static SessionManager GetSessionManager(this ActionExecutingContext context)

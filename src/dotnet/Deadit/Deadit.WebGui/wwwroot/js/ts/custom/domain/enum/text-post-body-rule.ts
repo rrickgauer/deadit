@@ -6,3 +6,5 @@ export enum TextPostBodyRule
     Required = "Required",
     NotAllowed = "NotAllowed"
 }
+
+

@@ -7,7 +7,7 @@
 
 <li class="list-group-item list-group-item-post" data-post-id="@Model.Post.Post.PostId">
 
-    <div class="d-flex">
+    <div class="d-flex align-items-start">
 
         @* Votes *@
         <div class="item-voting me-3" data-current-vote="@Model.Post.UserVoteType">
@@ -53,7 +53,20 @@
 
         @* Post metadata *@
         <div>
-            <div class="post-title"><h5><a class="text-decoration-none post-title-link" target="_blank" href="@Model.Post.Post.UriWeb">@Model.Post.Post.PostTitle</a></h5></div>
+            <div class="post-title">
+                <h5><a class="text-decoration-none post-title-link" target="_blank" href="@Model.Post.Post.UriWeb">@Model.Post.Post.PostTitle</a></h5>
+            </div>
+
+            @if (Model.Post.Post.FlairPostId is uint flairPost)
+            {
+                var backgroundColor = $"background-color: {Model.Post.Post.FlairPostColor};";
+                var foregroundColor = $"color: {ColorUtility.GetForegroundColor(Model.Post.Post.FlairPostColor!)};";
+
+                <div class="post-flair mb-1">
+                    <span class="badge" style="@backgroundColor @foregroundColor">@Model.Post.Post.FlairPostName</span>
+                </div>
+            }
+
             <div class="post-created-on">@Model.Post.Post.PostType?.GetIconHtml() Submitted @Model.Post.Post.CreatedOnDifferenceDisplay ago</div>
             <div class="post-count-comments">@NumberUtilities.FormatNumberWithCommas(Model.Post.Post.PostCountComments) comments</div>
         </div>

@@ -59,7 +59,8 @@ public sealed class CommunityRepositoryCommands
             description = @description,
             community_type = @community_type,
             text_post_body_rule = @text_post_body_rule,
-            membership_closed_on = @membership_closed_on
+            membership_closed_on = @membership_closed_on,
+            flair_post_rule = @flair_post_rule
         WHERE
             id = @id;";
 

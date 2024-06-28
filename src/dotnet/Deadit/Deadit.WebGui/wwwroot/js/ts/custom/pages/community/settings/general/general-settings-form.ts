@@ -1,6 +1,7 @@
 import { NativeEvents } from "../../../../domain/constants/native-events";
 import { IController } from "../../../../domain/contracts/i-controller";
 import { CommunityType } from "../../../../domain/enum/community-type";
+import { FlairPostRule } from "../../../../domain/enum/flair-post-rule";
 import { TextPostBodyRule } from "../../../../domain/enum/text-post-body-rule";
 import { InputFeedbackText, InputFeedbackTextArea } from "../../../../domain/helpers/input-feedback";
 import { RadioGroup } from "../../../../domain/helpers/radio-group/radio-group";
@@ -20,6 +21,7 @@ const FormSelectors = {
     alertsContainerClass: 'form-feedback',
     textPostContentRadiosClass: 'text-post-content-input-radios',
     communityTypeRadiosClass: 'community-type-input-radios',
+    flairPostRuleRadiosClass: 'flair-post-rule-input-radios',
 }
 
 
@@ -36,6 +38,7 @@ export class GeneralSettingsForm implements IController
     private readonly _textPostRuleInput: RadioGroup<TextPostBodyRule>;
     private _communityService: CommunityService;
     private _fieldSet: HTMLFieldSetElement;
+    private _flairPostRuleInput: RadioGroup<FlairPostRule>;
 
     private get isAcceptingNewMembers(): boolean
     {
@@ -59,6 +62,7 @@ export class GeneralSettingsForm implements IController
         this._alertsContainer          = this._form.querySelector<HTMLDivElement>(`.${FormSelectors.alertsContainerClass}`);
         this._communityTypeInput       = new RadioGroup<CommunityType>(this._form.querySelector(`.${FormSelectors.communityTypeRadiosClass}`));
         this._textPostRuleInput        = new RadioGroup<TextPostBodyRule>(this._form.querySelector(`.${FormSelectors.textPostContentRadiosClass}`));
+        this._flairPostRuleInput       = new RadioGroup<FlairPostRule>(this._form.querySelector(`.${FormSelectors.flairPostRuleRadiosClass}`));
 
         this._fieldSet = this._form.querySelector<HTMLFieldSetElement>('fieldset');
 
@@ -190,6 +194,7 @@ export class GeneralSettingsForm implements IController
             description: Nullable.getValue<string>(this._inputDescription.inputElement.value, null),
             textPostBodyRule: this._textPostRuleInput.selectedValue,
             title: this._inputTitle.inputElement.value,
+            flairPostRule: this._flairPostRuleInput.selectedValue,
         }
 
         return result;

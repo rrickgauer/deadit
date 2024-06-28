@@ -18,6 +18,7 @@ public class CommunityMemberFilter(CreatePostAuth auth) : IAsyncActionFilter
         {
             CommunityName = context.GetCommunityNameRouteValue(),
             UserId = context.GetSessionClientId(),
+            FlairPostId = null,
         });
 
         if (!authResponse.Successful)

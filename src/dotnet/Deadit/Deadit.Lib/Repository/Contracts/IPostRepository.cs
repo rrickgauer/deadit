@@ -13,9 +13,11 @@ public interface IPostRepository
     public Task<DataTable> SelectUserTopHomePostsAsnc(uint clientId, PaginationPosts pagination, DateTime createdAfter);
 
 
+    public Task<DataTable> SelectNewestCommunityPostsAsync(string communityName, PaginationPosts pagination, uint flairId);
     public Task<DataTable> SelectNewestCommunityPostsAsync(string communityName, PaginationPosts pagination);
     public Task<DataTable> SelectNewestCommunityPostsAsync(string communityName);
 
+    public Task<DataTable> SelectTopCommunityPostsAsync(string communityName, DateTime createdAfter, PaginationPosts pagination, uint flairId);
     public Task<DataTable> SelectTopCommunityPostsAsync(string communityName, DateTime createdAfter, PaginationPosts pagination);
     public Task<DataTable> SelectTopCommunityPostsAsync(string communityName, DateTime createdAfter);
 

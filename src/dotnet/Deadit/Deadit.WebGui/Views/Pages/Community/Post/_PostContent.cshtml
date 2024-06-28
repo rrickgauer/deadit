@@ -63,7 +63,18 @@
                                 <h2>@Model.Post.PostTitle</h2>
                             </div>
                         </div>
-                        
+
+                            
+                        @if(Model.Post.FlairPostColor is string flairColor)
+                        {
+                            var backgroundColor = $"background-color: {flairColor};";
+                            var foregroundColor = $"color: {ColorUtility.GetForegroundColor(flairColor!)};";
+
+                            <div class="post-flair mb-1">
+                                <span class="badge" style="@backgroundColor @foregroundColor">New</span>
+                            </div>
+                        }
+
                         <div class="post-created-on">@Model.Post.PostType?.GetIconHtml() Submitted @Model.Post.CreatedOnDifferenceDisplay ago</div>
                         <div class="post-count-comments">@NumberUtilities.FormatNumberWithCommas(Model.Post.PostCountComments) comments</div>
                     </div>

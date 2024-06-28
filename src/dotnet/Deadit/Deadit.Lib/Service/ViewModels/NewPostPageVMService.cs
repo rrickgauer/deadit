@@ -10,24 +10,27 @@ using Deadit.Lib.Service.Contracts;
 namespace Deadit.Lib.Service.ViewModels;
 
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.WebGui)]
-public class NewPostPageVMService(ICommunityService communityService) : IVMService<NewPostPageVMServiceParms, NewPostPageViewModel>
+public class NewPostPageVMService(ICommunityService communityService, IFlairPostService flairService) : IVMService<NewPostPageVMServiceParms, NewPostPageViewModel>
 {
     private readonly ICommunityService _communityService = communityService;
+    private readonly IFlairPostService _flairService = flairService;
 
     public async Task<ServiceDataResponse<NewPostPageViewModel>> GetViewModelAsync(NewPostPageVMServiceParms args)
     {
         try
         {
             var community = await GetCommunityAsync(args);
+            var flairs = await GetFlairPostsAsync(args);
 
             NewPostPageViewModel viewModel = new()
             {
                 Community = community,
+                FlairPosts = flairs,
             };
 
             return viewModel;
         }
-        catch(ServiceResponseException ex)
+        catch (ServiceResponseException ex)
         {
             return ex;
         }
@@ -46,5 +49,14 @@ public class NewPostPageVMService(ICommunityService communityService) : IVMServi
         }
 
         return community;
+    }
+
+    private async Task<List<ViewFlairPost>> GetFlairPostsAsync(NewPostPageVMServiceParms args)
+    {
+        var getFlairs = await _flairService.GetFlairPostsAsync(args.CommunityName);
+
+        getFlairs.ThrowIfError();
+
+        return getFlairs.Data ?? new();
     }
 }

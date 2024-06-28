@@ -44,6 +44,19 @@ export enum ApiErrorCode
 
     PostTextPostContentNotAllowed = 600,
     PostTextPostContentRequired = 601,
+    PostInvalidFlairPostId = 602,
+    PostFlairRequired = 603,
+    PostFlairNotAllowed = 604,
+
+    //#endregion
+
+
+    //#region - Flair Post -
+
+    FlairPostNameContainsInvalidCharacter = 700,
+    FlairPostNameIsBanned = 701,
+    FlairPostDuplicateName = 702,
+    FlairPostInvalidColor = 703,
 
     //#endregion
 

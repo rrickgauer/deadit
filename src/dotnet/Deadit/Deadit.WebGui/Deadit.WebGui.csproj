@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\ts\custom\domain\enum\flair-post-rule.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -28,6 +32,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Deadit.Lib\Deadit.Lib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\js\ts\custom\domain\enum\flair-post-rule.ts" />
   </ItemGroup>
 
 </Project>

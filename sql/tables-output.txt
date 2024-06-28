@@ -52,6 +52,7 @@ Community
 | 7        | community_type       | smallint unsigned | False      | 1                 |       |
 | 8        | text_post_body_rule  | smallint unsigned | False      | 1                 |       |
 | 9        | membership_closed_on | timestamp         | True       |                   |       |
+| 10       | flair_post_rule      | smallint unsigned | False      |                   |       |
 
 
 
@@ -100,6 +101,29 @@ Error_Message_Group
 
 
 
+Flair_Post
+
+| Position | Name         | Type         | IsNullable | DefaultValue      | Extra |
+|----------|--------------|--------------|------------|-------------------|-------|
+| 1        | id           | int unsigned | False      |                   |       |
+| 2        | community_id | int unsigned | False      |                   |       |
+| 3        | name         | varchar(30)  | False      |                   |       |
+| 4        | color        | char(7)      | False      | #FFFFFF           |       |
+| 5        | created_on   | timestamp    | False      | CURRENT_TIMESTAMP |       |
+
+
+
+
+Flair_Post_Rule
+
+| Position | Name | Type              | IsNullable | DefaultValue | Extra |
+|----------|------|-------------------|------------|--------------|-------|
+| 1        | id   | smallint unsigned | False      |              |       |
+| 2        | name | varchar(20)       | False      |              |       |
+
+
+
+
 Post
 
 | Position | Name           | Type              | IsNullable | DefaultValue      | Extra |
@@ -114,6 +138,7 @@ Post
 | 8        | archived_on    | timestamp         | True       |                   |       |
 | 9        | mod_removed_on | timestamp         | True       |                   |       |
 | 10       | locked_on      | timestamp         | True       |                   |       |
+| 11       | flair_post_id  | int unsigned      | True       |                   |       |
 
 
 
@@ -238,7 +263,8 @@ View_Community
 | 7        | community_community_type       | smallint unsigned | True       | 1                 |       |
 | 8        | community_text_post_body_rule  | smallint unsigned | True       | 1                 |       |
 | 9        | community_membership_closed_on | timestamp         | True       |                   |       |
-| 10       | community_count_members        | bigint            | True       |                   |       |
+| 10       | community_flair_post_rule      | smallint unsigned | True       |                   |       |
+| 11       | community_count_members        | bigint            | True       |                   |       |
 
 
 
@@ -281,6 +307,30 @@ View_Error_Message
 
 
 
+View_Flair_Post
+
+| Position | Name                           | Type              | IsNullable | DefaultValue        | Extra |
+|----------|--------------------------------|-------------------|------------|---------------------|-------|
+| 1        | flair_post_id                  | int unsigned      | False      | 0                   |       |
+| 2        | flair_post_community_id        | int unsigned      | False      |                     |       |
+| 3        | flair_post_name                | varchar(30)       | False      |                     |       |
+| 4        | flair_post_color               | char(7)           | False      | #FFFFFF             |       |
+| 5        | flair_post_created_on          | timestamp         | False      | CURRENT_TIMESTAMP   |       |
+| 6        | community_id                   | int unsigned      | True       | 0                   |       |
+| 7        | community_name                 | char(50)          | True       |                     |       |
+| 8        | community_title                | char(100)         | True       |                     |       |
+| 9        | community_owner_id             | int unsigned      | True       |                     |       |
+| 10       | community_description          | char(200)         | True       |                     |       |
+| 11       | community_created_on           | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 12       | community_community_type       | smallint unsigned | True       | 1                   |       |
+| 13       | community_text_post_body_rule  | smallint unsigned | True       | 1                   |       |
+| 14       | community_membership_closed_on | timestamp         | True       |                     |       |
+| 15       | community_flair_post_rule      | smallint unsigned | True       |                     |       |
+| 16       | community_count_members        | bigint            | True       |                     |       |
+
+
+
+
 View_Post
 
 | Position | Name                           | Type              | IsNullable | DefaultValue        | Extra |
@@ -295,26 +345,32 @@ View_Post
 | 8        | post_archived_on               | timestamp         | True       |                     |       |
 | 9        | post_mod_removed_on            | timestamp         | True       |                     |       |
 | 10       | post_locked_on                 | timestamp         | True       |                     |       |
-| 11       | post_count_comments            | bigint            | True       |                     |       |
-| 12       | community_id                   | int unsigned      | True       | 0                   |       |
-| 13       | community_name                 | char(50)          | True       |                     |       |
-| 14       | community_title                | char(100)         | True       |                     |       |
-| 15       | community_owner_id             | int unsigned      | True       |                     |       |
-| 16       | community_description          | char(200)         | True       |                     |       |
-| 17       | community_created_on           | timestamp         | True       | 0000-00-00 00:00:00 |       |
-| 18       | community_community_type       | smallint unsigned | True       | 1                   |       |
-| 19       | community_text_post_body_rule  | smallint unsigned | True       | 1                   |       |
-| 20       | community_membership_closed_on | timestamp         | True       |                     |       |
-| 21       | community_count_members        | bigint            | True       |                     |       |
-| 22       | user_id                        | int unsigned      | False      | 0                   |       |
-| 23       | user_email                     | char(200)         | False      |                     |       |
-| 24       | user_username                  | char(30)          | False      |                     |       |
-| 25       | user_password                  | char(250)         | False      |                     |       |
-| 26       | user_created_on                | timestamp         | False      | 0000-00-00 00:00:00 |       |
-| 27       | post_count_votes_upvotes       | bigint            | False      | 0                   |       |
-| 28       | post_count_votes_downvotes     | bigint            | False      | 0                   |       |
-| 29       | post_count_votes_novotes       | bigint            | False      | 0                   |       |
-| 30       | post_count_votes_score         | bigint            | False      | 0                   |       |
+| 11       | post_flair_post_id             | int unsigned      | True       |                     |       |
+| 12       | post_count_comments            | bigint            | True       |                     |       |
+| 13       | community_id                   | int unsigned      | True       | 0                   |       |
+| 14       | community_name                 | char(50)          | True       |                     |       |
+| 15       | community_title                | char(100)         | True       |                     |       |
+| 16       | community_owner_id             | int unsigned      | True       |                     |       |
+| 17       | community_description          | char(200)         | True       |                     |       |
+| 18       | community_created_on           | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 19       | community_community_type       | smallint unsigned | True       | 1                   |       |
+| 20       | community_text_post_body_rule  | smallint unsigned | True       | 1                   |       |
+| 21       | community_membership_closed_on | timestamp         | True       |                     |       |
+| 22       | community_flair_post_rule      | smallint unsigned | True       |                     |       |
+| 23       | community_count_members        | bigint            | True       |                     |       |
+| 24       | user_id                        | int unsigned      | False      | 0                   |       |
+| 25       | user_email                     | char(200)         | False      |                     |       |
+| 26       | user_username                  | char(30)          | False      |                     |       |
+| 27       | user_password                  | char(250)         | False      |                     |       |
+| 28       | user_created_on                | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| 29       | post_count_votes_upvotes       | bigint            | False      | 0                   |       |
+| 30       | post_count_votes_downvotes     | bigint            | False      | 0                   |       |
+| 31       | post_count_votes_novotes       | bigint            | False      | 0                   |       |
+| 32       | post_count_votes_score         | bigint            | False      | 0                   |       |
+| 33       | flair_post_community_id        | int unsigned      | True       |                     |       |
+| 34       | flair_post_name                | varchar(30)       | True       |                     |       |
+| 35       | flair_post_color               | char(7)           | True       | #FFFFFF             |       |
+| 36       | flair_post_created_on          | timestamp         | True       | CURRENT_TIMESTAMP   |       |
 
 
 
@@ -334,26 +390,32 @@ View_Post_Link
 | 9        | post_archived_on               | timestamp         | True       |                     |       |
 | 10       | post_mod_removed_on            | timestamp         | True       |                     |       |
 | 11       | post_locked_on                 | timestamp         | True       |                     |       |
-| 12       | post_count_comments            | bigint            | True       |                     |       |
-| 13       | community_id                   | int unsigned      | True       | 0                   |       |
-| 14       | community_name                 | char(50)          | True       |                     |       |
-| 15       | community_title                | char(100)         | True       |                     |       |
-| 16       | community_owner_id             | int unsigned      | True       |                     |       |
-| 17       | community_description          | char(200)         | True       |                     |       |
-| 18       | community_created_on           | timestamp         | True       | 0000-00-00 00:00:00 |       |
-| 19       | community_community_type       | smallint unsigned | True       | 1                   |       |
-| 20       | community_text_post_body_rule  | smallint unsigned | True       | 1                   |       |
-| 21       | community_membership_closed_on | timestamp         | True       |                     |       |
-| 22       | community_count_members        | bigint            | True       |                     |       |
-| 23       | user_id                        | int unsigned      | False      | 0                   |       |
-| 24       | user_email                     | char(200)         | False      |                     |       |
-| 25       | user_username                  | char(30)          | False      |                     |       |
-| 26       | user_password                  | char(250)         | False      |                     |       |
-| 27       | user_created_on                | timestamp         | False      | 0000-00-00 00:00:00 |       |
-| 28       | post_count_votes_upvotes       | bigint            | False      | 0                   |       |
-| 29       | post_count_votes_downvotes     | bigint            | False      | 0                   |       |
-| 30       | post_count_votes_novotes       | bigint            | False      | 0                   |       |
-| 31       | post_count_votes_score         | bigint            | False      | 0                   |       |
+| 12       | post_flair_post_id             | int unsigned      | True       |                     |       |
+| 13       | post_count_comments            | bigint            | True       |                     |       |
+| 14       | community_id                   | int unsigned      | True       | 0                   |       |
+| 15       | community_name                 | char(50)          | True       |                     |       |
+| 16       | community_title                | char(100)         | True       |                     |       |
+| 17       | community_owner_id             | int unsigned      | True       |                     |       |
+| 18       | community_description          | char(200)         | True       |                     |       |
+| 19       | community_created_on           | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 20       | community_community_type       | smallint unsigned | True       | 1                   |       |
+| 21       | community_text_post_body_rule  | smallint unsigned | True       | 1                   |       |
+| 22       | community_membership_closed_on | timestamp         | True       |                     |       |
+| 23       | community_flair_post_rule      | smallint unsigned | True       |                     |       |
+| 24       | community_count_members        | bigint            | True       |                     |       |
+| 25       | user_id                        | int unsigned      | False      | 0                   |       |
+| 26       | user_email                     | char(200)         | False      |                     |       |
+| 27       | user_username                  | char(30)          | False      |                     |       |
+| 28       | user_password                  | char(250)         | False      |                     |       |
+| 29       | user_created_on                | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| 30       | post_count_votes_upvotes       | bigint            | False      | 0                   |       |
+| 31       | post_count_votes_downvotes     | bigint            | False      | 0                   |       |
+| 32       | post_count_votes_novotes       | bigint            | False      | 0                   |       |
+| 33       | post_count_votes_score         | bigint            | False      | 0                   |       |
+| 34       | flair_post_community_id        | int unsigned      | True       |                     |       |
+| 35       | flair_post_name                | varchar(30)       | True       |                     |       |
+| 36       | flair_post_color               | char(7)           | True       | #FFFFFF             |       |
+| 37       | flair_post_created_on          | timestamp         | True       | 0000-00-00 00:00:00 |       |
 
 
 
@@ -373,26 +435,32 @@ View_Post_Text
 | 9        | post_archived_on               | timestamp         | True       |                     |       |
 | 10       | post_mod_removed_on            | timestamp         | True       |                     |       |
 | 11       | post_locked_on                 | timestamp         | True       |                     |       |
-| 12       | post_count_comments            | bigint            | True       |                     |       |
-| 13       | community_id                   | int unsigned      | True       | 0                   |       |
-| 14       | community_name                 | char(50)          | True       |                     |       |
-| 15       | community_title                | char(100)         | True       |                     |       |
-| 16       | community_owner_id             | int unsigned      | True       |                     |       |
-| 17       | community_description          | char(200)         | True       |                     |       |
-| 18       | community_created_on           | timestamp         | True       | 0000-00-00 00:00:00 |       |
-| 19       | community_community_type       | smallint unsigned | True       | 1                   |       |
-| 20       | community_text_post_body_rule  | smallint unsigned | True       | 1                   |       |
-| 21       | community_membership_closed_on | timestamp         | True       |                     |       |
-| 22       | community_count_members        | bigint            | True       |                     |       |
-| 23       | user_id                        | int unsigned      | False      | 0                   |       |
-| 24       | user_email                     | char(200)         | False      |                     |       |
-| 25       | user_username                  | char(30)          | False      |                     |       |
-| 26       | user_password                  | char(250)         | False      |                     |       |
-| 27       | user_created_on                | timestamp         | False      | 0000-00-00 00:00:00 |       |
-| 28       | post_count_votes_upvotes       | bigint            | False      | 0                   |       |
-| 29       | post_count_votes_downvotes     | bigint            | False      | 0                   |       |
-| 30       | post_count_votes_novotes       | bigint            | False      | 0                   |       |
-| 31       | post_count_votes_score         | bigint            | False      | 0                   |       |
+| 12       | post_flair_post_id             | int unsigned      | True       |                     |       |
+| 13       | post_count_comments            | bigint            | True       |                     |       |
+| 14       | community_id                   | int unsigned      | True       | 0                   |       |
+| 15       | community_name                 | char(50)          | True       |                     |       |
+| 16       | community_title                | char(100)         | True       |                     |       |
+| 17       | community_owner_id             | int unsigned      | True       |                     |       |
+| 18       | community_description          | char(200)         | True       |                     |       |
+| 19       | community_created_on           | timestamp         | True       | 0000-00-00 00:00:00 |       |
+| 20       | community_community_type       | smallint unsigned | True       | 1                   |       |
+| 21       | community_text_post_body_rule  | smallint unsigned | True       | 1                   |       |
+| 22       | community_membership_closed_on | timestamp         | True       |                     |       |
+| 23       | community_flair_post_rule      | smallint unsigned | True       |                     |       |
+| 24       | community_count_members        | bigint            | True       |                     |       |
+| 25       | user_id                        | int unsigned      | False      | 0                   |       |
+| 26       | user_email                     | char(200)         | False      |                     |       |
+| 27       | user_username                  | char(30)          | False      |                     |       |
+| 28       | user_password                  | char(250)         | False      |                     |       |
+| 29       | user_created_on                | timestamp         | False      | 0000-00-00 00:00:00 |       |
+| 30       | post_count_votes_upvotes       | bigint            | False      | 0                   |       |
+| 31       | post_count_votes_downvotes     | bigint            | False      | 0                   |       |
+| 32       | post_count_votes_novotes       | bigint            | False      | 0                   |       |
+| 33       | post_count_votes_score         | bigint            | False      | 0                   |       |
+| 34       | flair_post_community_id        | int unsigned      | True       |                     |       |
+| 35       | flair_post_name                | varchar(30)       | True       |                     |       |
+| 36       | flair_post_color               | char(7)           | True       | #FFFFFF             |       |
+| 37       | flair_post_created_on          | timestamp         | True       | 0000-00-00 00:00:00 |       |
 
 
 

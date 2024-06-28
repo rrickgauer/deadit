@@ -30,7 +30,7 @@
 
     public void GetTextPostContentRadio(ViewCommunity community, TextPostBodyRule rule)
     {
-        var id = $"text-post-content-${rule.GetName().ToLower()}";
+        var id = $"text-post-content-{rule.GetName().ToLower()}";
         var checkedText = community.CommunityTextPostBodyRule == rule ? "checked" : string.Empty;
 
         var name = rule == TextPostBodyRule.NotAllowed ? "Not Allowed" : rule.GetName();
@@ -38,6 +38,18 @@
         <div class="form-check">
             <input type="radio" class="form-check-input" id="@id" name="text-post-content-input" value="@rule.GetName()" @checkedText />
             <label class="form-check-label" for="@id">@rule.GetDisplay()</label>
+            <div class="invalid-feedback"></div>
+        </div>
+    }
+
+    public void GetFlairPostRuleRadio(ViewCommunity community, FlairPostRule rule)
+    {
+        var id = $"flair-post-rule-input-{rule.GetName().ToLower()}";
+        var checkedText = community.CommunityFlairPostRule == rule ? "checked" : string.Empty;
+
+        <div class="form-check">
+            <input type="radio" class="form-check-input" id="@id" name="flair-post-rule-input" value="@rule.GetName()" @checkedText />
+            <label class="form-check-label" for="@id">@rule.GetDropdownDisplay()</label>
             <div class="invalid-feedback"></div>
         </div>
     }
@@ -143,7 +155,7 @@
 
                     @* Text post content rule *@
                     <div class="radio-group text-post-content-input-radios mt-3" data-radio-group-name="text-post-content-input">
-                        <p class="mb-0">Text Post Content</p>
+                        <p class="mb-0">Text Post Content:</p>
 
                         @{
                             GetTextPostContentRadio(Model.Community, TextPostBodyRule.Optional);
@@ -151,6 +163,19 @@
                             GetTextPostContentRadio(Model.Community, TextPostBodyRule.NotAllowed);
                         }
                     </div>
+
+
+                    <div class="radio-group flair-post-rule-input-radios mt-3" data-radio-group-name="flair-post-rule-input">
+                        <p class="mb-0">Post flair is:</p>
+
+                        @{
+                            GetFlairPostRuleRadio(Model.Community, FlairPostRule.Optional);
+                            GetFlairPostRuleRadio(Model.Community, FlairPostRule.Required);
+                            GetFlairPostRuleRadio(Model.Community, FlairPostRule.NotAllowed);
+                        }
+                    </div>
+
+
 
                 </div>
 

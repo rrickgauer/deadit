@@ -1,0 +1,35 @@
+﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http.Extensions;
+
+
+<div class="modal modal-flair-post-filter" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter by flair</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="alerts-container"></div>
+
+                <div class="modal-flair-post-filter-loading py-5">
+                    <partial name="~/Views/Includes/_SpinnerCenter.cshtml" />
+                </div>
+
+                <div class="modal-flair-post-filter-content d-none">
+
+                    <div class="radio-group flair-post-filter-input-group" data-radio-group-name="flair-post-filter-input"></div>
+
+                    <div class="d-flex mt-3">
+                        <button class="btn btn-sm btn-success btn-submit" type="button">Filter posts</button>
+                        <button class="btn btn-sm btn-standard btn-clear-selection ms-1" type="button">Reset</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -23,4 +23,5 @@ public sealed class GuiPageViewFiles
     public static string CommunitySettingsGeneralPage => $"{ParentDirectory}/Community/Settings/General/CommunitySettingsGeneralPage.cshtml";
     public static string CommunitySettingsMembersPage => $"{ParentDirectory}/Community/Settings/Members/CommunitySettingsMembersPage.cshtml";
     public static string CommunitySettingsContentPage => $"{ParentDirectory}/Community/Settings/Content/CommunitySettingsContentPage.cshtml";
+    public static string CommunitySettingsFlairPage => $"{ParentDirectory}/Community/Settings/Flairs/CommunitySettingsFlairsPage.cshtml";
 }

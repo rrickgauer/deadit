@@ -39,6 +39,7 @@ class RollupConfig
         }
 
         this.plugins = [typescript()];
+
     }
 }
 
@@ -58,6 +59,7 @@ const configs = [
     new RollupConfig('ts/custom/pages/community/settings/general/index.ts', 'dist/community-settings-general.bundle.js'),
     new RollupConfig('ts/custom/pages/community/settings/content/index.ts', 'dist/community-settings-content.bundle.js'),
     new RollupConfig('ts/custom/pages/community/settings/members/index.ts', 'dist/community-settings-members.bundle.js'),
+    new RollupConfig('ts/custom/pages/community/settings/flairs/index.ts', 'dist/community-settings-flairs.bundle.js'),
 ];
 
 

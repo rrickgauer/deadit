@@ -32,6 +32,7 @@ public class CreatePostFilter(CreatePostAuth auth) : IAsyncActionFilter
             UserId = context.GetSessionClientId(),
             PostType = postType,
             TextPostContent = content,
+            FlairPostId = form.FlairPostId,
         });
 
         if (!hasAuth.Successful)

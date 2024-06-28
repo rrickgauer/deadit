@@ -8,4 +8,5 @@ public class CreatePostAuthData
     public required string CommunityName { get; set; }
     public PostType? PostType { get; set; }
     public string? TextPostContent { get; set; }
+    public required uint? FlairPostId { get; set; }
 }

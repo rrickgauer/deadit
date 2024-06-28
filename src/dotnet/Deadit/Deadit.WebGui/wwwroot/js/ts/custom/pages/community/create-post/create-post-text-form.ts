@@ -48,9 +48,15 @@ export abstract class CreatePostFormBase implements IController
         {
             await this.onFormInputKey(e, true);
         });
+
         this._form.inputContent.inputElement.addEventListener(NativeEvents.KeyPress, async (e) =>
         {
             await this.onFormInputKey(e, false);
+        });
+
+        this._form.btnClearFlairSelection.addEventListener(NativeEvents.Click, (e) =>
+        {
+            this._form.flairSelect.selectedValue = "-1";
         });
 
     }
@@ -140,6 +146,7 @@ export class CreatePostTextForm extends CreatePostFormBase
             title: model.title,
             content: model.content,
             communityName: this._communityName,
+            flairPostId: model.flairPostId,
         };
 
         return formData;
@@ -192,6 +199,7 @@ export class CreatePostLinkForm extends CreatePostFormBase
             title: model.title,
             url: model.content,
             communityName: this._communityName,
+            flairPostId: model.flairPostId,
         };
 
         return formData;

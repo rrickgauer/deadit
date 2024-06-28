@@ -9,8 +9,9 @@
     var generalUrl = $"/{baseUrl}/general";
     var membersUrl = $"/{baseUrl}/members";
     var contentUrl = $"/{baseUrl}/content";
-
+    var flairUrl = $"/{baseUrl}/flair";
 }
+
 
 @functions {
 
@@ -51,7 +52,7 @@
                         @{
                             GetNavLink(generalUrl, "General", Model.ActivePage == ActiveCommunitySettingsPage.General);
                             GetNavLink(membersUrl, "Members", Model.ActivePage == ActiveCommunitySettingsPage.Members);
-                            GetNavLink(contentUrl, "Content", Model.ActivePage == ActiveCommunitySettingsPage.Content);
+                            GetNavLink(flairUrl, "Flair", Model.ActivePage == ActiveCommunitySettingsPage.Flair);
                         }
                     </nav>
                 </div>
