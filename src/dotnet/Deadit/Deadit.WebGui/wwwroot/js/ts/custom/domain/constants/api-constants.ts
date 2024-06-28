@@ -10,6 +10,7 @@ export enum ApiEndpoints
     VOTES_POST    = `${URL_PREFIX}/votes/posts`,
     POSTS         = `${URL_PREFIX}/posts`,
     COMMENTS      = `${URL_PREFIX}/comments`,
+    FLAIR_POSTS   = `${URL_PREFIX}/flair/posts`,
 }
 
 export enum HttpMethods {

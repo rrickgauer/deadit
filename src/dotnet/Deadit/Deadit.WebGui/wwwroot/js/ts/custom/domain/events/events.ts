@@ -6,6 +6,7 @@ import { SortOption } from "../enum/sort-option";
 import { TopPostSort } from "../enum/top-post-sort";
 import { UpdateCommunityApiRequest } from "../model/api-community-models";
 import { CommentApiResponse } from "../model/comment-models";
+import { SaveFlairPostData } from "../model/flair-models";
 import { Guid } from "../types/aliases";
 import { CustomEmptyMessage, CustomMessage } from "./custom-events";
 
@@ -80,4 +81,24 @@ export type CommunityMembershipDropdownClickedData = {
 }
 
 export const CommunityMembershipDropdownClickedEvent = new CustomMessage<CommunityMembershipDropdownClickedData>();
+
+
+
+export type EditFlairPostEventData = {
+    flairId: number;
+}
+
+export const EditFlairPostEvent = new CustomMessage<EditFlairPostEventData>();
+
+export const NewFlairPostEvent = new CustomEmptyMessage();
+
+export type FlairPostFormSubmittedData = {
+    flair: SaveFlairPostData
+}
+
+export const FlairPostFormSubmittedEvent = new CustomMessage<FlairPostFormSubmittedData>();
+
+
+export const FlairPostSuccessfullySavedEvent = new CustomEmptyMessage();
+
 

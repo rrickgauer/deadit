@@ -1,9 +1,7 @@
 ﻿using Deadit.Lib.Domain.Enum;
-using Deadit.Lib.Domain.Model;
 using Deadit.Lib.Domain.TableView;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ZstdSharp.Unsafe;
 
 namespace Deadit.Lib.Domain.Other;
 
@@ -13,7 +11,6 @@ public class HttpRequestItems(IDictionary<object, object?> requestDict)
 
     public HttpRequestItems(ActionContext context) : this(context.HttpContext.Items) { }
     public HttpRequestItems(HttpContext context) : this(context.Items) { }
-
 
     public uint? CommunityId
     {
@@ -25,6 +22,12 @@ public class HttpRequestItems(IDictionary<object, object?> requestDict)
     {
         get => GetValue<ViewPost>(HttpRequestStorageKey.Post);
         set => SetValue(HttpRequestStorageKey.Post, value);
+    }
+
+    public ViewFlairPost? FlairPost
+    {
+        get => GetValue<ViewFlairPost>(HttpRequestStorageKey.FlairPost);
+        set => SetValue(HttpRequestStorageKey.FlairPost, value);
     }
 
 
@@ -79,6 +82,19 @@ public class HttpRequestItems(IDictionary<object, object?> requestDict)
         HttpRequestItems items = new(context)
         {
             CommunityId = communityId,
+        };
+    }
+
+    public static void StoreFlairPost(IHttpContextAccessor contextAccessor, ViewFlairPost? flairPost)
+    {
+        if (contextAccessor.HttpContext?.Request.HttpContext is not HttpContext context)
+        {
+            return;
+        }
+
+        HttpRequestItems items = new(context)
+        {
+            FlairPost = flairPost,
         };
     }
 

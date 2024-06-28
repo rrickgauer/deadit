@@ -164,7 +164,7 @@ CREATE TABLE `Error_Message` (
   UNIQUE KEY `id` (`id`),
   KEY `error_message_group_id` (`error_message_group_id`),
   CONSTRAINT `Error_Message_ibfk_1` FOREIGN KEY (`error_message_group_id`) REFERENCES `Error_Message_Group` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=602 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=704 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,6 +182,26 @@ CREATE TABLE `Error_Message_Group` (
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Flair_Post`
+--
+
+DROP TABLE IF EXISTS `Flair_Post`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Flair_Post` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `community_id` int unsigned NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `color` char(7) NOT NULL DEFAULT '#FFFFFF',
+  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `community_id` (`community_id`,`name`),
+  CONSTRAINT `Flair_Post_ibfk_1` FOREIGN KEY (`community_id`) REFERENCES `Community` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -422,6 +442,32 @@ SET @saved_cs_client     = @@character_set_client;
  1 AS `error_message_created_on`,
  1 AS `error_message_group_id`,
  1 AS `error_message_group_created_on`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `View_Flair_Post`
+--
+
+DROP TABLE IF EXISTS `View_Flair_Post`;
+/*!50001 DROP VIEW IF EXISTS `View_Flair_Post`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `View_Flair_Post` AS SELECT 
+ 1 AS `flair_post_id`,
+ 1 AS `flair_post_community_id`,
+ 1 AS `flair_post_name`,
+ 1 AS `flair_post_color`,
+ 1 AS `flair_post_created_on`,
+ 1 AS `community_id`,
+ 1 AS `community_name`,
+ 1 AS `community_title`,
+ 1 AS `community_owner_id`,
+ 1 AS `community_description`,
+ 1 AS `community_created_on`,
+ 1 AS `community_community_type`,
+ 1 AS `community_text_post_body_rule`,
+ 1 AS `community_membership_closed_on`,
+ 1 AS `community_count_members`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -847,6 +893,24 @@ USE `Deadit_Dev`;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `View_Flair_Post`
+--
+
+/*!50001 DROP VIEW IF EXISTS `View_Flair_Post`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`main`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `View_Flair_Post` AS select `f`.`id` AS `flair_post_id`,`f`.`community_id` AS `flair_post_community_id`,`f`.`name` AS `flair_post_name`,`f`.`color` AS `flair_post_color`,`f`.`created_on` AS `flair_post_created_on`,`c`.`community_id` AS `community_id`,`c`.`community_name` AS `community_name`,`c`.`community_title` AS `community_title`,`c`.`community_owner_id` AS `community_owner_id`,`c`.`community_description` AS `community_description`,`c`.`community_created_on` AS `community_created_on`,`c`.`community_community_type` AS `community_community_type`,`c`.`community_text_post_body_rule` AS `community_text_post_body_rule`,`c`.`community_membership_closed_on` AS `community_membership_closed_on`,`c`.`community_count_members` AS `community_count_members` from (`Flair_Post` `f` join `View_Community` `c` on((`c`.`community_id` = `f`.`community_id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `View_Post`
 --
 
@@ -981,7 +1045,7 @@ USE `Deadit_Dev`;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-27 18:17:33
+-- Dump completed on 2024-07-02  8:28:17
 -- MySQL dump 10.13  Distrib 8.0.32, for Win64 (x86_64)
 --
 -- Host: 104.225.208.163    Database: Deadit_Dev
@@ -1028,7 +1092,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Error_Message` WRITE;
 /*!40000 ALTER TABLE `Error_Message` DISABLE KEYS */;
-REPLACE INTO `Error_Message` VALUES (200,2,'The email is already registered with another account.','2024-05-07 14:11:22'),(201,2,'The username is already taken.','2024-05-07 14:11:22'),(202,2,'The password does not meet the criteria.','2024-05-07 14:11:23'),(300,3,'The community name contains an invalid character.','2024-05-07 14:12:27'),(301,3,'The community name already exists.','2024-05-07 14:12:27'),(302,3,'The community name is banned.','2024-05-07 14:12:27'),(303,3,'Attempted to view a private community.','2024-06-18 16:09:26'),(400,4,'Either \'commentId\' or \'postId\' must be provided.','2024-05-15 20:54:03'),(401,4,'Only \'commentId\' or \'postId\' can have a value, not both.','2024-05-15 20:54:03'),(500,5,'The parent comment does not exist','2024-05-31 19:10:01'),(501,5,'The parent comment is locked.','2024-05-31 19:12:45'),(502,5,'The post has been locked by a moderator.','2024-05-31 19:21:32'),(503,5,'The post has been removed by a moderator.','2024-05-31 19:21:55'),(504,5,'The post has been deleted by its author.','2024-05-31 19:22:06'),(600,6,'Text post content is not allowed.','2024-06-13 01:12:45'),(601,6,'Text post content is required.','2024-06-13 01:26:40');
+REPLACE INTO `Error_Message` VALUES (200,2,'The email is already registered with another account.','2024-05-07 14:11:22'),(201,2,'The username is already taken.','2024-05-07 14:11:22'),(202,2,'The password does not meet the criteria.','2024-05-07 14:11:23'),(300,3,'The community name contains an invalid character.','2024-05-07 14:12:27'),(301,3,'The community name already exists.','2024-05-07 14:12:27'),(302,3,'The community name is banned.','2024-05-07 14:12:27'),(303,3,'Attempted to view a private community.','2024-06-18 16:09:26'),(400,4,'Either \'commentId\' or \'postId\' must be provided.','2024-05-15 20:54:03'),(401,4,'Only \'commentId\' or \'postId\' can have a value, not both.','2024-05-15 20:54:03'),(500,5,'The parent comment does not exist','2024-05-31 19:10:01'),(501,5,'The parent comment is locked.','2024-05-31 19:12:45'),(502,5,'The post has been locked by a moderator.','2024-05-31 19:21:32'),(503,5,'The post has been removed by a moderator.','2024-05-31 19:21:55'),(504,5,'The post has been deleted by its author.','2024-05-31 19:22:06'),(600,6,'Text post content is not allowed.','2024-06-13 01:12:45'),(601,6,'Text post content is required.','2024-06-13 01:26:40'),(700,7,'The flair name contains an invalid character. ','2024-07-02 01:08:13'),(701,7,'The flair name is banned.','2024-07-02 01:08:13'),(702,7,'This community already has a flair with this name.','2024-07-02 01:08:13'),(703,7,'The flair color is not a valid HEX value. Please ensure it starts with a \'#\' followed by exactly 6 hexadecimal characters (0-9, A-F).','2024-07-02 01:08:13');
 /*!40000 ALTER TABLE `Error_Message` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1050,7 +1114,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Error_Message_Group` WRITE;
 /*!40000 ALTER TABLE `Error_Message_Group` DISABLE KEYS */;
-REPLACE INTO `Error_Message_Group` VALUES (1,'Misc','2024-05-07 14:07:53'),(2,'Account Signup','2024-05-07 14:08:56'),(3,'Community Settings','2024-05-07 14:09:15'),(4,'Voting','2024-05-15 20:19:17'),(5,'Comment','2024-05-31 19:08:09'),(6,'Post','2024-06-13 01:09:57');
+REPLACE INTO `Error_Message_Group` VALUES (1,'Misc','2024-05-07 14:07:53'),(2,'Account Signup','2024-05-07 14:08:56'),(3,'Community Settings','2024-05-07 14:09:15'),(4,'Voting','2024-05-15 20:19:17'),(5,'Comment','2024-05-31 19:08:09'),(6,'Post','2024-06-13 01:09:57'),(7,'Flair Post','2024-07-02 01:02:41');
 /*!40000 ALTER TABLE `Error_Message_Group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1085,4 +1149,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-27 18:17:40
+-- Dump completed on 2024-07-02  8:28:23

@@ -47,5 +47,15 @@ export enum ApiErrorCode
 
     //#endregion
 
+
+    //#region - Flair Post -
+
+    FlairPostNameContainsInvalidCharacter = 700,
+    FlairPostNameIsBanned = 701,
+    FlairPostDuplicateName = 702,
+    FlairPostInvalidColor = 703,
+
+    //#endregion
+
 }
 

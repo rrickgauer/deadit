@@ -4,4 +4,5 @@ public enum HttpRequestStorageKey
 {
     CommunityId = 0,
     Post = 1,
+    FlairPost = 2,
 }

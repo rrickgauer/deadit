@@ -5,4 +5,5 @@ public enum ActiveCommunitySettingsPage
     General,
     Members,
     Content,
+    Flair,
 }

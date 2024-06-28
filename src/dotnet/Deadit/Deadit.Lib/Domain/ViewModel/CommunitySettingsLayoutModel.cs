@@ -28,6 +28,11 @@ public class ContentCommunitySettingsPageModel
 
 }
 
+public class FlairCommunitySettingsPageModel
+{
+    public required List<ViewFlairPost> Flairs { get; set; }
+}
+
 public class MembersCommunitySettingsPageModel
 {
     public required List<ViewCommunityMembership> Memberships { get; set; }

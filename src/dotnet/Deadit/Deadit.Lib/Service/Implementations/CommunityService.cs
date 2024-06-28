@@ -1,4 +1,5 @@
 ﻿using Deadit.Lib.Domain.Attributes;
+using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
 using Deadit.Lib.Domain.Errors;
 using Deadit.Lib.Domain.Forms;
@@ -15,7 +16,7 @@ namespace Deadit.Lib.Service.Implementations;
 [AutoInject<ICommunityService>(AutoInjectionType.Scoped, InjectionProject.Always)]
 public class CommunityService(ICommunityRepository repo, ITableMapperService tableMapper, IBannedCommunityNameService banned) : ICommunityService
 {
-    private const string NewCommunityNameRegexPattern = @"^[a-zA-Z0-9_]*$";
+    
 
     private readonly ICommunityRepository _communityRepository = repo;
     private readonly ITableMapperService _tableMapperService = tableMapper;
@@ -109,7 +110,7 @@ public class CommunityService(ICommunityRepository repo, ITableMapperService tab
     /// <returns></returns>
     private bool DoesCommunityNameContainInvalidCharacters(string communityName)
     {
-        return !Regex.IsMatch(communityName, NewCommunityNameRegexPattern);
+        return !Regex.IsMatch(communityName, RegexPatterns.UrlCharactersOnly);
     }
 
     /// <summary>
