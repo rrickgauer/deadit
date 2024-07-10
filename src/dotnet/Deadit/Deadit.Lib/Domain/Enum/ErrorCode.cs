@@ -61,13 +61,37 @@ public enum ErrorCode : uint
 
     #endregion
 
-
     #region - Post -
     [ErrorCodeGroup(ErrorCodeGroup.Post)]
     PostTextPostContentNotAllowed = 600,
 
     [ErrorCodeGroup(ErrorCodeGroup.Post)]
     PostTextPostContentRequired = 601,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Post)]
+    PostInvalidFlairPostId = 602,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Post)]
+    PostFlairRequired = 603,
+
+    [ErrorCodeGroup(ErrorCodeGroup.Post)]
+    PostFlairNotAllowed = 604,
+
+    #endregion
+
+    #region - Flair Post -
+
+    [ErrorCodeGroup(ErrorCodeGroup.FlairPost)]
+    FlairPostNameContainsInvalidCharacter = 700,
+
+    [ErrorCodeGroup(ErrorCodeGroup.FlairPost)]
+    FlairPostNameIsBanned = 701,
+
+    [ErrorCodeGroup(ErrorCodeGroup.FlairPost)]
+    FlairPostDuplicateName = 702,
+
+    [ErrorCodeGroup(ErrorCodeGroup.FlairPost)]
+    FlairPostInvalidColor = 703,
 
     #endregion
 }

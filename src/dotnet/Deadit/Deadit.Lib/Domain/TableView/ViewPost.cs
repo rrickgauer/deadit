@@ -10,7 +10,8 @@ namespace Deadit.Lib.Domain.TableView;
 
 public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteScore,
     ITableView<ViewPost, PostText>,
-    ITableView<ViewPost, PostLink>
+    ITableView<ViewPost, PostLink>,
+    ITableView<ViewPost, FlairPost>
 {
 
     protected const string DeletedContentText = "[Post deleted by author]";
@@ -76,6 +77,32 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
     [SqlColumn("post_count_comments")]
     public uint PostCountComments { get; set; } = 0;
 
+    #region - Flair Post -
+
+    [SqlColumn("post_flair_post_id")]
+    [CopyToProperty<PostText>(nameof(PostText.FlairPostId))]
+    [CopyToProperty<PostLink>(nameof(PostLink.FlairPostId))]
+    [CopyToProperty<FlairPost>(nameof(FlairPost.Id))]
+    public uint? FlairPostId { get; set; }
+
+    [SqlColumn("flair_post_community_id")]
+    [CopyToProperty<FlairPost>(nameof(FlairPost.CommunityId))]
+    public uint? FlairPostCommunityId { get; set; }
+
+    [SqlColumn("flair_post_name")]
+    [CopyToProperty<FlairPost>(nameof(FlairPost.Name))]
+    public string? FlairPostName { get; set; }
+
+    [SqlColumn("flair_post_color")]
+    [CopyToProperty<FlairPost>(nameof(FlairPost.Color))]
+    public string? FlairPostColor { get; set; }
+
+    [SqlColumn("flair_post_created_on")]
+    [CopyToProperty<FlairPost>(nameof(FlairPost.CreatedOn))]
+    public DateTime? FlairPostCreatedOn { get; set; }
+
+    #endregion
+
 
     #region - IVoteScore -
 
@@ -138,6 +165,7 @@ public class ViewPost : ViewCommunity, ICreatedUri, ICreatedOnDifference, IVoteS
 
     public static explicit operator PostText(ViewPost other) => other.CastToModel<ViewPost, PostText>();
     public static explicit operator PostLink(ViewPost other) => other.CastToModel<ViewPost, PostLink>();
+    public static explicit operator FlairPost(ViewPost other) => other.CastToModel<ViewPost, FlairPost>();
 
     public static explicit operator Post(ViewPost other)
     {

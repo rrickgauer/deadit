@@ -73,6 +73,7 @@ public class ApiPostsController(IPostService postService, GetPostApiVMService ge
             CreatedOn = DateTime.UtcNow,
             Id = Guid.NewGuid(),
             Title = formData.Title,
+            FlairPostId = formData.FlairPostId,
         };
 
         return post;

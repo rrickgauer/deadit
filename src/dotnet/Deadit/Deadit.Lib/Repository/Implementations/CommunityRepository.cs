@@ -69,6 +69,7 @@ public class CommunityRepository(DatabaseConnection dbConnection) : ICommunityRe
         command.Parameters.AddWithValue("@community_type", community.CommunityType);
         command.Parameters.AddWithValue("@text_post_body_rule", community.TextPostBodyRule);
         command.Parameters.AddWithValue("@membership_closed_on", community.MembershipClosedOn);
+        command.Parameters.AddWithValue("@flair_post_rule", community.FlairPostRule);
         command.Parameters.AddWithValue("@id", community.Id);
 
         return await _dbConnection.ModifyAsync(command);

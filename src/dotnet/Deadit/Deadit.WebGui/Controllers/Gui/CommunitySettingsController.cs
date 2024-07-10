@@ -24,12 +24,14 @@ public class CommunitySettingsController : GuiController, IControllerName
     private readonly GeneralCommunitySettingsVMService _generalVMService;
     private readonly MembersCommunitySettingsVMService _memberVMService;
     private readonly ContentCommunitySettingsVMService _contentVMService;
+    private readonly FlairCommunitySettingsVMService _flairVMService;
 
-    public CommunitySettingsController(GeneralCommunitySettingsVMService generalVMService, MembersCommunitySettingsVMService memberVMService, ContentCommunitySettingsVMService contentVMService)
+    public CommunitySettingsController(GeneralCommunitySettingsVMService generalVMService, MembersCommunitySettingsVMService memberVMService, ContentCommunitySettingsVMService contentVMService, FlairCommunitySettingsVMService flairVMService)
     {
         _generalVMService = generalVMService;
         _memberVMService = memberVMService;
         _contentVMService = contentVMService;
+        _flairVMService = flairVMService;
     }
 
     [HttpGet]
@@ -84,5 +86,22 @@ public class CommunitySettingsController : GuiController, IControllerName
         }
 
         return View(GuiPageViewFiles.CommunitySettingsContentPage, getViewModel.Data);
+    }
+
+    [HttpGet("flair")]
+    [ActionName(nameof(GetFlairSettingsPage))]
+    public async Task<IActionResult> GetFlairSettingsPage([FromRoute] string communityName)
+    {
+        var getViewModel = await _flairVMService.GetViewModelAsync(new()
+        {
+            CommunityName = communityName,
+        });
+
+        if (!getViewModel.Successful)
+        {
+            return BadRequest(getViewModel);
+        }
+
+        return View(GuiPageViewFiles.CommunitySettingsFlairPage, getViewModel.Data);
     }
 }

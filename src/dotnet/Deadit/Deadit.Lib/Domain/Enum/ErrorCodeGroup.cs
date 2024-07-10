@@ -9,4 +9,5 @@ public enum ErrorCodeGroup : uint
     Voting            = 4,
     Comment           = 5,
     Post              = 6,
+    FlairPost         = 7,
 }

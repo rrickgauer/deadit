@@ -1,37 +1,91 @@
 ﻿@model Deadit.Lib.Domain.ViewModel.CommunityPageViewModel
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Utility
 @using Microsoft.AspNetCore.Http.Extensions;
 @using Deadit.Lib.Domain.Enum;
 
 
 
+@functions {
+
+
+    public void GetNavsHtml(bool isNewPage)
+    {
+        string urlNew = $"/{Model.Community.CommunityUrlGui}";
+        string urlTop = $"/{Model.Community.CommunityUrlTop}";
+
+        <ul class="nav nav-pills mb-3">
+            @{ 
+                GetNavHtmlItem(urlNew, "New", isNewPage);
+                GetNavHtmlItem(urlTop, "Top", !isNewPage);
+            }
+        </ul>
+    }
+
+    public void GetNavHtmlItem(string url, string display, bool isActive)
+    {
+        string activeText = isActive ? "active" : "";
+
+        string ariaText = "aria-current=\"page\"";
+
+        if (!isActive)
+        {
+            ariaText = "";
+        }
+
+        <li class="nav-item"><a class="nav-link @activeText" @ariaText href="@url">@display</a></li>
+    }
+
+
+
+    public void GetFilterHtml()
+    {
+        <div class="d-flex">
+            <button type="button" class="btn btn-standard btn-open-flair-filter-modal">@Html.Raw(Icons.Filter)</button>
+        </div>
+    }
+}
+
+
 
 @if(Model.PostSort.SortByNew)
 {
-    <ul class="nav nav-pills mb-3">
-        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/@Model.Community.CommunityUrlGui">New</a></li>
-        <li class="nav-item"><a class="nav-link" href="/@Model.Community.CommunityUrlTop">Top</a></li>
-    </ul>
+    <div class="d-flex justify-content-between align-items-center">
+        @{
+            GetNavsHtml(true);
+            GetFilterHtml();
+        }
+    </div>
 }
 
 else
 {
 
-    <div class="d-flex justify-content-between align-items-baseline community-page-top-sort-options">
-        <ul class="nav nav-pills mb-3">
-            <li class="nav-item"><a class="nav-link" href="/@Model.Community.CommunityUrlGui">New</a></li>
-            <li class="nav-item"><a class="nav-link active" aria-current="page" href="/@Model.Community.CommunityUrlTop">Top</a></li>
-        </ul>
+    <div class="d-flex justify-content-between align-items-center">
 
-        <div class="top-post-sort d-flex justify-content-start align-items-center">
-            <p class="m-0 p-0 me-2">Sort by:</p>
 
-            <select class="form-select w-auto top-post-sort-options">
-                @Html.Raw(Model.PostSort.TopSort.GetSortOptionHtml())
-            </select>
+        <div class="d-flex align-items-baseline community-page-top-sort-options">
+            @{
+                GetNavsHtml(false);
+            }
+
+            <div class="top-post-sort d-flex justify-content-start align-items-center ms-4">
+                <p class="m-0 p-0 me-2">Top posts in:</p>
+
+                <select class="form-select w-auto top-post-sort-options">
+                    @Html.Raw(Model.PostSort.TopSort.GetSortOptionHtml())
+                </select>
+            </div>
         </div>
-    </div>
 
+        @{
+            GetFilterHtml();
+        }
+
+
+
+    </div>
 
 }
 

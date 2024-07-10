@@ -24,6 +24,8 @@ public class UpdateCommunityRequestForm
     [BindRequired]
     public required bool AcceptingNewMembers { get; set; }
 
+    [BindRequired]
+    public required FlairPostRule FlairPostRule { get; set; }
 
     public void SetCommunityData(Community community)
     {
@@ -31,6 +33,7 @@ public class UpdateCommunityRequestForm
         community.Description = Description;
         community.CommunityType = CommunityType;
         community.TextPostBodyRule = TextPostBodyRule;
+        community.FlairPostRule = FlairPostRule;
         community.MembershipClosedOn = AcceptingNewMembers ? null : DateTime.UtcNow;
     }
 }

@@ -15,6 +15,7 @@ public abstract class Post
     public DateTime? ArchivedOn { get; set; }
     public DateTime? RemovedOn { get; set; }
     public DateTime? LockedOn { get; set; }
+    public uint? FlairPostId { get; set; }
 
     public ushort PostTypeValue => (ushort)PostType;
 }

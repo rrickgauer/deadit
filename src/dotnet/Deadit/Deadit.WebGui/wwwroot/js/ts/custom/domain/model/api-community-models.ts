@@ -1,4 +1,5 @@
 import { CommunityType } from "../enum/community-type";
+import { FlairPostRule } from "../enum/flair-post-rule";
 import { TextPostBodyRule } from "../enum/text-post-body-rule";
 
 
@@ -36,6 +37,7 @@ export type UpdateCommunityApiRequest = {
     communityType: CommunityType;
     textPostBodyRule: TextPostBodyRule;
     acceptingNewMembers: boolean;
+    flairPostRule: FlairPostRule;
 }
 
 export class UpdateCommunityRequest

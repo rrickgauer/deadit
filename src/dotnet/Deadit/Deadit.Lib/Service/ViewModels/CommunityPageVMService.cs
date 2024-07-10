@@ -104,7 +104,16 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
 
     private async Task<List<ViewPost>> GetNewestCommunityPostsAsync(CommunityPageViewModelParms args)
     {
-        var getPosts = await _postService.GetNewestCommunityPostsAsync(args.CommunityName, args.Pagination);
+        ServiceDataResponse<List<ViewPost>> getPosts;
+
+        if (args.FilterByFlairId is uint flairId)
+        {
+            getPosts = await _postService.GetNewestCommunityPostsAsync(args.CommunityName, args.Pagination, flairId);
+        }
+        else
+        {
+            getPosts = await _postService.GetNewestCommunityPostsAsync(args.CommunityName, args.Pagination);
+        }
 
         if (!getPosts.Successful)
         {
@@ -116,7 +125,17 @@ public class CommunityPageVMService : IVMService<CommunityPageViewModelParms, Co
 
     private async Task<List<ViewPost>> GetTopCommunityPostsAsync(CommunityPageViewModelParms args)
     {
-        var getPosts = await _postService.GetTopCommunityPostsAsync(args.CommunityName, args.PostSorting.TopSort, args.Pagination);
+        ServiceDataResponse<List<ViewPost>> getPosts;
+
+        if (args.FilterByFlairId is uint flairId)
+        {
+            getPosts = await _postService.GetTopCommunityPostsAsync(args.CommunityName, args.PostSorting.TopSort, args.Pagination, flairId);
+        }
+        else
+        {
+            getPosts = await _postService.GetTopCommunityPostsAsync(args.CommunityName, args.PostSorting.TopSort, args.Pagination);
+        }
+
 
         if (!getPosts.Successful)
         {

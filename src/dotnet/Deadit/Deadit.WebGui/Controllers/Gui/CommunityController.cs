@@ -1,5 +1,6 @@
 ﻿using Deadit.Lib.Domain.Constants;
 using Deadit.Lib.Domain.Enum;
+using Deadit.Lib.Domain.Forms;
 using Deadit.Lib.Domain.Other;
 using Deadit.Lib.Domain.Paging;
 using Deadit.Lib.Filter;
@@ -8,6 +9,7 @@ using Deadit.Lib.Service.ViewModels;
 using Deadit.WebGui.Controllers.Contracts;
 using Deadit.WebGui.Filter;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Deadit.WebGui.Controllers.Gui;
 
@@ -54,12 +56,9 @@ public class CommunityController(CommunityPageVMService communityPageVMService, 
     /// <returns></returns>
     [HttpGet]
     [ActionName(nameof(GetCommunityPageAsync))]
-    public async Task<IActionResult> GetCommunityPageAsync([FromRoute] string communityName, [FromQuery] uint? page)
+    public async Task<IActionResult> GetCommunityPageAsync([FromRoute] string communityName, [FromQuery] GetCommunityPageQueryParms queryParms)
     {
-        // og shit below
-        PostSorting postSorting = new(PostSortType.New);
-
-        return await ReturnCommunityPageAsync(communityName, postSorting, page);
+        return await ReturnCommunityPageAsync(communityName, queryParms);
     }
 
     /// <summary>
@@ -70,26 +69,23 @@ public class CommunityController(CommunityPageVMService communityPageVMService, 
     /// <returns></returns>
     [HttpGet("top")]
     [ActionName(nameof(GetCommunityPageTop))]
-    public async Task<IActionResult> GetCommunityPageTop([FromRoute] string communityName, [FromQuery] TopPostSort? sort, [FromQuery] uint? page)
+    public async Task<IActionResult> GetCommunityPageTop([FromRoute] string communityName, [FromQuery] GetCommunityPageQueryParmsTop queryParms)
     {
-        TopPostSort topSort = sort ?? TopPostSort.Month;
-
-        PostSorting postSorting = new(PostSortType.Top, topSort);
-
-        return await ReturnCommunityPageAsync(communityName, postSorting, page);
+        return await ReturnCommunityPageAsync(communityName, queryParms);
     }
 
 
-    private async Task<IActionResult> ReturnCommunityPageAsync(string communityName, PostSorting postSorting, uint? page)
+    private async Task<IActionResult> ReturnCommunityPageAsync(string communityName, BaseGetCommunityPageQueryParms queryParms)
     {
-        PaginationPosts pagination = new(page);
+        PaginationPosts pagination = new(queryParms.Page);
 
         var serviceResponse = await _communityPageVMService.GetViewModelAsync(new()
         {
             ClientId = ClientId,
             CommunityName = communityName,
-            PostSorting = postSorting,
+            PostSorting = queryParms.GetPostSorting(),
             Pagination = pagination,
+            FilterByFlairId = queryParms.Flair,
         });
 
         if (!serviceResponse.Successful)

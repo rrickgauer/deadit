@@ -4,7 +4,6 @@ import { UrlUtility } from "../../../../utilities/url-utility";
 import { CommunityMembershipListItem } from "./community-membership-list-item";
 import { CommunityMembershipDropdownAction } from "../../../../domain/enum/community-membership-dropdown-action";
 import { MessageBoxConfirm } from "../../../../domain/helpers/message-box/MessageBoxConfirm";
-import { use } from "marked";
 import { AlertUtility } from "../../../../utilities/alert-utility";
 import { CommunityMembershipService } from "../../../../services/community-membership-service";
 import { ErrorUtility } from "../../../../utilities/error-utility";

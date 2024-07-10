@@ -10,4 +10,5 @@ public class CommunityPageViewModelParms : IClientId, ICommunityName
     public required uint? ClientId { get; set; }
     public required PostSorting PostSorting { get; set; }
     public required PaginationPosts Pagination { get; set; }
+    public required uint? FilterByFlairId { get; set; }
 }

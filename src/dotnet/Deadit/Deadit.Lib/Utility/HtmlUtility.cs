@@ -2,10 +2,11 @@
 
 namespace Deadit.Lib.Utility;
 
-public class HtmlUtility
+public static class HtmlUtility
 {
     public static HtmlString ToHtml(object? data)
     {
         return new HtmlString($"{data}");
     }
+
 }

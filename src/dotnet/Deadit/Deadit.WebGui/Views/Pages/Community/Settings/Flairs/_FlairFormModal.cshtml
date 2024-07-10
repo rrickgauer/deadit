@@ -1,0 +1,50 @@
+﻿@using Deadit.Lib.Domain.Constants
+@using Deadit.Lib.Domain.ViewModel
+@model CommunitySettingsLayoutModel<FlairCommunitySettingsPageModel>
+
+<div class="modal flair-form-modal" tabindex="-1" data-js-flair-id="">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Flair</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="form-feedback"></div>
+
+
+                <div class="spinner-container">
+                    <partial name="~/Views/Includes/_SpinnerCenter.cshtml" />
+                </div>
+
+                <div class="flair-post-form-container d-none">
+                    <form class="flair-post-form">
+                        <fieldset>
+                            @* Name *@
+                            <div class="input-feedback mb-3">
+                                <label for="flair-post-form-input-name" class="form-label">Name</label>
+                                <input type="text" class="form-control input-feedback-input" id="flair-post-form-input-name" required maxlength="@FlairPostConstants.MaxNameLength" minlength="1" />
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback"></div>
+                                <p class="form-text">Flairs can only contain letters, numbers, or underscores.</p>
+                            </div>
+
+                            @* Color *@
+                            <div class="input-feedback my-3">
+                                <label for="flair-post-form-input-color" class="form-label">Color</label>
+                                <input type="color" class="form-control input-feedback-input form-control-color w-100" id="flair-post-form-input-color" title="Choose your color" required>
+                                <div class="valid-feedback">Looks good!</div>
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="d-flex my-3">
+                                <button type="submit" class="btn btn-success btn-submit">Save</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -12,12 +12,14 @@ namespace Deadit.Lib.Auth;
 
 
 [AutoInject(AutoInjectionType.Scoped, InjectionProject.Always)]
-public class CreatePostAuth(ICommunityMemberService communityMemberService, ICommunityService communityService, IHttpContextAccessor accessor) : IAsyncPermissionsAuth<CreatePostAuthData>
+public class CreatePostAuth(ICommunityMemberService communityMemberService, ICommunityService communityService, IHttpContextAccessor accessor, IFlairPostService flairService) : IAsyncPermissionsAuth<CreatePostAuthData>
 {
     private readonly ICommunityMemberService _communityMemberService = communityMemberService;
     private readonly ICommunityService _communityService = communityService;
     private readonly IHttpContextAccessor _accessor = accessor;
+    private readonly IFlairPostService _flairService = flairService;
     private HttpContext? _context => _accessor.HttpContext?.Request.HttpContext;
+
 
     public async Task<ServiceResponse> HasPermissionAsync(CreatePostAuthData data)
     {
@@ -28,6 +30,9 @@ public class CreatePostAuth(ICommunityMemberService communityMemberService, ICom
 
             // if this is a text post, make sure it doesn't violate the community text post rule
             HandleTextPostRule(community, data);
+
+            // make sure the flair is okay
+            await HandleFlairPostAsync(community, data);
 
             // check if client is the owner
             if (community.CommunityOwnerId == data.UserId)
@@ -40,7 +45,7 @@ public class CreatePostAuth(ICommunityMemberService communityMemberService, ICom
 
             return new();
         }
-        catch(ServiceResponseException ex)
+        catch (ServiceResponseException ex)
         {
             return ex;
         }
@@ -86,7 +91,7 @@ public class CreatePostAuth(ICommunityMemberService communityMemberService, ICom
             return;
         }
 
-        switch(community.CommunityTextPostBodyRule)
+        switch (community.CommunityTextPostBodyRule)
         {
             case TextPostBodyRule.Required:
                 if (string.IsNullOrWhiteSpace(args.TextPostContent))
@@ -105,6 +110,52 @@ public class CreatePostAuth(ICommunityMemberService communityMemberService, ICom
 
                 break;
         }
+    }
 
+    private async Task HandleFlairPostAsync(ViewCommunity community, CreatePostAuthData args)
+    {
+        // ensure that the flair can be null
+        if (args.FlairPostId is not uint flairPostId)
+        {
+            // community wants new posts to have a flair
+            if (community.CommunityFlairPostRule == FlairPostRule.Required)
+            {
+                throw new ServiceResponseException(ErrorCode.PostFlairRequired);
+            }
+
+            return;
+        }
+
+        // the new post has a flair assigned to it
+        // ensure the community allows flairs
+        if (community.CommunityFlairPostRule == FlairPostRule.NotAllowed)
+        {
+            throw new ServiceResponseException(ErrorCode.PostFlairNotAllowed);
+        }
+
+        // ensure the flair exists
+        var getflair = await GetFlairAsync(flairPostId);
+
+        if (getflair is not ViewFlairPost flair)
+        {
+            throw new ServiceResponseException(ErrorCode.PostInvalidFlairPostId);
+        }
+
+        // ensure the flair belongs to the community
+        if (flair.FlairPostCommunityId != community.CommunityId)
+        {
+            throw new ServiceResponseException(ErrorCode.PostInvalidFlairPostId);
+        }
+
+
+    }
+
+    private async Task<ViewFlairPost?> GetFlairAsync(uint flairPostId)
+    {
+        var getFlair = await _flairService.GetFlairPostAsync(flairPostId);
+
+        getFlair.ThrowIfError();
+
+        return getFlair.Data;
     }
 }

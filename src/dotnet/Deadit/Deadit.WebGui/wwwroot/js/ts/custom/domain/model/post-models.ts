@@ -4,6 +4,7 @@ import { VoteType } from "../enum/vote-type";
 import { DateTimeString, Guid } from "../types/aliases";
 import { CommunityApiRequest } from "./api-community-models";
 import { CommentApiResponse } from "./comment-models";
+import { FlairPostOnlyApiResponse } from "./flair-models";
 import { VoteScores } from "./vote-scores";
 
 
@@ -16,6 +17,7 @@ export type PostPageParms = {
 export type CreatePostApiRequest = {
     title: string;
     communityName: string;
+    flairPostId: number | null;
 }
 
 export type CreateTextPostApiRequest = CreatePostApiRequest & {
@@ -38,8 +40,7 @@ export type GetPostApiRequest = {
 }
 
 
-
-export type PostApiResponse = CommunityApiRequest & VoteScores & {
+export type PostApiResponse = CommunityApiRequest & VoteScores & FlairPostOnlyApiResponse & {
     postId?: Guid;
     postCommunityId?: number;
     postTitle?: string;

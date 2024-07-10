@@ -18,14 +18,19 @@ public class BannedCommunityNameService(ITableMapperService tableMapperService, 
     {
         try
         {
-            var bannedCommunityNames = (await GetBannedCommunityNamesAsync())?.Data?.Select(n => n.Name?.ToLower()).ToList();
 
-            bool isBanned = bannedCommunityNames?.Contains(communityName.ToLower()) ?? false;
+            var getBannedNames = await GetBannedCommunityNamesAsync();
 
-            return new()
+            if (!getBannedNames.Successful)
             {
-                Data = isBanned,
-            };
+                return new(getBannedNames);
+            }
+
+            var bannedNames = getBannedNames.Data?.Select(n => n.Name!.ToLower()).ToList() ?? new();
+
+            bool isBanned = bannedNames.Contains(communityName.ToLower());
+            
+            return isBanned;
         }
         catch(RepositoryException ex)
         {

@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Deadit.Lib.Domain.Forms;
 
-
 public class CreatePostForms
 {
     public abstract class CreatePostForm
@@ -14,6 +13,9 @@ public class CreatePostForms
 
         [BindRequired]
         public required string CommunityName { get; set; }
+
+        [BindRequired]
+        public required uint? FlairPostId { get; set; }
     }
 
     public class CreateTextPostForm : CreatePostForm

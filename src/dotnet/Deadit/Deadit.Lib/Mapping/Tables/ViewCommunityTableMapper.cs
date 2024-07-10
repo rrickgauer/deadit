@@ -20,6 +20,7 @@ public class ViewCommunityTableMapper : TableMapper<ViewCommunity>
             CommunityType               = (CommunityType)row.Field<ushort>(GetColumnName(nameof(result.CommunityType))),
             CommunityTextPostBodyRule   = (TextPostBodyRule)row.Field<ushort>(GetColumnName(nameof(result.CommunityTextPostBodyRule))),
             CommunityMembershipClosedOn = row.Field<DateTime?>(GetColumnName(nameof(result.CommunityMembershipClosedOn))),
+            CommunityFlairPostRule      = (FlairPostRule)row.Field<ushort>(GetColumnName(nameof(result.CommunityFlairPostRule))),
         };
 
         return result;

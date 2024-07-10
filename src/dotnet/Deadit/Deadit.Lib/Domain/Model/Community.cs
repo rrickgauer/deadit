@@ -13,5 +13,6 @@ public class Community
     public CommunityType CommunityType { get; set; } = CommunityType.Private;
     public TextPostBodyRule TextPostBodyRule { get; set; } = TextPostBodyRule.Optional;
     public DateTime? MembershipClosedOn { get; set; }
+    public FlairPostRule FlairPostRule { get; set; } = FlairPostRule.Optional;
 }
 

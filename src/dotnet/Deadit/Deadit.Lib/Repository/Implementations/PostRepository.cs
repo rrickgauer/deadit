@@ -83,6 +83,18 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
 
     #region - Select Newest Community Posts -
 
+    public async Task<DataTable> SelectNewestCommunityPostsAsync(string communityName, PaginationPosts pagination, uint flairId)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SelectNewestCommunityPostsLimitWithFlair);
+
+        command.Parameters.AddWithValue("@community_name", communityName);
+        command.Parameters.AddWithValue("@flair_id", flairId);
+
+        command.AddPaginationParamters(pagination);
+
+        return await _connection.FetchAllAsync(command);
+    }
+
     public async Task<DataTable> SelectNewestCommunityPostsAsync(string communityName, PaginationPosts pagination)
     {
         MySqlCommand command = new(PostRepositoryCommands.SelectNewestCommunityPostsLimit);
@@ -107,6 +119,13 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
 
     #region - Select Top Community Posts -
 
+    public async Task<DataTable> SelectTopCommunityPostsAsync(string communityName, DateTime createdAfter, PaginationPosts pagination, uint flairId)
+    {
+        MySqlCommand command = new(PostRepositoryCommands.SelectTopCommunityPostsLimitWithFlair);
+
+        return await SelectTopCommunityPostsAsync(command, communityName, createdAfter, pagination, flairId);
+    }
+
     public async Task<DataTable> SelectTopCommunityPostsAsync(string communityName, DateTime createdAfter, PaginationPosts pagination)
     {
         MySqlCommand command = new(PostRepositoryCommands.SelectTopCommunityPostsLimit);
@@ -121,7 +140,7 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
         return await SelectTopCommunityPostsAsync(command, communityName, createdAfter);
     }
 
-    private async Task<DataTable> SelectTopCommunityPostsAsync(MySqlCommand command, string communityName, DateTime createdAfter, PaginationPosts? pagination = null)
+    private async Task<DataTable> SelectTopCommunityPostsAsync(MySqlCommand command, string communityName, DateTime createdAfter, PaginationPosts? pagination = null, uint? flairId = null)
     {
         command.Parameters.AddWithValue("@community_name", communityName);
         command.Parameters.AddWithValue("@created_on", createdAfter);
@@ -129,6 +148,11 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
         if (pagination != null)
         {
             command.AddPaginationParamters(pagination);
+        }
+
+        if (flairId.HasValue)
+        {
+            command.Parameters.AddWithValue("@flair_id", flairId.Value);
         }
 
         return await _connection.FetchAllAsync(command);
@@ -205,6 +229,7 @@ public class PostRepository(DatabaseConnection connection, TransactionConnection
         command.Parameters.AddWithValue("@post_type", post.PostTypeValue);
         command.Parameters.AddWithValue("@author_id", post.AuthorId);
         command.Parameters.AddWithValue("@created_on", post.CreatedOn);
+        command.Parameters.AddWithValue("@flair_post_id", post.FlairPostId);
 
         return await transaction.ExecuteInTransactionAsync(command);
     }

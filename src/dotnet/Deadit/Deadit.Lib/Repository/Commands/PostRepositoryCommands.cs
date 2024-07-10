@@ -48,6 +48,7 @@ public sealed class PostRepositoryCommands
     public static readonly string SelectTopHomePagePostsLimit = string.Format(_selectTopHomePagePostsTemplate, RepositoryConstants.PAGINATION_CLAUSE);
 
 
+    private const string _filterPostsByFlair = @" AND p.post_flair_post_id = @flair_id ";
 
     private const string _selectNewestCommunityPostsTemplate = @"
         SELECT
@@ -57,12 +58,16 @@ public sealed class PostRepositoryCommands
         WHERE
             p.community_name = @community_name
             AND p.post_deleted_on IS NULL
+            {1}
         ORDER BY 
             p.post_created_on DESC
         {0};";
 
-    public static readonly string SelectNewestCommunityPosts = string.Format(_selectNewestCommunityPostsTemplate, string.Empty);
-    public static readonly string SelectNewestCommunityPostsLimit = string.Format(_selectNewestCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE);
+
+    public static readonly string SelectNewestCommunityPosts = string.Format(_selectNewestCommunityPostsTemplate, string.Empty, string.Empty);    
+    public static readonly string SelectNewestCommunityPostsLimit = string.Format(_selectNewestCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE, string.Empty);
+    public static readonly string SelectNewestCommunityPostsLimitWithFlair = string.Format(_selectNewestCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE, _filterPostsByFlair);
+
 
 
     private const string _selectTopCommunityPostsTemplate = @"
@@ -74,12 +79,14 @@ public sealed class PostRepositoryCommands
             p.community_name = @community_name
             AND p.post_created_on > @created_on
             AND p.post_deleted_on IS NULL
+            {1}
         ORDER BY
             p.post_count_votes_score DESC
         {0};";
 
-    public static readonly string SelectTopCommunityPosts = string.Format(_selectTopCommunityPostsTemplate, string.Empty);
-    public static readonly string SelectTopCommunityPostsLimit = string.Format(_selectTopCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE);
+    public static readonly string SelectTopCommunityPosts = string.Format(_selectTopCommunityPostsTemplate, string.Empty, string.Empty);
+    public static readonly string SelectTopCommunityPostsLimit = string.Format(_selectTopCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE, string.Empty);
+    public static readonly string SelectTopCommunityPostsLimitWithFlair = string.Format(_selectTopCommunityPostsTemplate, RepositoryConstants.PAGINATION_CLAUSE, _filterPostsByFlair);
 
 
 
@@ -122,7 +129,8 @@ public sealed class PostRepositoryCommands
             title,
             post_type,
             author_id,
-            created_on
+            created_on,
+            flair_post_id
         )
         VALUES
         (
@@ -131,7 +139,8 @@ public sealed class PostRepositoryCommands
             @title,
             @post_type,
             @author_id,
-            @created_on
+            @created_on,
+            @flair_post_id
         ) AS new_values 
         ON duplicate KEY UPDATE
             title = new_values.title;";

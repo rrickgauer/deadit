@@ -155,3 +155,14 @@ export class InputFeedbackTextArea extends InputFeedback
         super(container, autoClear);
     }
 }
+
+
+export class InputFeedbackSelect extends InputFeedback
+{
+    public inputElement: HTMLSelectElement;
+
+    constructor(container: Element, autoClear: boolean = false)
+    {
+        super(container, autoClear);
+    }
+}
